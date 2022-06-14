@@ -10,7 +10,7 @@ Clone this repository then install the dependencies using `npm install`.
 
 ### Scripts
 
-Use `run` to start the development server.
+Use `dev` to start the development server.
 
 ```bash
 npm run dev
