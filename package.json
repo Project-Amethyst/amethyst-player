@@ -21,6 +21,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"carbon-icons-svelte": "^11.1.0",
 		"scss": "^0.2.4"
 	}
 }
