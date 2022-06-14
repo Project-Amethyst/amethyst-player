@@ -6,8 +6,6 @@ A web player for Amethyst that supports Launchpad/Matrix.
 
 ## Development
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
 Clone this repository then install the dependencies using `npm install`.
 
 ### Scripts
