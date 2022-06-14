@@ -27,7 +27,7 @@
 
     <div class="amethyst-player-content">
         <div class="amethyst-player-launchpad-holder">
-            <div style="transform: scale(1.5)">
+            <div style="transform: scale(1.2)">
                 <LaunchpadProMk2/>
             </div>
         </div>

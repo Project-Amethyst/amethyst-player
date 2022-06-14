@@ -1,19 +1,20 @@
 <script lang="ts">
     let keyPads = []
 
-    function getCornerRadius(x, y) {
-        switch(x + y * 10) { // This switch is for the 4 Buttons in the Middle
+    /** Get the clip path for the middle pads. */
+    function getCornerRadius (x: number, y: number) {
+        switch (x + y * 10) {
             case 44:
-                return "10% 40% 10% 10%"
+              return "polygon(80% 0, 100% 20%, 100% 100%, 0 100%, 0 0)";
 
             case 45:
-                return "40% 10% 10% 10%"
+                return "polygon(20% 0, 100% 0, 100% 100%, 0 100%, 0 20%)";
 
             case 54:
-                return "10% 10% 40% 10%"
+                return "polygon(100% 0, 100% 80%, 80% 100%, 0 100%, 0 0)";
 
             case 55:
-                return "10% 10% 10% 40%"
+                return "polygon(100% 0, 100% 100%, 20% 100%, 0 80%, 0 0)";
         }
     }
 
@@ -30,21 +31,29 @@
                     <div class="lp-btn-parent">
 
                         {#if x === 0 && y === 9}
-                            <button class="lp-round-setup-btn" bind:this={keyPads[0]}>
+                            <button
+                              class="lp-round-setup-btn"
+                              bind:this={keyPads[0]}
+                            >
 
                             </button>
                         {/if}
 
-                        {#if x === 0 && y !== 0 && y !== 9 || x === 9 && y !== 0 && y !== 9 || x !== 0 && x!== 9 && y === 0 || x !== 0 && x!== 9 && y === 9}
-                            <button class="lp-round-corner-btn" bind:this={keyPads[x + y * 10]}>
+                        {#if (x > 0 && x < 9) && (y > 0 && y < 9)}
+                          <button
+                            class="lp-normal-btn"
+                            bind:this={keyPads[x + y * 10]}
+                            style="clip-path: {getCornerRadius(x, y)}"
+                          >
 
-                            </button>
-                        {/if}
+                          </button>
+                        {:else if (x > 0 && x < 9) || (y > 0 && y < 9)}
+                          <button
+                            class="lp-round-corner-btn"
+                            bind:this={keyPads[x + y * 10]}
+                          >
 
-                        {#if x > 0 && x < 9 && y > 0 && y < 9}
-                            <button class="lp-normal-btn" bind:this={keyPads[x + y * 10]} style="border-radius: {getCornerRadius(x, y)}">
-
-                            </button>
+                          </button>
                         {/if}
 
                     </div>
