@@ -7,7 +7,7 @@
     function getCornerRadius (x: number, y: number) {
         switch (x + y * 10) {
             case 44:
-              return "polygon(80% 0, 100% 20%, 100% 100%, 0 100%, 0 0)";
+                return "polygon(80% 0, 100% 20%, 100% 100%, 0 100%, 0 0)";
 
             case 45:
                 return "polygon(20% 0, 100% 0, 100% 100%, 0 100%, 0 20%)";
@@ -21,8 +21,6 @@
     }
 
     export function rgb_led(pitch: number, r: number, g: number, b: number) {
-        if(pitch === 0) return;
-
         if(keyPads[pitch]) {
             r = 80 + r * 3;
             g = 80 + g * 3;
@@ -39,48 +37,36 @@
 
 <div class="lp-border">
     <div class="lp-controls">
-        {#each Array(10) as _, y}
+        {#each Array(9) as _, y}
             <div class="lp-controls-row">
-                {#each Array(10) as _2, x}
-                    <div class="lp-btn-parent">
+                {#each Array(9) as _2, x}
+                    {#if x + 1 > 0 && y + 1 > 0}
+                        <div class="lp-btn-parent">
 
-                        {#if x === 0 && y === 9}
-                            <button
-                              class="lp-shift-btn"
-                              bind:this={keyPads[0]}
-                              on:mousedown={() => keyPress(0)}
-                            >
+                            {#if (x + 1 > 0 && x + 1 < 9) && (y + 1 > 0 && y + 1 < 9)}
+                                <button
+                                        class="lp-normal-btn"
+                                        bind:this={keyPads[(x + 1) + (y + 1) * 10]}
+                                        style="clip-path: {getCornerRadius(x + 1, y + 1)};"
+                                        on:mousedown={() => keyPress((x + 1)  + (y + 1) * 10)}
+                                >
 
-                            </button>
-                        {/if}
+                                </button>
+                            {:else if (x + 1 > 0 && x + 1 < 9) || (y + 1 > 0 && y + 1 < 9)}
+                                <button
+                                        class="lp-round-corner-btn"
+                                        bind:this={keyPads[(x + 1) + (y + 1) * 10]}
+                                        on:mousedown={() => keyPress((x + 1)  + (y + 1) * 10)}
+                                >
 
-                        {#if (x > 0 && x < 9) && (y > 0 && y < 9)}
-                          <button
-                            class="lp-normal-btn"
-                            bind:this={keyPads[x + y * 10]}
-                            style="clip-path: {getCornerRadius(x, y)};"
-                            on:mousedown={() => keyPress(x + y * 10)}
-                          >
+                                </button>
+                            {/if}
 
-                          </button>
-                        {:else if (x > 0 && x < 9) || (y > 0 && y < 9)}
-                          <button
-                            class="lp-round-corner-btn"
-                            bind:this={keyPads[x + y * 10]}
-                            on:mousedown={() => keyPress(x + y * 10)}
-                          >
-
-                          </button>
-                        {/if}
-
-                    </div>
+                        </div>
+                    {/if}
                 {/each}
             </div>
         {/each}
-    </div>
-
-    <div class="lp-mode-light" bind:this={keyPads[99]}>
-
     </div>
 </div>
 
@@ -88,7 +74,7 @@
     .lp-border {
         background: rgb(20, 20, 20);
         border: 2px solid rgb(120, 120, 120);
-        border-radius: 32px;
+        border-radius: 16px;
 
         width: fit-content;
 
@@ -147,27 +133,6 @@
                 background-color: rgb(80, 80, 80);
             }
 
-            .lp-shift-btn {
-                padding: 0;
-                border: none;
-
-                height: 15px;
-                width: 15px;
-                border-radius: 50%;
-                background-color: rgb(40, 40, 40);
-            }
-
         }
-    }
-
-    .lp-mode-light {
-        width: 10px;
-        height: 10px;
-        border-radius: 30% 30% 0 0;
-        background-color: rgb(80, 80, 80);
-
-        position: fixed;
-        margin-top: 10px;
-        margin-left: 197px;
     }
 </style>
