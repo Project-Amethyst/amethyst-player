@@ -40,10 +40,11 @@
     })
 </script>
 
+<title>Amethyst Player</title>
 <main>
-    <div class="amethyst-player-header expand-class">
+    <div class="amethyst-player-sidebar expand-class">
         <div class="left-margin-30 center-class">
-            <img src="logo-256.png" alt="Amethyst Logo" width="75" height="75">
+            <img class="logo" src="logo-256.png" alt="Amethyst Logo" width="75" height="75">
 
             <span class="amethyst">Amethyst Player</span>
         </div>
@@ -131,19 +132,57 @@
         align-items: center;
     }
 
-    .amethyst-player-header {
-        height: 100px;
+    .amethyst-player-sidebar {
+        width: 110px;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+
+        display: flex;
+        flex-direction: column;
+
+        -moz-box-shadow:    -3px 0 5px 0 #555;
+        -webkit-box-shadow: -3px 0 5px 0 #555;
+        box-shadow: -3px 0 5px 0 #555;
+
+        transition: width 600ms ease;
+
 
         background-color: rgb(20, 20, 20);
 
         gap: 20px;
+
+        .amethyst {
+            display: inline;
+            position: absolute;
+            left: 4.75%;
+            transition: 600ms;
+            top: -999px;
+        }
+
+        .logo {
+            position: fixed;
+            left: 1%;
+            top: 2%;
+        }
+
+        &:hover {
+            .amethyst {
+                display: block;
+                position: fixed;
+                top: 4%;
+                left: 4.75%;
+            }
+
+            width: 335px;
+        }
 
         span {
             color: #f1f1f1;
 
             font-family: 'Roboto Mono', sans-serif;
             font-weight: 700;
-            font-size: 32px;
+            font-size: 22px;
             letter-spacing: 0.1rem;
         }
 
@@ -151,7 +190,8 @@
             width: 100px;
             height: 100px;
             position: fixed;
-            left: calc(100vw - 100px);
+            left: 0.25%;
+            top: 89.25%;
 
             button {
                 height: 38px;
