@@ -143,9 +143,7 @@
         display: flex;
         flex-direction: column;
 
-        -moz-box-shadow:    -3px 0 5px 0 #555;
-        -webkit-box-shadow: -3px 0 5px 0 #555;
-        box-shadow: -3px 0 5px 0 #555;
+        box-shadow: 0 0 7.5px 2.5px black;
 
         transition: width 600ms ease;
 
@@ -218,6 +216,7 @@
             position: fixed;
             left: 0.25%;
             top: 89.25%;
+            cursor: pointer;
 
             button {
                 height: 38px;
@@ -231,6 +230,7 @@
                 &:hover {
                     transform: rotateZ(45deg);
                     color: #c5c5c5;
+                    cursor: pointer;
                 }
             }
         }
