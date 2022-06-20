@@ -46,7 +46,7 @@
         <div class="left-margin-30 center-class">
             <img class="logo" src="logo-256.png" alt="Amethyst Logo" width="75" height="75">
 
-            <span class="amethyst">Amethyst Player</span>
+            <span class="amethyst">Amethyst</span>
         </div>
 
         <div class="settings-icon center-class">
@@ -79,8 +79,7 @@
     </div>
 
     <div class="amethyst-player-footer center-class">
-        <span>Amethyst Player (Web)</span>
-        <span>Maintained by <a href="https://github.com/anthonyhfm">anthonyhfm</a>, <a href="https://github.com/203Null">203null</a>, <a href="https://github.com/Vexcited">vexcited</a> and <a href="https://github.com/mtgsquad">molai</a></span>
+        <span>Amethyst Player v1 - Maintained by <a href="https://github.com/anthonyhfm">anthonyhfm</a>, <a href="https://github.com/203Null">203null</a>, <a href="https://github.com/Vexcited">vexcited</a> and <a href="https://github.com/mtgsquad">molai</a></span>
     </div>
 
     <Popup bind:show={showSettings}>
@@ -118,10 +117,6 @@
         width: 100vw;
     }
 
-    .amethyst {
-        margin: 7.5px;
-    }
-
     .expand-class {
         display: flex;
         justify-content: space-between;
@@ -135,6 +130,17 @@
     }
 
     .amethyst-player-sidebar {
+
+        span {
+            color: #f1f1f1;
+
+            font-family: 'Roboto Mono', sans-serif;
+            font-weight: 700;
+            font-size: 22px;
+            letter-spacing: 0.1rem;
+        }
+
+
         width: 110px;
         position: fixed;
         top: 0;
@@ -153,11 +159,13 @@
         gap: 20px;
 
         .amethyst {
+            margin: 7.5px;
             display: inline;
             position: absolute;
-            left: 4.75%;
+            left: 6%;
             transform: 600ms ease;
             top: -999px;
+            font-size: 32px;
         }
 
         .settings-text {
@@ -185,12 +193,12 @@
             .amethyst {
                 display: block;
                 position: fixed;
-                top: 4%;
-                left: 4.75%;
+                top: 3%;
+                left: 5.5%;
                 animation: fadeIn 1.75s;
             }
 
-            width: 335px;
+            width: 310px;
 
             .settings-text{
                 display: block;
@@ -199,15 +207,6 @@
                 left: 4.75%;
                 animation: fadeIn 1.75s;
             }
-        }
-
-        span {
-            color: #f1f1f1;
-
-            font-family: 'Roboto Mono', sans-serif;
-            font-weight: 700;
-            font-size: 22px;
-            letter-spacing: 0.1rem;
         }
 
         .settings-icon {
