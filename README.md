@@ -14,8 +14,9 @@ Use `dev` to start the development server.
 
 ```bash
 npm run dev
-
-# or start the server and open the app in a new browser tab
+```
+Use the following command to start the development server and open in a new tab.
+```bash
 npm run dev -- --open
 ```
 
@@ -28,3 +29,4 @@ npm run build
 
 You can preview the production build with `npm run preview`.
 
+*Amethyst ✨*
