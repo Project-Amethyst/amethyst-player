@@ -53,6 +53,8 @@
             <button on:click={() => showSettings = true}>
                 <SettingsIcon size={38}/>
             </button>
+
+            <span on:click={() => showSettings = true} class="settings-text">Settings</span>
         </div>
     </div>
 
@@ -156,14 +158,29 @@
             display: inline;
             position: absolute;
             left: 4.75%;
-            transition: 600ms;
+            transform: 600ms ease;
             top: -999px;
         }
+
+        .settings-text {
+            display: inline;
+            position: absolute;
+            left: -999px;
+            transform: 600ms ease;
+            top: 93%;
+            cursor: pointer;
+        }
+
 
         .logo {
             position: fixed;
             left: 1%;
             top: 2%;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
         }
 
         &:hover {
@@ -172,9 +189,18 @@
                 position: fixed;
                 top: 4%;
                 left: 4.75%;
+                animation: fadeIn 1.75s;
             }
 
             width: 335px;
+
+            .settings-text{
+                display: block;
+                position: fixed;
+                top: 93%;
+                left: 4.75%;
+                animation: fadeIn 1.75s;
+            }
         }
 
         span {
