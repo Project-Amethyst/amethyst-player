@@ -160,20 +160,20 @@
 
         .amethyst {
             margin: 7.5px;
-            display: inline;
-            position: absolute;
-            left: 6%;
+            display: none;
+            position: fixed;
+            top: 3%;
+            left: 5.5%;
             transform: 600ms ease;
-            top: -999px;
             font-size: 32px;
         }
 
         .settings-text {
-            display: inline;
-            position: absolute;
-            left: -999px;
-            transform: 600ms ease;
+            display: none;
+            position: fixed;
             top: 93%;
+            left: 4.75%;
+            transform: 600ms ease;
             cursor: pointer;
         }
 
@@ -192,9 +192,6 @@
         &:hover {
             .amethyst {
                 display: block;
-                position: fixed;
-                top: 3%;
-                left: 5.5%;
                 animation: fadeIn 1.75s;
             }
 
@@ -202,9 +199,6 @@
 
             .settings-text{
                 display: block;
-                position: fixed;
-                top: 93%;
-                left: 4.75%;
                 animation: fadeIn 1.75s;
             }
         }
