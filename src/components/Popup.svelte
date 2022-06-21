@@ -46,7 +46,7 @@
             width: 100vw;
 
             background-color: rgba(0, 0, 0, 0.48);
-            backdrop-filter: blur(2px);
+            backdrop-filter: blur(8px);
         }
 
         &.inactive {

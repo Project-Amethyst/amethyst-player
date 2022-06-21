@@ -2,6 +2,9 @@
 
 <script lang="ts">
     import SettingsIcon from "carbon-icons-svelte/lib/Settings.svelte"
+    import MusicIcon from "carbon-icons-svelte/lib/Music.svelte"
+    import FolderIcon from "carbon-icons-svelte/lib/FolderAdd.svelte"
+
     import LaunchpadProMk2 from "../../components/devices/LaunchpadProMk2.svelte";
     import LaunchpadMk2 from "../../components/devices/LaunchpadMk2.svelte";
     import LaunchpadX from "../../components/devices/LaunchpadX.svelte";
@@ -35,6 +38,10 @@
         console.log("Virtual Launchpad Button " + pitch + " has been pressed")
     }
 
+    function calculateLaunchpadScale() {
+
+    }
+
     onMount(() => {
         launchpad.rgb_led(44, 63, 0, 0) // It takes rgb byte values from 0-63
     })
@@ -63,6 +70,49 @@
 
     <div class="main-content">
         <div class="sidebar-part">
+
+            <div class="sidebar-block">
+                <div class="icon-holder">
+                    <img height="50%" style="border-radius: 50%; border: 2px solid rgb(80, 80, 80);" src="https://yt3.ggpht.com/f4s7T6OpDAjpOLZTPXfkKCIxiIbq5qWsBtNxmfq4x3WI6TMkDnYnMSPVhRNbNowS8gGI3M5ymzU=s88-c-k-c0x00ffffff-no-rj">
+                </div>
+
+                <div class="control-holder creator-name">
+                    <span>Clementshow</span>
+                </div>
+            </div>
+
+            <div class="sidebar-block">
+                <div class="icon-holder">
+                    <MusicIcon size={38}/>
+                </div>
+
+                <div class="control-holder song-info">
+                    <span class="song-artist">Alan Walker</span>
+                    <span class="song-title">The Spectre</span>
+                </div>
+            </div>
+
+            <div style="height: 100%;"></div>
+
+            <div class="sidebar-block clickable">
+                <div class="icon-holder">
+                    <FolderIcon size={38}/>
+                </div>
+
+                <div class="control-holder left-text">
+                    <span>Open local Project</span>
+                </div>
+            </div>
+
+            <div class="sidebar-block clickable" on:click={() => showSettings = true}>
+                <div class="icon-holder">
+                    <SettingsIcon size={38}/>
+                </div>
+
+                <div class="control-holder left-text">
+                    <span>Settings</span>
+                </div>
+            </div>
 
         </div>
 
@@ -175,12 +225,95 @@
             background-color: rgb(20, 20, 20);
             transition: width 0.4s ease-in-out;
             box-shadow: 0 0 10px 2px black;
+            overflow: hidden;
 
             display: flex;
             flex-direction: column;
 
             &:hover {
-                width: 400px;
+                width: 450px;
+            }
+
+            .sidebar-block {
+                width: 450px;
+                height: 100px;
+
+                display: flex;
+
+                &.clickable {
+                    transition: background-color 0.1s ease-in-out;
+                    cursor: pointer;
+
+                    &:hover {
+                        background-color: rgb(10, 10, 10);
+                    }
+                }
+
+                .icon-holder {
+                    height: 100px;
+                    width: 100px;
+
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    color: #b9b9b9;
+                }
+
+                .control-holder {
+                    height: 100px;
+                    width: 250px;
+
+
+                    &.creator-name {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        span {
+                            color: rgb(200, 200, 200);
+
+                            font-family: 'Roboto Mono', sans-serif;
+                            font-weight: 600;
+                            font-size: 28px;
+                            padding: 5px 10px;
+                        }
+                    }
+
+                    &.song-info {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        gap: 5px;
+
+                        flex-direction: column;
+
+                        font-family: "Roboto Mono", monospace;
+
+                        font-size: 18px;
+
+                        span.song-artist {
+                            color: aqua;
+                        }
+
+                        span.song-title {
+                            color: rgb(200, 200, 200)
+                        }
+                    }
+
+                    &.left-text {
+                        display: flex;
+                        align-items: center;
+                        justify-content: flex-start;
+
+                        font-family: "Roboto Mono", monospace;
+
+                        font-size: 20px;
+
+                        color: rgb(200, 200, 200);
+                    }
+                }
             }
         }
 
@@ -195,36 +328,6 @@
         img {
             border-radius: 50%;
             border: 2px solid #474747;
-        }
-
-        span.creator-name {
-            color: #f1f1f1;
-
-            font-family: 'Roboto Mono', monospace;
-            font-weight: 500;
-            font-size: 18px;
-            margin-left: 15px;
-            padding: 5px 10px;
-            border-radius: 6px;
-            background-color: #2c2c2c;
-            letter-spacing: 0.1rem;
-        }
-
-        span.song-info {
-            color: #f1f1f1;
-
-            font-family: 'Roboto Mono', monospace;
-            font-weight: 500;
-            font-size: 18px;
-            margin-left: 20px;
-            padding: 5px 10px;
-            border-radius: 6px;
-            background-color: #2c2c2c;
-            letter-spacing: 0.1rem;
-
-            span.song-title {
-                color: aqua;
-            }
         }
     }
 
