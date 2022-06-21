@@ -41,15 +41,11 @@
 </script>
 
 <main>
-    <div class="amethyst-player-header center-class">
-        <img src="logo-256.png" width="75" height="75">
+    <div class="amethyst-player-header center-class" style="justify-content: flex-start">
+        <div class="center-class" style="gap: 20px; margin-left: 30px;">
+            <img src="logo-256.png" width="75" height="75">
 
-        <span>Amethyst Player</span>
-
-        <div class="settings-icon center-class">
-            <button on:click={() => showSettings = true}>
-                <SettingsIcon size={38}/>
-            </button>
+            <span>Amethyst Player</span>
         </div>
     </div>
 
