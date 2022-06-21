@@ -1,7 +1,11 @@
 <!-- Index file for the player route -->
 
 <script lang="ts">
+    // icons
     import SettingsIcon from "carbon-icons-svelte/lib/Settings.svelte"
+    import FolderAdd from "carbon-icons-svelte/lib/FolderAdd.svelte";
+
+    // other stuff
     import LaunchpadProMk2 from "../../components/devices/LaunchpadProMk2.svelte";
     import LaunchpadMk2 from "../../components/devices/LaunchpadMk2.svelte";
     import LaunchpadX from "../../components/devices/LaunchpadX.svelte";
@@ -59,6 +63,20 @@
                 -
                 <span class="song-title">The Spectre</span>
             </span>
+        </div>
+
+        <div class="project-icon center-class">
+            <button on:click={() => {
+                console.log('folder button pressed')
+                // proper code goes here
+            }}>
+                <FolderAdd size={38}/>
+            </button>
+
+            <span on:click={() => {
+                console.log('folder button pressed')
+                // proper code goes here
+            }} class="project-text">Open</span>
         </div>
 
         <div class="settings-icon center-class">
@@ -234,6 +252,15 @@
             cursor: pointer;
         }
 
+        .project-text {
+            display: none;
+            position: fixed;
+            top: 85.5%;
+            left: 4.75%;
+            transform: 600ms ease;
+            cursor: pointer;
+        }
+
 
         .logo {
             position: fixed;
@@ -255,6 +282,11 @@
             width: 310px;
 
             .settings-text{
+                display: block;
+                animation: fadeIn 1.75s;
+            }
+
+            .project-text{
                 display: block;
                 animation: fadeIn 1.75s;
             }
@@ -294,6 +326,31 @@
 
                 &:hover {
                     transform: rotateZ(45deg);
+                    color: #c5c5c5;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .project-icon {
+            width: 100px;
+            height: 100px;
+            position: fixed;
+            left: 0.25%;
+            top: 81.5%;
+            cursor: pointer;
+
+            button {
+                height: 38px;
+                width: 38px;
+                padding: 0;
+                background: transparent;
+                border: none;
+                color: whitesmoke;
+                transition: transform 0.2s ease-in-out;
+
+                &:hover {
+                    transform: rotateZ(10deg);
                     color: #c5c5c5;
                     cursor: pointer;
                 }
