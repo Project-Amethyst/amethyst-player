@@ -137,7 +137,7 @@
             border-radius: 50%;
             border: 2px solid #474747;
             position: fixed;
-            top: 27%;
+            top: 25%;
             left: 1.75%;
             display: none;
         }
@@ -154,7 +154,7 @@
             background-color: #2c2c2c;
             letter-spacing: 0.1rem;
             position: fixed;
-            top: 27.75%;
+            top: 25.75%;
             left: 5%;
             transform: 600ms ease;
         }
@@ -171,7 +171,7 @@
             background-color: #2c2c2c;
             letter-spacing: 0.1rem;
             position: fixed;
-            top: 35%;
+            top: 33%;
             max-width: 300px;
 
             span.song-title {
