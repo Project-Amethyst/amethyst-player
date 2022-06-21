@@ -49,6 +49,18 @@
             <span class="amethyst">Amethyst</span>
         </div>
 
+        <div class="amethyst-player-info center-class">
+            <img height="40" alt="creator pfp" src="https://yt3.ggpht.com/f4s7T6OpDAjpOLZTPXfkKCIxiIbq5qWsBtNxmfq4x3WI6TMkDnYnMSPVhRNbNowS8gGI3M5ymzU=s88-c-k-c0x00ffffff-no-rj">
+    
+            <span class="creator-name">Clementshow</span>
+    
+            <span class="song-info">
+                <span class="song-artist">Alan Walker</span>
+                -
+                <span class="song-title">The Spectre</span>
+            </span>
+        </div>
+
         <div class="settings-icon center-class">
             <button on:click={() => showSettings = true}>
                 <SettingsIcon size={38}/>
@@ -56,18 +68,6 @@
 
             <span on:click={() => showSettings = true} class="settings-text">Settings</span>
         </div>
-    </div>
-
-    <div class="amethyst-player-info center-class">
-        <img height="40" alt="creator pfp" src="https://yt3.ggpht.com/f4s7T6OpDAjpOLZTPXfkKCIxiIbq5qWsBtNxmfq4x3WI6TMkDnYnMSPVhRNbNowS8gGI3M5ymzU=s88-c-k-c0x00ffffff-no-rj">
-
-        <span class="creator-name">Clementshow</span>
-
-        <span class="song-info">
-            <span class="song-artist">Alan Walker</span>
-            -
-            <span class="song-title">The Spectre</span>
-        </span>
     </div>
 
     <div class="amethyst-player-content">
@@ -80,6 +80,7 @@
 
     <div class="amethyst-player-footer center-class">
         <span>Amethyst Player v1 - Maintained by <a href="https://github.com/anthonyhfm">anthonyhfm</a>, <a href="https://github.com/203Null">203null</a>, <a href="https://github.com/Vexcited">vexcited</a> and <a href="https://github.com/mtgsquad">molai</a></span>
+        <span>Amethyst is currently in development.</span>
     </div>
 
     <Popup bind:show={showSettings}>
@@ -128,6 +129,62 @@
         justify-content: center;
         align-items: center;
     }
+
+    .amethyst-player-info {
+        height: 100px;
+
+        img {
+            border-radius: 50%;
+            border: 2px solid #474747;
+            position: fixed;
+            top: 27%;
+            left: 1.75%;
+            display: none;
+        }
+
+        span.creator-name {
+            color: #f1f1f1;
+            display: none;
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 500;
+            font-size: 14px;
+            margin-left: 15px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            background-color: #2c2c2c;
+            letter-spacing: 0.1rem;
+            position: fixed;
+            top: 27.75%;
+            left: 5%;
+            transform: 600ms ease;
+        }
+
+        span.song-info {
+            color: #f1f1f1;
+            display: none;
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 500;
+            font-size: 14px;
+            margin-left: 10px;
+            padding: 2.5px 5px;
+            border-radius: 6px;
+            background-color: #2c2c2c;
+            letter-spacing: 0.1rem;
+            position: fixed;
+            top: 35%;
+            max-width: 300px;
+
+            span.song-title {
+                color: aqua;
+                font-size: 14px;
+            }
+
+            span.song-artist {
+                font-size: 14px;
+            }
+        }
+    }
+
 
     .amethyst-player-sidebar {
 
@@ -201,6 +258,21 @@
                 display: block;
                 animation: fadeIn 1.75s;
             }
+
+            .creator-name {
+                display: block;
+                animation: fadeIn 1.75s;
+            }
+
+            .song-info {
+                display: block;
+                animation: fadeIn 1.75s;
+            }
+
+            .amethyst-player-info > img {
+                display: block;
+                animation: fadeIn 1.75s;
+            }
         }
 
         .settings-icon {
@@ -229,50 +301,12 @@
         }
     }
 
-    .amethyst-player-info {
-        height: 100px;
-
-        img {
-            border-radius: 50%;
-            border: 2px solid #474747;
-        }
-
-        span.creator-name {
-            color: #f1f1f1;
-
-            font-family: 'Roboto Mono', monospace;
-            font-weight: 500;
-            font-size: 18px;
-            margin-left: 15px;
-            padding: 5px 10px;
-            border-radius: 6px;
-            background-color: #2c2c2c;
-            letter-spacing: 0.1rem;
-        }
-
-        span.song-info {
-            color: #f1f1f1;
-
-            font-family: 'Roboto Mono', monospace;
-            font-weight: 500;
-            font-size: 18px;
-            margin-left: 20px;
-            padding: 5px 10px;
-            border-radius: 6px;
-            background-color: #2c2c2c;
-            letter-spacing: 0.1rem;
-
-            span.song-title {
-                color: aqua;
-            }
-        }
-    }
-
     .amethyst-player-content {
         height: calc(100vh - 300px);
         width: 100vw;
 
         overflow: auto;
+        padding-top: 5%;
 
         .amethyst-player-launchpad-holder {
             height: calc(100%);
