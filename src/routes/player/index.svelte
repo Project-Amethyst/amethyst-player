@@ -128,6 +128,8 @@
 
         background-color: rgb(20, 20, 20);
         box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
         border-bottom: 3px inset rgb(10, 10, 10);
 
         gap: 20px;
