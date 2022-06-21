@@ -42,14 +42,14 @@
 
 <main>
     <div class="amethyst-player-header center-class" style="justify-content: flex-start">
-        <div class="center-class" style="gap: 20px; margin-left: 30px;">
+        <div class="center-class" style="gap: 20px; margin-left: 10px;">
             <img src="logo-256.png" width="75" height="75">
 
             <span>Amethyst Player</span>
         </div>
     </div>
 
-    <div class="amethyst-player-info center-class">
+    <!-- <div class="amethyst-player-info center-class">
         <img height="40" src="https://yt3.ggpht.com/f4s7T6OpDAjpOLZTPXfkKCIxiIbq5qWsBtNxmfq4x3WI6TMkDnYnMSPVhRNbNowS8gGI3M5ymzU=s88-c-k-c0x00ffffff-no-rj">
 
         <span class="creator-name">Clementshow</span>
@@ -59,19 +59,27 @@
             -
             <span class="song-title">The Spectre</span>
         </span>
-    </div>
+    </div> -->
 
-    <div class="amethyst-player-content">
-        <div class="amethyst-player-launchpad-holder center-class">
-            <div style="transform: scale(1.4)">
-                <svelte:component this={virtualDeviceComponent} bind:this={launchpad} keyPress={(p) => virtualKeyPressed(p)}/>
+    <div class="main-content">
+        <div class="sidebar-part">
+
+        </div>
+
+        <div class="content-part">
+            <div class="amethyst-player-content">
+                <div class="amethyst-player-launchpad-holder center-class">
+                    <div style="transform: scale(1.4)">
+                        <svelte:component this={virtualDeviceComponent} bind:this={launchpad} keyPress={(p) => virtualKeyPressed(p)}/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="amethyst-player-footer center-class">
+                <span>Amethyst Player (Web)</span>
+                <span>Maintained by <a href="">anthonyhfm</a>, <a href="">203null</a>, <a href="">vexcited</a> and <a href="">molai</a></span>
             </div>
         </div>
-    </div>
-
-    <div class="amethyst-player-footer center-class">
-        <span>Amethyst Player (Web)</span>
-        <span>Maintained by <a href="">anthonyhfm</a>, <a href="">203null</a>, <a href="">vexcited</a> and <a href="">molai</a></span>
     </div>
 
     <Popup bind:show={showSettings}>
@@ -119,6 +127,8 @@
         height: 100px;
 
         background-color: rgb(20, 20, 20);
+        box-sizing: border-box;
+        border-bottom: 3px inset rgb(10, 10, 10);
 
         gap: 20px;
 
@@ -151,6 +161,29 @@
                     color: #c5c5c5;
                 }
             }
+        }
+    }
+
+    .main-content {
+        display: flex;
+        flex-direction: row;
+
+        .sidebar-part {
+            width: 100px;
+            background-color: rgb(20, 20, 20);
+            transition: width 0.4s ease-in-out;
+            box-shadow: 0 0 10px 2px black;
+
+            display: flex;
+            flex-direction: column;
+
+            &:hover {
+                width: 400px;
+            }
+        }
+
+        .content-part {
+            width: 100%;
         }
     }
 
@@ -194,8 +227,8 @@
     }
 
     .amethyst-player-content {
-        height: calc(100vh - 300px);
-        width: 100vw;
+        height: calc(100vh - 200px);
+        width: 100%;
 
         overflow: auto;
 
@@ -207,7 +240,7 @@
 
     .amethyst-player-footer {
         height: 100px;
-        width: 100vw;
+        width: 100%;
         flex-direction: column;
         gap: 10px;
 
