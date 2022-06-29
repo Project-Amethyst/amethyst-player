@@ -1,6 +1,7 @@
 <!-- Index file for the player route -->
 
 <script lang="ts">
+    import GridController from "grid-controller"
     import SettingsIcon from "carbon-icons-svelte/lib/Settings.svelte"
     import MusicIcon from "carbon-icons-svelte/lib/Music.svelte"
     import FolderIcon from "carbon-icons-svelte/lib/FolderAdd.svelte"
@@ -14,6 +15,8 @@
     import Dropdown from "../../components/Dropdown.svelte";
     import {onMount} from "svelte";
     import '../../shared.css';
+
+    GridController.start()
 
     let virtualDeviceComponents = [
         { component: LaunchpadProMk2 },
@@ -153,6 +156,60 @@
                             "Matrix"
                         ]
                     } bind:value={settings.virtualDeviceIndex} />
+
+                </div>
+            </div>
+
+            <div class="setting">
+                <div class="setting-name">
+                    <span>Language</span>
+                </div>
+
+                <div>
+                    <Dropdown options={
+                        [
+                            "🇺🇸 English"
+                        ]
+                    } />
+
+                </div>
+            </div>
+
+            <div class="setting">
+                <div class="setting-name">
+                    <span>Midi Output:</span>
+                </div>
+
+                <div>
+                    <Dropdown options={
+                        GridController.availableDeviceOutputs().map(output => output.name)
+                    } on:click={() => console.log(GridController.availableDeviceInputs().map(input => input.name))}/>
+
+                </div>
+            </div>
+
+            <div class="setting">
+                <div class="setting-name">
+                    <span>Midi Input:</span>
+                </div>
+
+                <div>
+                    <Dropdown options={
+                        GridController.availableDeviceInputs().map(input => input.name)
+                    }/>
+
+                </div>
+            </div>
+
+            <div class="setting">
+                <div class="setting-name">
+                    <span>Midi Config:</span>
+                </div>
+
+                <div>
+                    <Dropdown options={
+                        GridController.configList()
+                    } />
 
                 </div>
             </div>
