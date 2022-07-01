@@ -1,7 +1,6 @@
 <!-- Index file for the player route -->
 
 <script lang="ts">
-    import GridController from "grid-controller"
     import SettingsIcon from "carbon-icons-svelte/lib/Settings.svelte"
     import MusicIcon from "carbon-icons-svelte/lib/Music.svelte"
     import FolderIcon from "carbon-icons-svelte/lib/FolderAdd.svelte"
@@ -15,8 +14,6 @@
     import Dropdown from "../../components/Dropdown.svelte";
     import {onMount} from "svelte";
     import '../../shared.css';
-
-    GridController.start()
 
     let virtualDeviceComponents = [
         { component: LaunchpadProMk2 },
