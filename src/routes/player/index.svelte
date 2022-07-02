@@ -135,7 +135,7 @@
         <div class="content-part">
             <div class="amethyst-player-content">
                 <div class="amethyst-player-launchpad-holder center-class">
-                    <div style="height: 50vh; width: 50vh;" class="center-class">
+                    <div style="height: 50vh; width: 50vh; padding: 20px;" class="center-class">
                         <svelte:component this={virtualDeviceComponent} bind:this={device} keyPress={virtualKeyPressed}/>
                     </div>
                 </div>
