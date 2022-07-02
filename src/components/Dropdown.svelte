@@ -7,10 +7,30 @@
     export let value: number = 0;
 
     let showOptions: boolean;
+
+    let dropdownButton;
+
+    function clickOutsideOptions(node) {
+        const handleClick = (event) => {
+            if(dropdownButton.contains(event.target)) return; // Recognizes if the dropdown button was pressed again
+
+            if (!node.contains(event.target)) {
+                node.dispatchEvent(new CustomEvent("clickoutside"));
+            }
+        };
+
+        document.addEventListener("click", handleClick, true);
+
+        return {
+            destroy() {
+                document.removeEventListener("click", handleClick, true);
+            }
+        };
+    }
 </script>
 
 <div style="display: flex; flex-direction: column;">
-    <div class="dropdown-select-body" on:click={() => showOptions = !showOptions}>
+    <div class="dropdown-select-body" bind:this={dropdownButton} on:click={() => showOptions = !showOptions}>
         <div class="left-portion">
             <span>{options[value]}</span>
         </div>
@@ -21,7 +41,7 @@
     </div>
 
     {#if showOptions}
-        <div class="dropdown-select-options">
+        <div class="dropdown-select-options" use:clickOutsideOptions on:clickoutside={() => showOptions = false}>
             {#each options as option}
                 <div class="dropdown-option" on:click={() => {
                     value = options.indexOf(option)
@@ -93,13 +113,15 @@
 
         .dropdown-option {
             width: 100%;
-            height: 30px;
+            height: 22px;
 
             cursor: pointer;
 
             display: flex;
             align-items: center;
             justify-content: center;
+
+            font-size: 14px;
 
             color: whitesmoke;
             font-family: "Roboto Mono", monospace;
