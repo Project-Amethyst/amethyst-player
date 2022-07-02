@@ -1,7 +1,8 @@
 <script lang="ts">
-    let keyPads = []
+    import type { KeyPad, KeyPress } from "../../types/devices";
 
-    export let keyPress;
+    let keyPads: KeyPad[] = [];
+    export let keyPress: KeyPress;
 
     /** Get the clip path for the middle pads. */
     function getCornerRadius (x: number, y: number) {
@@ -17,6 +18,9 @@
 
             case 55:
                 return "polygon(100% 0, 100% 100%, 20% 100%, 0 80%, 0 0)";
+            
+            default:
+                return "unset";
         }
     }
 
@@ -45,18 +49,18 @@
 
                             {#if (x + 1 > 0 && x + 1 < 9) && (y + 1 > 0 && y + 1 < 9)}
                                 <button
-                                        class="lp-normal-btn"
-                                        bind:this={keyPads[(x + 1) + (y + 1) * 10]}
-                                        style="clip-path: {getCornerRadius(x + 1, y + 1)};"
-                                        on:mousedown={() => keyPress((x + 1)  + (y + 1) * 10)}
+                                    class="lp-normal-btn"
+                                    bind:this={keyPads[(x + 1) + (y + 1) * 10]}
+                                    style="clip-path: {getCornerRadius(x + 1, y + 1)};"
+                                    on:mousedown={() => keyPress((x + 1)  + (y + 1) * 10)}
                                 >
 
                                 </button>
                             {:else if (x + 1 > 0 && x + 1 < 9) || (y + 1 > 0 && y + 1 < 9)}
                                 <button
-                                        class="lp-round-corner-btn"
-                                        bind:this={keyPads[(x + 1) + (y + 1) * 10]}
-                                        on:mousedown={() => keyPress((x + 1)  + (y + 1) * 10)}
+                                    class="lp-round-corner-btn"
+                                    bind:this={keyPads[(x + 1) + (y + 1) * 10]}
+                                    on:mousedown={() => keyPress((x + 1)  + (y + 1) * 10)}
                                 >
 
                                 </button>
@@ -76,8 +80,10 @@
         border: 2px solid rgb(120, 120, 120);
         border-radius: 4%;
 
-        width: calc(100% - 80px);
-        height: calc(100% - 80px);
+        position: relative;
+
+        width: 100%;
+        aspect-ratio: 1/1;
 
         padding: 4%;
     }
@@ -104,24 +110,24 @@
             justify-content: center;
             align-items: center;
 
-
             .lp-round-corner-btn {
-                padding: 0;
-                border: none;
-
                 height: 90%;
                 width: 90%;
                 border-radius: 50%;
                 background-color: rgb(80, 80, 80);
 
                 &::after {
-                    content: '';
+                    content: "";
                     display: block;
-                    width: 80%;
-                    height: 80%;
+                    box-sizing: border-box;
+
+                    height: 100%;
+                    width: 100%;
+                    
+                    padding: 2px;
+                    background-clip: content-box;
                     background-color: rgb(10, 10, 10);
                     border-radius: 50%;
-                    margin-left: 9.5%;
                 }
             }
 
@@ -134,17 +140,6 @@
                 border-radius: 10%;
                 background-color: rgb(80, 80, 80);
             }
-
-            .lp-shift-btn {
-                padding: 0;
-                border: none;
-
-                height: 35%;
-                width: 35%;
-                border-radius: 50%;
-                background-color: rgb(40, 40, 40);
-            }
-
         }
     }
 </style>

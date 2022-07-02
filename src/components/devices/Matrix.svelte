@@ -1,7 +1,8 @@
 <script lang="ts">
-    let keyPads = []
+  import type { KeyPad, KeyPress } from "../../types/devices";
 
-    export let keyPress;
+    let keyPads: KeyPad[] = [];
+    export let keyPress: KeyPress;
 
     /** Get the clip path for the middle pads. */
     function getCornerRadius (x: number, y: number) {
@@ -17,6 +18,9 @@
 
             case 55:
                 return "polygon(100% 0, 100% 100%, 20% 100%, 0 80%, 0 0)";
+
+            default:
+                return "unset";
         }
     }
 
@@ -65,8 +69,10 @@
         border: 2px solid rgb(120, 120, 120);
         border-radius: 4%;
 
-        width: calc(100% - 100px);
-        height: calc(100% - 100px);
+        position: relative;
+
+        width: 100%;
+        aspect-ratio: 1/1;
 
         padding: 3%;
     }

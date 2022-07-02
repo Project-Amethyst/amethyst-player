@@ -1,6 +1,8 @@
 <!-- Index file for the player route -->
 
 <script lang="ts">
+    import type { KeyPress } from "src/types/devices";
+
     import SettingsIcon from "carbon-icons-svelte/lib/Settings.svelte"
     import MusicIcon from "carbon-icons-svelte/lib/Music.svelte"
     import FolderIcon from "carbon-icons-svelte/lib/FolderAdd.svelte"
@@ -10,9 +12,11 @@
     import LaunchpadX from "../../components/devices/LaunchpadX.svelte";
     import LaunchpadProMk3 from "../../components/devices/LaunchpadProMk3.svelte";
     import Matrix from "../../components/devices/Matrix.svelte";
+    
     import Popup from "../../components/Popup.svelte";
     import Dropdown from "../../components/Dropdown.svelte";
-    import {onMount} from "svelte";
+
+    import { onMount, SvelteComponent } from "svelte";
     import '../../shared.css';
 
     let virtualDeviceComponents = [
@@ -20,37 +24,44 @@
         { component: LaunchpadMk2 },
         { component: LaunchpadX },
         { component: LaunchpadProMk3 },
-        { component: Matrix },
-    ]
+        { component: Matrix }
+    ] as const;
 
     let settings = {
         virtualDeviceIndex: 0
-    }
+    };
 
-    let virtualDeviceComponent;
+    let virtualDeviceComponent: (typeof virtualDeviceComponents)[number]["component"];
     $: virtualDeviceComponent = virtualDeviceComponents[settings.virtualDeviceIndex].component;
 
-    let launchpad;
+    let device: 
+      | LaunchpadProMk2
+      | LaunchpadMk2
+      | LaunchpadX
+      | LaunchpadProMk3
+      | Matrix
+    ;
 
-    let showSettings;
+    let showSettings: boolean;
 
-    function virtualKeyPressed(pitch: number) {
-        console.log("Virtual Launchpad Button " + pitch + " has been pressed")
+    const virtualKeyPressed: KeyPress = (keyPad: number) => {
+        console.info("Virtual Device Button", keyPad, "has been pressed");
     }
 
-    function calculateLaunchpadScale() {
-
-    }
+    const calculateDeviceScale = () => {
+      // TODO: i guess ?
+    };
 
     onMount(() => {
-        launchpad.rgb_led(44, 63, 0, 0) // It takes rgb byte values from 0-63
-    })
+        // It takes RGB byte values from 0-63.
+        device.rgb_led(44, 63, 0, 0);
+    });
 </script>
 
 <main>
     <div class="amethyst-player-header center-class" style="justify-content: flex-start">
         <div class="center-class" style="gap: 20px; margin-left: 10px;">
-            <img src="logo-256.png" width="75" height="75">
+            <img src="logo-256.png" alt="Amethyst's logo" width="75" height="75" />
 
             <span>Amethyst Player</span>
         </div>
@@ -73,7 +84,12 @@
 
             <div class="sidebar-block">
                 <div class="icon-holder">
-                    <img height="50%" style="border-radius: 50%; border: 2px solid rgb(80, 80, 80);" src="https://yt3.ggpht.com/f4s7T6OpDAjpOLZTPXfkKCIxiIbq5qWsBtNxmfq4x3WI6TMkDnYnMSPVhRNbNowS8gGI3M5ymzU=s88-c-k-c0x00ffffff-no-rj">
+                    <img
+                      alt="Clementshow's icon"
+                      height="50%"
+                      style="border-radius: 50%; border: 2px solid rgb(80, 80, 80);"
+                      src="https://yt3.ggpht.com/f4s7T6OpDAjpOLZTPXfkKCIxiIbq5qWsBtNxmfq4x3WI6TMkDnYnMSPVhRNbNowS8gGI3M5ymzU=s88-c-k-c0x00ffffff-no-rj"
+                    />
                 </div>
 
                 <div class="control-holder creator-name">
@@ -83,7 +99,7 @@
 
             <div class="sidebar-block">
                 <div class="icon-holder">
-                    <MusicIcon size={38}/>
+                    <MusicIcon size={32}/>
                 </div>
 
                 <div class="control-holder song-info">
@@ -96,7 +112,7 @@
 
             <div class="sidebar-block clickable">
                 <div class="icon-holder">
-                    <FolderIcon size={38}/>
+                    <FolderIcon size={32}/>
                 </div>
 
                 <div class="control-holder left-text">
@@ -106,7 +122,7 @@
 
             <div class="sidebar-block clickable" on:click={() => showSettings = true}>
                 <div class="icon-holder">
-                    <SettingsIcon size={38}/>
+                    <SettingsIcon size={32}/>
                 </div>
 
                 <div class="control-holder left-text">
@@ -120,7 +136,7 @@
             <div class="amethyst-player-content">
                 <div class="amethyst-player-launchpad-holder center-class">
                     <div style="height: 50vh; width: 50vh;" class="center-class">
-                        <svelte:component this={virtualDeviceComponent} bind:this={launchpad} keyPress={(p) => virtualKeyPressed(p)}/>
+                        <svelte:component this={virtualDeviceComponent} bind:this={device} keyPress={virtualKeyPressed}/>
                     </div>
                 </div>
             </div>
@@ -144,16 +160,18 @@
                 </div>
 
                 <div class="setting-option">
-                    <Dropdown options={
-                        [
-                            "Launchpad Pro Mk2",
-                            "Launchpad Mk2",
-                            "Launchpad X",
-                            "Launchpad Pro Mk3",
-                            "Matrix"
-                        ]
-                    } bind:value={settings.virtualDeviceIndex} />
-
+                    <Dropdown
+                        bind:value={settings.virtualDeviceIndex}
+                        options={
+                            [
+                                "Launchpad Pro Mk2",
+                                "Launchpad Mk2",
+                                "Launchpad X",
+                                "Launchpad Pro Mk3",
+                                "Matrix"
+                            ]
+                        }
+                    />
                 </div>
             </div>
 

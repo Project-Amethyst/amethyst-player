@@ -1,7 +1,8 @@
 <script lang="ts">
-    let keyPads = []
+    import type { KeyPad, KeyPress } from "../../types/devices";
 
-    export let keyPress;
+    let keyPads: KeyPad[] = [];
+    export let keyPress: KeyPress;
 
     /** Get the clip path for the middle pads. */
     function getCornerRadius (x: number, y: number) {
@@ -17,6 +18,9 @@
 
             case 55:
                 return "polygon(100% 0, 100% 100%, 20% 100%, 0 80%, 0 0)";
+            
+            default:
+                return "unset";
         }
     }
 
@@ -90,8 +94,10 @@
         border: 2px solid rgb(120, 120, 120);
         border-radius: 6%;
 
-        width: calc(100% - 80px);
-        height: calc(100% - 80px);
+        position: relative;
+
+        width: 100%;
+        aspect-ratio: 1/1;
 
         padding: 4%;
     }
@@ -118,7 +124,6 @@
             justify-content: center;
             align-items: center;
 
-
             .lp-round-corner-btn {
                 padding: 0;
                 border: none;
@@ -129,18 +134,21 @@
                 background-color: rgb(80, 80, 80);
 
                 &::after {
-                    content: '';
-                    display: block;
-                    width: 80%;
-                    height: 80%;
-                    background-color: rgb(10, 10, 10);
-                    border-radius: 50%;
-                    margin-left: 9.5%;
+                  content: "";
+                  display: block;
+                  box-sizing: border-box;
+
+                  height: 100%;
+                  width: 100%;
+                  
+                  padding: 2px;
+                  background-clip: content-box;
+                  background-color: rgb(10, 10, 10);
+                  border-radius: 50%;
                 }
             }
 
             .lp-normal-btn {
-                padding: 0;
                 border: none;
 
                 height: 92%;
@@ -167,7 +175,9 @@
         height: 3%;
         border-radius: 30% 30% 0 0;
         background-color: rgb(80, 80, 80);
-        margin-top: 1.4%;
-        margin-left: 48.5%;
+
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        margin: 0 auto;
     }
 </style>

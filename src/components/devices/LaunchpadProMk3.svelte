@@ -1,7 +1,8 @@
 <script lang="ts">
-    let keyPads = []
+    import type { KeyPad, KeyPress } from "../../types/devices";
 
-    export let keyPress;
+    let keyPads: KeyPad[] = [];
+    export let keyPress: KeyPress;
 
     /** Get the clip path for the middle pads. */
     function getCornerRadius (x: number, y: number) {
@@ -17,6 +18,9 @@
 
             case 55:
                 return "polygon(100% 0, 100% 100%, 20% 100%, 0 80%, 0 0)";
+
+            default:
+                return "unset";
         }
     }
 
@@ -44,9 +48,9 @@
 
                         {#if x === 0 && y === 9}
                             <button
-                                    class="lp-shift-btn"
-                                    bind:this={keyPads[x + y * 10]}
-                                    on:mousedown={() => keyPress(x + y * 10)}
+                                class="lp-shift-btn"
+                                bind:this={keyPads[x + y * 10]}
+                                on:mousedown={() => keyPress(x + y * 10)}
                             >
 
                             </button>
@@ -66,10 +70,10 @@
                             </div>
                         {:else if (x > 0 && x < 9) && (y > 0 && y < 9)}
                             <button
-                                    class="lp-normal-btn"
-                                    bind:this={keyPads[x + y * 10]}
-                                    style="clip-path: {getCornerRadius(x, y)};"
-                                    on:mousedown={() => keyPress(x + y * 10)}
+                                class="lp-normal-btn"
+                                bind:this={keyPads[x + y * 10]}
+                                style="clip-path: {getCornerRadius(x, y)};"
+                                on:mousedown={() => keyPress(x + y * 10)}
                             >
 
                             </button>
@@ -77,26 +81,26 @@
                             {#if y === 0}
                                 <div class="lp-round-corner-btn-column">
                                     <button
-                                            class="lp-round-corner-btn-half"
-                                            bind:this={keyPads[x + (y + 10) * 10]}
-                                            on:mousedown={() => keyPress(x + (y + 10) * 10)}
+                                        class="lp-round-corner-btn-half"
+                                        bind:this={keyPads[x + (y + 10) * 10]}
+                                        on:mousedown={() => keyPress(x + (y + 10) * 10)}
                                     >
 
                                     </button>
 
                                     <button
-                                            class="lp-round-corner-btn-half"
-                                            bind:this={keyPads[x + y * 10]}
-                                            on:mousedown={() => keyPress(x + y * 10)}
+                                        class="lp-round-corner-btn-half"
+                                        bind:this={keyPads[x + y * 10]}
+                                        on:mousedown={() => keyPress(x + y * 10)}
                                     >
 
                                     </button>
                                 </div>
                             {:else}
                                 <button
-                                        class="lp-round-corner-btn"
-                                        bind:this={keyPads[x + y * 10]}
-                                        on:mousedown={() => keyPress(x + y * 10)}
+                                    class="lp-round-corner-btn"
+                                    bind:this={keyPads[x + y * 10]}
+                                    on:mousedown={() => keyPress(x + y * 10)}
                                 >
 
                                 </button>
@@ -116,8 +120,10 @@
         border: 2px solid rgb(120, 120, 120);
         border-radius: 2%;
 
-        width: calc(100% - 80px);
-        height: calc(100% - 80px);
+        position: relative;
+
+        width: 100%;
+        aspect-ratio: 1/1;
 
         padding: 4%;
     }
@@ -144,24 +150,24 @@
             justify-content: center;
             align-items: center;
 
-
             .lp-round-corner-btn {
-                padding: 0;
-                border: none;
-
                 height: 90%;
                 width: 90%;
                 border-radius: 5%;
                 background-color: rgb(80, 80, 80);
 
                 &::after {
-                    content: '';
+                    content: "";
                     display: block;
-                    width: 85%;
-                    height: 85%;
+                    box-sizing: border-box;
+
+                    height: 100%;
+                    width: 100%;
+                    
+                    padding: 2px;
+                    background-clip: content-box;
                     background-color: rgb(10, 10, 10);
                     border-radius: 5%;
-                    margin-left: 7.5%;
                 }
             }
 
@@ -177,30 +183,28 @@
                 gap: 12.5%;
 
                 .lp-round-corner-btn-half {
-                    padding: 0;
-                    border: none;
-
                     height: 100%;
                     width: 92%;
                     border-radius: 5%;
                     background-color: rgb(80, 80, 80);
 
                     &::after {
-                        content: '';
+                        content: "";
                         display: block;
-                        width: 85%;
-                        height: 70%;
+                        box-sizing: border-box;
+
+                        height: 100%;
+                        width: 100%;
+                        
+                        padding: 1.5px;
+                        background-clip: content-box;
                         background-color: rgb(10, 10, 10);
                         border-radius: 5%;
-                        margin-left: 7%;
                     }
                 }
             }
 
             .lp-normal-btn {
-                padding: 0;
-                border: none;
-
                 height: 92%;
                 width: 92%;
                 border-radius: 5%;
@@ -208,9 +212,6 @@
             }
 
             .lp-logo {
-                padding: 0;
-                border: none;
-
                 height: 90%;
                 width: 90%;
                 border-radius: 8%;
@@ -264,22 +265,23 @@
             }
 
             .lp-shift-btn {
-                padding: 0;
-                border: none;
-
                 height: 60%;
                 width: 60%;
                 border-radius: 15%;
                 background-color: rgb(80, 80, 80);
 
                 &::after {
-                    content: '';
+                    content: "";
                     display: block;
-                    width: 80%;
-                    height: 80%;
+                    box-sizing: border-box;
+
+                    height: 100%;
+                    width: 100%;
+                    
+                    padding: 2px;
+                    background-clip: content-box;
                     background-color: rgb(10, 10, 10);
                     border-radius: 5%;
-                    margin-left: 10%;
                 }
             }
 

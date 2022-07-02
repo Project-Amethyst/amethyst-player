@@ -1,21 +1,23 @@
 <script lang="ts">
-    import '../shared.css'
-
-    import CaretDownIcon from "carbon-icons-svelte/lib/CaretDown.svelte"
+    import CaretDownIcon from "carbon-icons-svelte/lib/CaretDown.svelte";
 
     export let options: string[];
     export let value: number = 0;
 
     let showOptions: boolean;
+    let dropdownButton: HTMLDivElement;
 
-    let dropdownButton;
+    function clickOutsideOptions(node: HTMLDivElement) {
+        const handleClick = (event: MouseEvent) => {
+            if (!event.target) return;
+            const target = event.target as HTMLElement;
 
-    function clickOutsideOptions(node) {
-        const handleClick = (event) => {
-            if(dropdownButton.contains(event.target)) return; // Recognizes if the dropdown button was pressed again
+            // Recognizes if the dropdown button was pressed again.
+            if (dropdownButton.contains(target)) return;
 
-            if (!node.contains(event.target)) {
-                node.dispatchEvent(new CustomEvent("clickoutside"));
+            // Close the dropdown if we click anywhere else.
+            if (!node.contains(target)) {
+                showOptions = false
             }
         };
 
@@ -36,12 +38,12 @@
         </div>
 
         <div class="right-portion">
-            <CaretDownIcon size={22}/>
+            <CaretDownIcon size={20} />
         </div>
     </div>
 
     {#if showOptions}
-        <div class="dropdown-select-options" use:clickOutsideOptions on:clickoutside={() => showOptions = false}>
+        <div class="dropdown-select-options" use:clickOutsideOptions>
             {#each options as option}
                 <div class="dropdown-option" on:click={() => {
                     value = options.indexOf(option)
@@ -61,7 +63,7 @@
         flex-direction: row;
         cursor: pointer;
 
-        height: 30px;
+        height: 34px;
         border-radius: 8px;
 
         background-color: rgb(20, 20, 20);
@@ -102,13 +104,14 @@
         background-color: rgb(30, 30, 30);
         border: 2px solid rgb(50, 50, 50);
         border-radius: 8px;
+
         display: flex;
         flex-direction: column;
+        
         gap: 10px;
-        padding: 10px 20px 10px 10px;
-
+        padding: 10px;
+        
         position: fixed;
-
         margin-top: 38px;
 
         .dropdown-option {
@@ -128,8 +131,7 @@
             background-color: rgb(40, 40, 40);
 
             border-radius: 6px;
-
-            padding: 5px;
+            padding: 16px;
 
             user-select: none;
             -moz-user-select: none;

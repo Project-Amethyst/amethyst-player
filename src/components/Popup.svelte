@@ -1,10 +1,13 @@
 <script lang="ts">
     export let show: boolean;
 
-    export function clickOutside(node) {
-        const handleClick = (event) => {
-            if (!node.contains(event.target)) {
-                node.dispatchEvent(new CustomEvent("outclick"));
+    export function clickOutside(node: HTMLDivElement) {
+        const handleClick = (event: MouseEvent) => {
+            if (!event.target) return;
+            const target = event.target as HTMLElement;
+
+            if (!node.contains(target)) {
+              show = false
             }
         };
 
@@ -21,8 +24,8 @@
 
 <div class="popup-element {show? 'active' : 'inactive'}">
     {#if show}
-        <div class="popup-inner" use:clickOutside on:outclick={() => show = false}>
-            <slot/>
+        <div class="popup-inner" use:clickOutside>
+            <slot />
         </div>
     {/if}
 </div>
