@@ -63,11 +63,12 @@
     .lp-border {
         background: rgb(20, 20, 20);
         border: 2px solid rgb(120, 120, 120);
-        border-radius: 16px;
+        border-radius: 4%;
 
-        width: fit-content;
+        width: calc(100% - 100px);
+        height: calc(100% - 100px);
 
-        padding: 15px;
+        padding: 3%;
     }
 
     .lp-controls {
@@ -75,17 +76,18 @@
         width: 100%;
 
         display: flex;
-        gap: 6px;
+        gap: 1.5%;
         flex-direction: column-reverse;
 
         .lp-controls-row {
+            height: 100%;
             display: flex;
-            gap: 6px;
+            gap: 1.5%;
         }
 
         .lp-btn-parent {
-            height: 35px;
-            width: 35px;
+            height: 100%;
+            width: 100%;
 
             display: flex;
             justify-content: center;
@@ -95,8 +97,8 @@
                 padding: 0;
                 border: none;
 
-                height: 32px;
-                width: 32px;
+                height: 92%;
+                width: 92%;
                 border-radius: 10%;
                 background-color: rgb(80, 80, 80);
             }

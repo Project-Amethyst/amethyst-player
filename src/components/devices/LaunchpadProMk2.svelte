@@ -88,11 +88,12 @@
     .lp-border {
         background: rgb(20, 20, 20);
         border: 2px solid rgb(120, 120, 120);
-        border-radius: 32px;
+        border-radius: 6%;
 
-        width: fit-content;
+        width: calc(100% - 80px);
+        height: calc(100% - 80px);
 
-        padding: 20px;
+        padding: 4%;
     }
 
     .lp-controls {
@@ -100,17 +101,18 @@
         width: 100%;
 
         display: flex;
-        gap: 6px;
+        gap: 1.5%;
         flex-direction: column-reverse;
 
         .lp-controls-row {
+            height: 100%;
             display: flex;
-            gap: 6px;
+            gap: 1.5%;
         }
 
         .lp-btn-parent {
-            height: 35px;
-            width: 35px;
+            height: 100%;
+            width: 100%;
 
             display: flex;
             justify-content: center;
@@ -121,19 +123,19 @@
                 padding: 0;
                 border: none;
 
-                height: 30px;
-                width: 30px;
+                height: 90%;
+                width: 90%;
                 border-radius: 50%;
                 background-color: rgb(80, 80, 80);
 
                 &::after {
                     content: '';
                     display: block;
-                    width: 24px;
-                    height: 24px;
+                    width: 80%;
+                    height: 80%;
                     background-color: rgb(10, 10, 10);
                     border-radius: 50%;
-                    margin-left: 3px;
+                    margin-left: 9.5%;
                 }
             }
 
@@ -141,8 +143,8 @@
                 padding: 0;
                 border: none;
 
-                height: 32px;
-                width: 32px;
+                height: 92%;
+                width: 92%;
                 border-radius: 10%;
                 background-color: rgb(80, 80, 80);
             }
@@ -151,8 +153,8 @@
                 padding: 0;
                 border: none;
 
-                height: 15px;
-                width: 15px;
+                height: 35%;
+                width: 35%;
                 border-radius: 50%;
                 background-color: rgb(40, 40, 40);
             }
@@ -161,13 +163,11 @@
     }
 
     .lp-mode-light {
-        width: 10px;
-        height: 10px;
+        width: 3%;
+        height: 3%;
         border-radius: 30% 30% 0 0;
         background-color: rgb(80, 80, 80);
-
-        position: fixed;
-        margin-top: 10px;
-        margin-left: 197px;
+        margin-top: 1.4%;
+        margin-left: 48.5%;
     }
 </style>

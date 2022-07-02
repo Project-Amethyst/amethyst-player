@@ -119,7 +119,7 @@
         <div class="content-part">
             <div class="amethyst-player-content">
                 <div class="amethyst-player-launchpad-holder center-class">
-                    <div style="transform: scale(1.4)">
+                    <div style="height: 50vh; width: 50vh;" class="center-class">
                         <svelte:component this={virtualDeviceComponent} bind:this={launchpad} keyPress={(p) => virtualKeyPressed(p)}/>
                     </div>
                 </div>
@@ -143,7 +143,7 @@
                     <span>Virtual Device:</span>
                 </div>
 
-                <div>
+                <div class="setting-option">
                     <Dropdown options={
                         [
                             "Launchpad Pro Mk2",
@@ -162,7 +162,7 @@
                     <span>Language</span>
                 </div>
 
-                <div>
+                <div class="setting-option">
                     <Dropdown options={
                         [
                             "🇺🇸 English"
@@ -172,44 +172,6 @@
                 </div>
             </div>
 
-            <div class="setting">
-                <div class="setting-name">
-                    <span>Midi Output:</span>
-                </div>
-
-                <div>
-                    <Dropdown options={
-                        GridController.availableDeviceOutputs().map(output => output.name)
-                    } on:click={() => console.log(GridController.availableDeviceInputs().map(input => input.name))}/>
-
-                </div>
-            </div>
-
-            <div class="setting">
-                <div class="setting-name">
-                    <span>Midi Input:</span>
-                </div>
-
-                <div>
-                    <Dropdown options={
-                        GridController.availableDeviceInputs().map(input => input.name)
-                    }/>
-
-                </div>
-            </div>
-
-            <div class="setting">
-                <div class="setting-name">
-                    <span>Midi Config:</span>
-                </div>
-
-                <div>
-                    <Dropdown options={
-                        GridController.configList()
-                    } />
-
-                </div>
-            </div>
         </div>
     </Popup>
 </main>
@@ -423,6 +385,7 @@
     .settings-popup {
         display: flex;
         flex-direction: column;
+        gap: 10px;
 
         .popup-header {
             height: 30px;
@@ -450,6 +413,12 @@
 
                 font-family: "Roboto Mono", sans-serif;
                 font-weight: 400;
+            }
+
+            .setting-option {
+                min-width: 250px;
+                display: flex;
+                flex-direction: row-reverse;
             }
         }
     }

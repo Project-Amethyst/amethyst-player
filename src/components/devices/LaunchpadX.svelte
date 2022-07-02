@@ -65,7 +65,15 @@
                                 >
 
                                     <div class="logo-inner" bind:this={keyPads[(x + 1) + (y + 1) * 10]}>
+                                        <div class="logo-holder">
+                                            <div class="logo-split">
+                                                <div class="top-part"></div>
+                                            </div>
 
+                                            <div class="logo-split">
+                                                <div class="bottom-part"></div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                 </div>
@@ -83,11 +91,12 @@
     .lp-border {
         background: rgb(20, 20, 20);
         border: 2px solid rgb(120, 120, 120);
-        border-radius: 8px;
+        border-radius: 2%;
 
-        width: fit-content;
+        width: calc(100% - 90px);
+        height: calc(100% - 90px);
 
-        padding: 15px;
+        padding: 4%;
     }
 
     .lp-controls {
@@ -99,13 +108,14 @@
         flex-direction: column-reverse;
 
         .lp-controls-row {
+            height: 100%;
             display: flex;
             gap: 6px;
         }
 
         .lp-btn-parent {
-            height: 35px;
-            width: 35px;
+            height: 100%;
+            width: 100%;
 
             display: flex;
             justify-content: center;
@@ -116,19 +126,19 @@
                 padding: 0;
                 border: none;
 
-                height: 30px;
-                width: 30px;
+                height: 90%;
+                width: 90%;
                 border-radius: 8%;
                 background-color: rgb(80, 80, 80);
 
                 &::after {
                     content: '';
                     display: block;
-                    width: 26px;
-                    height: 26px;
+                    width: 85%;
+                    height: 85%;
                     background-color: rgb(10, 10, 10);
                     border-radius: 8%;
-                    margin-left: 2px;
+                    margin-left: 7.5%;
                 }
             }
 
@@ -136,8 +146,8 @@
                 padding: 0;
                 border: none;
 
-                height: 32px;
-                width: 32px;
+                height: 90%;
+                width: 90%;
                 border-radius: 8%;
                 background-color: rgb(5, 5, 5);
 
@@ -146,38 +156,44 @@
                 align-items: center;
 
                 .logo-inner {
-                    width: 26px;
-                    height: 26px;
+                    width: 85%;
+                    height: 85%;
 
                     background-color: rgb(80, 80, 80);
                     border-radius: 16%;
+                    overflow: hidden;
 
-                    &:before {
-                        content: " ";
+                    .logo-holder {
+                        height: 100%;
+                        width: 100%;
+                        transform: rotateZ(-45deg) scale(0.9);
 
-                        position: fixed;
+                        .logo-split {
+                            height: 50%;
+                            width: 100%;
 
-                        transform: rotateZ(-45deg);
-                        margin-top: 7px;
-                        margin-left: 2.5px;
-                        width: 15px;
-                        height: 6px;
-                        background-color: black;
-                    }
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
 
-                    &:after {
-                        content: " ";
+                            .top-part {
+                                background-color: black;
+                                margin-top: 10%;
 
-                        position: fixed;
+                                height: 60%;
+                                width: 70%;
+                            }
 
-                        transform: rotateZ(-45deg);
-                        margin-top: 13px;
-                        margin-left: 8.5px;
-                        width: 15px;
-                        height: 6px;
-                        background-color: black;
+                            .bottom-part {
+                                background-color: black;
+                                margin-bottom: 10%;
 
-                        border-radius: 0 0 2px 0;
+                                height: 60%;
+                                width: 70%;
+
+                                border-radius: 0 0 0.75vh 0;
+                            }
+                        }
                     }
                 }
             }
@@ -186,8 +202,8 @@
                 padding: 0;
                 border: none;
 
-                height: 32px;
-                width: 32px;
+                height: 90%;
+                width: 90%;
                 border-radius: 8%;
                 background-color: rgb(80, 80, 80);
             }
