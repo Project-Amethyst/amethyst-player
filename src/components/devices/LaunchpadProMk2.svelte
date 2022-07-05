@@ -1,8 +1,9 @@
 <script lang="ts">
-    import type { KeyPad, KeyPress } from "../../types/devices";
+    import type { KeyPad, KeyPress, KeyRelease } from "../../types/devices";
 
     let keyPads: KeyPad[] = [];
     export let keyPress: KeyPress;
+    export let keyRelease: KeyRelease;
 
     /** Get the clip path for the middle pads. */
     function getCornerRadius (x: number, y: number) {
@@ -24,9 +25,8 @@
         }
     }
 
-    export function rgb_led(pitch: number, r: number, g: number, b: number) {
-        if(pitch === 0) return;
-
+    export function rgb_led(x: number, y:number, r: number, g: number, b: number) {
+        let pitch = y * 10 + x
         if(keyPads[pitch]) {
             r = 80 + r * 3;
             g = 80 + g * 3;
@@ -52,7 +52,8 @@
                             <button
                               class="lp-shift-btn"
                               bind:this={keyPads[0]}
-                              on:mousedown={() => keyPress(0)}
+                              on:mousedown={() => keyPress(0, 0)}
+                              on:mouseup={() => keyRelease(0, 0)}
                             >
 
                             </button>
@@ -63,7 +64,8 @@
                             class="lp-normal-btn"
                             bind:this={keyPads[x + y * 10]}
                             style="clip-path: {getCornerRadius(x, y)};"
-                            on:mousedown={() => keyPress(x + y * 10)}
+                            on:mousedown={() => keyPress(x, y)}
+                            on:mouseup={() => keyRelease(x, y)}
                           >
 
                           </button>
@@ -71,7 +73,8 @@
                           <button
                             class="lp-round-corner-btn"
                             bind:this={keyPads[x + y * 10]}
-                            on:mousedown={() => keyPress(x + y * 10)}
+                            on:mousedown={() => keyPress(x, y)}
+                            on:mouseup={() => keyRelease(x, y)}
                           >
 
                           </button>

@@ -1,7 +1,7 @@
 <!-- Index file for the player route -->
 
 <script lang="ts">
-    import type { KeyPress } from "src/types/devices";
+    import type { KeyPress, KeyRelease } from "src/types/devices";
 
     import SettingsIcon from "carbon-icons-svelte/lib/Settings.svelte"
     import MusicIcon from "carbon-icons-svelte/lib/Music.svelte"
@@ -13,7 +13,7 @@
     import LaunchpadProMk3 from "../../components/devices/LaunchpadProMk3.svelte";
     import Matrix from "../../components/devices/Matrix.svelte";
     
-    import Popup from "../../components/Popup.svelte";
+    import Popup from "../../components/Popup.svelte"; 
     import Dropdown from "../../components/Dropdown.svelte";
 
     import { onMount, SvelteComponent } from "svelte";
@@ -44,18 +44,30 @@
 
     let showSettings: boolean;
 
-    const virtualKeyPressed: KeyPress = (keyPad: number) => {
-        console.info("Virtual Device Button", keyPad, "has been pressed");
+    const virtualKeyPressed: KeyPress = (x: number, y:number) => {
+        console.info(`Virtual Button ${x}-${y} has been pressed`);
+        device.rgb_led(x, y, 255, 255, 255);
+    }
+
+    const virtualKeyReleased: KeyRelease = (x: number, y:number) => {
+        console.info(`Virtual Button ${x}-${y} has been released`);
+        device.rgb_led(x, y, 0, 0, 0);
     }
 
     const calculateDeviceScale = () => {
       // TODO: i guess ?
     };
 
-    onMount(() => {
-        // It takes RGB byte values from 0-63.
-        device.rgb_led(44, 63, 0, 0);
-    });
+    const loadProject = () => {
+        console.log("Load File Selector")
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.onchange = e => { 
+            var file = e?.target?.files[0]; 
+            console.log(file);
+        }
+        input.click();
+    };
 </script>
 
 <main>
@@ -110,7 +122,7 @@
 
             <div style="height: 100%;"></div>
 
-            <div class="sidebar-block clickable">
+            <div class="sidebar-block clickable" on:click={loadProject}>
                 <div class="icon-holder">
                     <FolderIcon size={32}/>
                 </div>
@@ -136,7 +148,7 @@
             <div class="amethyst-player-content">
                 <div class="amethyst-player-launchpad-holder center-class">
                     <div style="height: 50vh; width: 50vh; padding: 20px;" class="center-class">
-                        <svelte:component this={virtualDeviceComponent} bind:this={device} keyPress={virtualKeyPressed}/>
+                        <svelte:component this={virtualDeviceComponent} bind:this={device} keyPress={virtualKeyPressed} keyRelease={virtualKeyReleased}/>
                     </div>
                 </div>
             </div>
