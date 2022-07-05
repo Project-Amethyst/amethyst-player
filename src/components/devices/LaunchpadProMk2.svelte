@@ -8,16 +8,16 @@
     /** Get the clip path for the middle pads. */
     function getCornerRadius (x: number, y: number) {
         switch (x + y * 10) {
-            case 44:
+            case 54:
               return "polygon(80% 0, 100% 20%, 100% 100%, 0 100%, 0 0)";
 
-            case 45:
+            case 55:
                 return "polygon(20% 0, 100% 0, 100% 100%, 0 100%, 0 20%)";
 
-            case 54:
+            case 44:
                 return "polygon(100% 0, 100% 80%, 80% 100%, 0 100%, 0 0)";
 
-            case 55:
+            case 45:
                 return "polygon(100% 0, 100% 100%, 20% 100%, 0 80%, 0 0)";
             
             default:
@@ -48,7 +48,7 @@
                 {#each Array(10) as _2, x}
                     <div class="lp-btn-parent">
 
-                        {#if x === 0 && y === 9}
+                        {#if x === 0 && y === 0}
                             <button
                               class="lp-shift-btn"
                               bind:this={keyPads[0]}
@@ -111,7 +111,7 @@
 
         display: flex;
         gap: 1.5%;
-        flex-direction: column-reverse;
+        flex-direction: column;
 
         .lp-controls-row {
             height: 100%;
