@@ -23,6 +23,8 @@
 
     let sidebarLocked: boolean = false;
 
+    let fileUpload: HTMLInputElement;
+
     let virtualDeviceComponents = [
         { component: LaunchpadProMk2 },
         { component: LaunchpadMk2 },
@@ -128,10 +130,12 @@
                 </div>
             </div>
 
-            <div class="sidebar-block clickable">
+            <div class="sidebar-block clickable" on:click={() => fileUpload.click()}>
                 <div class="icon-holder">
                     <FolderIcon size={32}/>
                 </div>
+
+                <input style="display: none;" bind:this={fileUpload} type="file">
 
                 <div class="control-holder left-text">
                     <span>Open local Project</span>
