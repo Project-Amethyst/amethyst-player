@@ -2,11 +2,11 @@
 	"name": "amethyst-player",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "svelte-kit dev",
-		"build": "svelte-kit build",
+		"dev": "vite dev",
+		"build": "vite build",
 		"package": "svelte-kit package",
-		"preview": "svelte-kit preview",
-		"prepare": "svelte-kit sync",
+		"preview": "vite preview",
+		"prepare": "vite sync",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch"
 	},
@@ -22,6 +22,8 @@
 	"type": "module",
 	"dependencies": {
 		"carbon-icons-svelte": "^11.1.0",
-		"scss": "^0.2.4"
+		"node-sass": "^7.0.1",
+		"scss": "^0.2.4",
+		"vite": "^3.0.0"
 	}
 }
