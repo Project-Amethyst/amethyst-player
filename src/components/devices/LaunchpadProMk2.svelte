@@ -1,7 +1,9 @@
 <script lang="ts">
-    import type { KeyPad, KeyPress, KeyRelease } from "../../types/devices";
+    import type {KeyPadElement, KeyPress, KeyRelease } from "../../types/devices";
 
-    let keyPads: KeyPad[] = [];
+    import Keypad from "./keypad.svelte";
+
+    let keyPads: KeyPadElement[] = [];
     export let keyPress: KeyPress;
     export let keyRelease: KeyRelease;
 
@@ -9,7 +11,7 @@
     function getCornerRadius (x: number, y: number) {
         switch (x + y * 10) {
             case 54:
-              return "polygon(80% 0, 100% 20%, 100% 100%, 0 100%, 0 0)";
+                return "polygon(80% 0, 100% 20%, 100% 100%, 0 100%, 0 0)";
 
             case 55:
                 return "polygon(20% 0, 100% 0, 100% 100%, 0 100%, 0 20%)";
@@ -47,37 +49,12 @@
             <div class="lp-controls-row">
                 {#each Array(10) as _2, x}
                     <div class="lp-btn-parent">
-
                         {#if x === 0 && y === 0}
-                            <button
-                              class="lp-shift-btn"
-                              bind:this={keyPads[0]}
-                              on:mousedown={() => keyPress(0, 0)}
-                              on:mouseup={() => keyRelease(0, 0)}
-                            >
-
-                            </button>
-                        {/if}
-
-                        {#if (x > 0 && x < 9) && (y > 0 && y < 9)}
-                          <button
-                            class="lp-normal-btn"
-                            bind:this={keyPads[x + y * 10]}
-                            style="clip-path: {getCornerRadius(x, y)};"
-                            on:mousedown={() => keyPress(x, y)}
-                            on:mouseup={() => keyRelease(x, y)}
-                          >
-
-                          </button>
+                            <Keypad class="lp-shift-btn" id={[x, y]}/> 
+                        {:else if  (x > 0 && x < 9) && (y > 0 && y < 9)}
+                            <Keypad class="lp-normal-btn" style="clip-path: {getCornerRadius(x, y)};" id={[x, y]}/> 
                         {:else if (x > 0 && x < 9) || (y > 0 && y < 9)}
-                          <button
-                            class="lp-round-corner-btn"
-                            bind:this={keyPads[x + y * 10]}
-                            on:mousedown={() => keyPress(x, y)}
-                            on:mouseup={() => keyRelease(x, y)}
-                          >
-
-                          </button>
+                            <Keypad class="lp-round-corner-btn" id={[x, y]}/> 
                         {/if}
 
                     </div>
@@ -127,7 +104,7 @@
             justify-content: center;
             align-items: center;
 
-            .lp-round-corner-btn {
+            :global(.lp-round-corner-btn) {
                 padding: 0;
                 border: none;
 
@@ -151,7 +128,7 @@
                 }
             }
 
-            .lp-normal-btn {
+            :global(.lp-normal-btn) {
                 border: none;
 
                 height: 92%;
@@ -160,7 +137,7 @@
                 background-color: rgb(80, 80, 80);
             }
 
-            .lp-shift-btn {
+            :global(.lp-shift-btn) {
                 padding: 0;
                 border: none;
 

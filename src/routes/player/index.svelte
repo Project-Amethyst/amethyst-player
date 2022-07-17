@@ -36,10 +36,10 @@
 
     let device: 
       | LaunchpadProMk2
-      | LaunchpadMk2
-      | LaunchpadX
-      | LaunchpadProMk3
-      | Matrix
+    //   | LaunchpadMk2
+    //   | LaunchpadX
+    //   | LaunchpadProMk3
+    //   | Matrix
     ;
 
     let showSettings: boolean;

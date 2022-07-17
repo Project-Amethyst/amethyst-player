@@ -9,13 +9,10 @@
         switch (x + y * 10) {
             case 44:
                 return "polygon(80% 0, 100% 20%, 100% 100%, 0 100%, 0 0)";
-
             case 45:
                 return "polygon(20% 0, 100% 0, 100% 100%, 0 100%, 0 20%)";
-
             case 54:
                 return "polygon(100% 0, 100% 80%, 80% 100%, 0 100%, 0 0)";
-
             case 55:
                 return "polygon(100% 0, 100% 100%, 20% 100%, 0 80%, 0 0)";
             
