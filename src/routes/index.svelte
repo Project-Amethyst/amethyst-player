@@ -3,29 +3,17 @@
 <script lang="ts">
     import type { KeyID, KeyPress, KeyRelease } from "src/types/devices";
 
+    import {virtualDeviceComponents} from "../components/devices/Devices"
+
     import SettingsIcon from "carbon-icons-svelte/lib/Settings.svelte"
     import MusicIcon from "carbon-icons-svelte/lib/Music.svelte"
     import FolderIcon from "carbon-icons-svelte/lib/FolderAdd.svelte"
 
-    import LaunchpadProMk2 from "../components/devices/LaunchpadProMk2.svelte";
-    import LaunchpadMk2 from "../components/devices/LaunchpadMk2.svelte";
-    import LaunchpadX from "../components/devices/LaunchpadX.svelte";
-    import LaunchpadProMk3 from "../components/devices/LaunchpadProMk3.svelte";
-    import Matrix from "../components/devices/Matrix.svelte";
-    
     import Popup from "../components/Popup.svelte"; 
     import Dropdown from "../components/Dropdown.svelte";
 
     import { onMount, SvelteComponent } from "svelte";
     import '../shared.css';
-
-    let virtualDeviceComponents = [
-        { component: LaunchpadProMk2 },
-        { component: LaunchpadMk2 },
-        { component: LaunchpadX },
-        { component: LaunchpadProMk3 },
-        { component: Matrix }
-    ] as const;
 
     let settings = {
         virtualDeviceIndex: 0
@@ -34,13 +22,7 @@
     let virtualDeviceComponent: (typeof virtualDeviceComponents)[number]["component"];
     $: virtualDeviceComponent = virtualDeviceComponents[settings.virtualDeviceIndex].component;
 
-    let device: 
-      | LaunchpadProMk2
-    //   | LaunchpadMk2
-    //   | LaunchpadX
-    //   | LaunchpadProMk3
-    //   | Matrix
-    ;
+    let device: any; //Should be fine
 
     let showSettings: boolean;
 
