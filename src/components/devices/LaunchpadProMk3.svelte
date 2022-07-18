@@ -6,6 +6,10 @@
     export let keyPress: KeyPress;
     export let keyRelease: KeyRelease;
 
+    var dimension = [10, 11];
+    var grid_dimension = [8, 8];
+    var grid_offset = [1, 1];
+
     /** Get the clip path for the middle pads. */
     function getCornerRadius (x: number, y: number) {
         switch (x + y * 10) {
@@ -38,6 +42,11 @@
     }
 
     export function rgb_led(keyID: KeyID, r: number, g: number, b: number) {
+        if(Array.isArray(keyID))
+        {
+            keyID[0] += grid_offset[0];
+            keyID[1] += grid_offset[1];
+        }
         let index = get_index(keyID)
         if(keyPads[index]) {
             r = 80 + r * 3;
