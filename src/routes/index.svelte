@@ -19,15 +19,17 @@
 
   let settings = {
     virtualDevice: Object.keys(virtualDeviceComponents)[0],
+		projectEngine: "Unipack" //Object.keys(projectEngines)[0],
   };
 
   let virtualDeviceComponent: typeof virtualDeviceComponents[number]["component"];
   $: virtualDeviceComponent =
     virtualDeviceComponents[settings.virtualDevice].component;
 
-  let device: any; //Should be fine
-	let engine: ProjectRT = projectEngines["Unipack"](); //this will be unipack atm. Make it changeable in the future.
+	let engine: ProjectRT ; //this will be unipack atm. Make it changeable in the future.
+	$: engine = projectEngines[settings.projectEngine]();
 
+	let device: any; //Should be fine
   let showSettings: boolean;
 
   const virtualKeyPressed: KeyPress = (keyID: KeyID) => {
@@ -161,6 +163,19 @@
           <Dropdown
             bind:value_str={settings.virtualDevice}
             options={Object.keys(virtualDeviceComponents)}
+          />
+        </div>
+      </div>
+
+			<div class="setting">
+        <div class="setting-name">
+          <span>Project Engine:</span>
+        </div>
+
+        <div class="setting-option">
+          <Dropdown
+            bind:value_str={settings.projectEngine}
+            options={Object.keys(projectEngines)}
           />
         </div>
       </div>
