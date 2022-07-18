@@ -1,9 +1,9 @@
 <script lang="ts">
-    import type {KeyPadElement, KeyPress, KeyRelease } from "../../types/devices";
+    import type {KeyID, KeyPadElement, KeyPress, KeyRelease } from "../../types/devices";
 
     import Keypad from "./keypad.svelte";
 
-    let keyPads: KeyPadElement[] = [];
+    let keyPads: any[] = [];
     export let keyPress: KeyPress;
     export let keyRelease: KeyRelease;
 
@@ -27,9 +27,21 @@
         }
     }
 
-    export function rgb_led(x: number, y:number, r: number, g: number, b: number) {
-        let pitch = y * 10 + x
-        if(keyPads[pitch]) {
+    function get_index(keyID: KeyID): number {
+
+        if(Array.isArray(keyID))
+        {
+            return keyID[1] * 10 + keyID[0];
+        }
+        else
+        {
+            return keyID;
+        }
+    }
+
+    export function rgb_led(keyID: KeyID, r: number, g: number, b: number) {
+        let index = get_index(keyID)
+        if(keyPads[index]) {
             r = 80 + r * 3;
             g = 80 + g * 3;
             b = 80 + b * 3;
@@ -38,7 +50,9 @@
             if(g >= 255) g = 255;
             if(b >= 255) b = 255;
 
-            keyPads[pitch].style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+            keyPads[index].set_color(r, g, b);           
+            // console.log(keyPads[index])
+            // keyPads[index].style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
         }
     }
 </script>
@@ -50,11 +64,11 @@
                 {#each Array(10) as _2, x}
                     <div class="lp-btn-parent">
                         {#if x === 0 && y === 0}
-                            <Keypad class="lp-shift-btn" id={[x, y]}/> 
+                            <Keypad class="lp-shift-btn" id={[x, y]} bind:this={keyPads[get_index([x,y])]} keyPress={keyPress} keyRelease={keyRelease}/> 
                         {:else if  (x > 0 && x < 9) && (y > 0 && y < 9)}
-                            <Keypad class="lp-normal-btn" style="clip-path: {getCornerRadius(x, y)};" id={[x, y]}/> 
+                            <Keypad class="lp-normal-btn" style="clip-path: {getCornerRadius(x, y)};" id={[x, y]} bind:this={keyPads[get_index([x,y])]} keyPress={keyPress} keyRelease={keyRelease}/> 
                         {:else if (x > 0 && x < 9) || (y > 0 && y < 9)}
-                            <Keypad class="lp-round-corner-btn" id={[x, y]}/> 
+                            <Keypad class="lp-round-corner-btn" id={[x, y]} bind:this={keyPads[get_index([x,y])]} keyPress={keyPress} keyRelease={keyRelease}/> 
                         {/if}
 
                     </div>

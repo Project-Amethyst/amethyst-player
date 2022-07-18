@@ -1,7 +1,7 @@
 <!-- Index file for the player route -->
 
 <script lang="ts">
-    import type { KeyPress, KeyRelease } from "src/types/devices";
+    import type { KeyID, KeyPress, KeyRelease } from "src/types/devices";
 
     import SettingsIcon from "carbon-icons-svelte/lib/Settings.svelte"
     import MusicIcon from "carbon-icons-svelte/lib/Music.svelte"
@@ -44,14 +44,14 @@
 
     let showSettings: boolean;
 
-    const virtualKeyPressed: KeyPress = (x: number, y:number) => {
-        console.info(`Virtual Button ${x}-${y} has been pressed`);
-        device.rgb_led(x, y, 255, 255, 255);
+    const virtualKeyPressed: KeyPress = (keyID: KeyID) => {
+        console.info(`Virtual Button ${keyID} has been pressed`);
+        device.rgb_led(keyID, 255, 255, 255);
     }
 
-    const virtualKeyReleased: KeyRelease = (x: number, y:number) => {
-        console.info(`Virtual Button ${x}-${y} has been released`);
-        device.rgb_led(x, y, 0, 0, 0);
+    const virtualKeyReleased: KeyRelease = (keyID: KeyID) => {
+        console.info(`Virtual Button ${keyID} has been released`);
+        device.rgb_led(keyID, 0, 0, 0);
     }
 
     const calculateDeviceScale = () => {

@@ -21,7 +21,7 @@
         }
     }
 
-    export function rgb_led(pitch: number, r: number, g: number, b: number) {
+    export function rgb_led(keyID: KeyID, r: number, g: number, b: number) {
         if(keyPads[pitch]) {
             r = 80 + r * 3;
             g = 80 + g * 3;
