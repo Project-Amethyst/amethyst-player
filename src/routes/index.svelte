@@ -18,12 +18,12 @@
   import "../shared.css";
 
   let settings = {
-    virtualDeviceIndex: 0,
+    virtualDevice: Object.keys(virtualDeviceComponents)[0],
   };
 
   let virtualDeviceComponent: typeof virtualDeviceComponents[number]["component"];
   $: virtualDeviceComponent =
-    virtualDeviceComponents[settings.virtualDeviceIndex].component;
+    virtualDeviceComponents[settings.virtualDevice].component;
 
   let device: any; //Should be fine
 	let engine: ProjectRT = projectEngines["Unipack"](); //this will be unipack atm. Make it changeable in the future.
@@ -159,14 +159,8 @@
 
         <div class="setting-option">
           <Dropdown
-            bind:value={settings.virtualDeviceIndex}
-            options={[
-              "Launchpad Pro Mk2",
-              "Launchpad Mk2",
-              "Launchpad X",
-              "Launchpad Pro Mk3",
-              "Matrix",
-            ]}
+            bind:value_str={settings.virtualDevice}
+            options={Object.keys(virtualDeviceComponents)}
           />
         </div>
       </div>
