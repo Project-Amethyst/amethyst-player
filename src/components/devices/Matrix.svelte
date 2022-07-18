@@ -45,8 +45,10 @@
     export function rgb_led(keyID: KeyID, r: number, g: number, b: number) {
         if(Array.isArray(keyID))
         {
-            keyID[0] += grid_offset[0];
-            keyID[1] += grid_offset[1];
+            keyID = [
+                keyID[0] + grid_offset[0],
+                keyID[1] + grid_offset[1]
+            ];
         }
         let index = get_index(keyID)
         if(keyPads[index]) {
@@ -70,7 +72,7 @@
                 {#each Array(8) as _2, x}
                     <div class="lp-btn-parent">
                         {#if (x >= 0 && x < 9) && (y >= 0 && y < 9)}
-                        <Keypad class="lp-normal-btn" style="clip-path: {getCornerRadius(x, y)};" id={[x, y]} bind:this={keyPads[get_index([x,y])]} keyPress={keyPress} keyRelease={keyRelease}/> 
+                        <Keypad class="lp-normal-btn" style="clip-path: {getCornerRadius(x, y)};" id={[x - grid_offset[0], y - grid_offset[0]]} bind:this={keyPads[get_index([x,y])]} keyPress={keyPress} keyRelease={keyRelease}/> 
                         {/if}
                     </div>
                 {/each}
