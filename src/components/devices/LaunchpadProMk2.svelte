@@ -1,6 +1,5 @@
 <script lang="ts">
-    import type {KeyID, KeyPadElement, KeyPress, KeyRelease } from "../../types/devices";
-
+    import type {KeyID, KeyPress, KeyRelease } from "../../types/devices";
     import Keypad from "./keypad.svelte";
 
     let keyPads: any[] = [];
@@ -51,8 +50,6 @@
             if(b >= 255) b = 255;
 
             keyPads[index].set_color(r, g, b);           
-            // console.log(keyPads[index])
-            // keyPads[index].style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
         }
     }
 </script>
