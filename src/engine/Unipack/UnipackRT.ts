@@ -2,6 +2,7 @@ import type { ProjectInfo, ProjectRT } from "./ProjectRT";
 
 class UnipackRT implements ProjectRT
 {   
+    api?: object;
     info?: ProjectInfo;
     soundFiles = {};
     keySound = undefined;
@@ -10,10 +11,17 @@ class UnipackRT implements ProjectRT
     canvas = undefined;
     activeKeyLED = {};
 
+    constructor(api: object)
+    {
+        this.api = api
+    }
+
     //Meta
     LoadProjectFile(file: Blob): void
     {
-
+        console.log("Loading Unipack")
+        console.log(file);
+        this.api.setRGB(0, [1, 1], 255, 255, 255);
     }
 
     ClearProjectFile(): void{}

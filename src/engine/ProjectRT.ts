@@ -4,6 +4,7 @@ export interface ProjectInfo{
 }
 
 export interface ProjectRT {
+    constructor: (api: object) => void;
     //Meta
     LoadProjectFile: (file: Blob) => void;
     ClearProjectFile: () => void;
@@ -25,5 +26,3 @@ export interface ProjectRT {
     GetAutoplayProgress: () => [number, number];
     GetChain: () => number;
 }
-  
-  

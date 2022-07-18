@@ -27,7 +27,7 @@
     virtualDeviceComponents[settings.virtualDevice].component;
 
 	let engine: ProjectRT ; //this will be unipack atm. Make it changeable in the future.
-	$: engine = projectEngines[settings.projectEngine]();
+	$: engine = projectEngines[settings.projectEngine](api);
 
 	let device: any; //Should be fine
   let showSettings: boolean;
@@ -52,10 +52,28 @@
     input.type = "file";
     input.onchange = (e) => {
       var file = e?.target?.files[0];
-      console.log(file);
+			engine.LoadProjectFile(file);
     };
     input.click();
   };
+
+	var api =
+	{
+		setRGB: function(deviceID: number, keyID: KeyID, r: number, g: number, b: number)
+		{
+			device.rgb_led(keyID, r, g, b);
+		},
+
+		// setPalette: function(deviceID: number, keyID: KeyID, paletteID: number)
+		// {
+		// 	device.rgb_led(keyID, r, g, b);
+		// }
+
+		clear: function(deviceID: number)
+		{
+			device.clear(); //TODO: Implentment this
+		}
+	}
 </script>
 
 <main>
