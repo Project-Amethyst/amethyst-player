@@ -4,6 +4,7 @@
 
   import { virtualDeviceComponents } from "../components/devices/Devices";
 	
+	import type {canvas} from "../engine/CanvasAPI"
 	import type {ProjectRT} from "../engine/ProjectRT"
 	import {projectEngines} from "../engine/Engines"
 
@@ -57,7 +58,7 @@
     input.click();
   };
 
-	var api =
+	var api:canvas =
 	{
 		setRGB: function(deviceID: number, keyID: KeyID, r: number, g: number, b: number)
 		{

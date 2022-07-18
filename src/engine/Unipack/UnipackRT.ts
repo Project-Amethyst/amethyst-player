@@ -1,8 +1,8 @@
-import type { ProjectInfo, ProjectRT } from "./ProjectRT";
+import type { canvas, KeyID, ProjectInfo, ProjectRT } from "./ProjectRT";
 
 class UnipackRT implements ProjectRT
 {   
-    api?: object;
+    api?: canvas;
     info?: ProjectInfo;
     soundFiles = {};
     keySound = undefined;
@@ -11,7 +11,7 @@ class UnipackRT implements ProjectRT
     canvas = undefined;
     activeKeyLED = {};
 
-    constructor(api: object)
+    constructor(api: canvas)
     {
         this.api = api
     }
@@ -27,8 +27,8 @@ class UnipackRT implements ProjectRT
     ClearProjectFile(): void{}
 
     //Input
-    KeyPress(x:number, y:number): void{}
-    KeyRelease(x:number, y:number): void{}
+    KeyPress(deviceID:number, keyID:KeyID): void{}
+    KeyRelease(deviceID:number, keyID:KeyID): void{}
     ChainChange(chain:number): void{}
 
     //Autoplay
