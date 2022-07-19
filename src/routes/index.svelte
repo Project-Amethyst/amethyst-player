@@ -53,7 +53,11 @@
     input.type = "file";
     input.onchange = (e) => {
       var file = e?.target?.files[0];
-			engine.LoadProjectFile(file);
+			engine.LoadProjectFile(file).then
+      (
+        result => {alert("Project Loaded")},
+
+      )
     };
     input.click();
   };

@@ -13,18 +13,19 @@ class UnipackRT implements ProjectRT {
     keyLED = undefined;
     canvas = undefined;
     activeKeyLED = {};
+    currentChain:number = 0
 
     constructor(api: canvas) {
         this.api = api;
     }
 
     //Meta
-    LoadProjectFile(file: File): void {
+    LoadProjectFile(file: File): Promise<void> {
         console.log(`Loading Unipack ${file.name}`);
         // console.log(file);
         // this.api.setRGB(0, [1, 1], 255, 255, 255);
 
-        new Promise(async (resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             try {
                 // console.log(this.info)
                 let zip = new JSZip();
@@ -206,7 +207,10 @@ class UnipackRT implements ProjectRT {
     ClearProjectFile(): void { }
 
     //Input
-    KeyPress(deviceID: number, keyID: KeyID): void { }
+    KeyPress(deviceID: number, keyID: KeyID): void {
+
+    }
+
     KeyRelease(deviceID: number, keyID: KeyID): void { }
     ChainChange(chain: number): void { }
 
@@ -219,7 +223,7 @@ class UnipackRT implements ProjectRT {
 
     //Info
     GetProjectInfo(): ProjectInfo {
-        return { name: "Test Name", author: "Test Author" };
+        return 
     }
     GetAutoplayProgress(): [number, number] {
         return [0, 0];
