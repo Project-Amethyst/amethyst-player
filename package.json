@@ -22,6 +22,8 @@
 	"type": "module",
 	"dependencies": {
 		"carbon-icons-svelte": "^11.1.0",
+		"howler": "^2.2.3",
+		"jszip": "^3.10.0",
 		"node-sass": "^7.0.1",
 		"scss": "^0.2.4",
 		"vite": "^3.0.0"

@@ -1,7 +1,7 @@
 // import {Howler, Howl} from "../../howler/howler.core";
 import {Howler, Howl} from "howler";
 
-class keySound {
+class KeySound {
   howl?: Howl;
   loopTarget:{[key: number]: number } = {};
   loopCounter:{[key: number]: number } = {};
@@ -18,8 +18,8 @@ class keySound {
       format: [format],
       html5: !Howler.usingWebAudio,
       onend: this.onEnd.bind(this),
-      onloaderror: keySound.howlerLoadError,
-      onplayerror: keySound.howlerPlayError
+      onloaderror: KeySound.howlerLoadError,
+      onplayerror: KeySound.howlerPlayError
     });
   }
 
@@ -72,4 +72,4 @@ class keySound {
   }
 }
 
-export default keySound;
+export default KeySound;

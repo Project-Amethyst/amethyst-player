@@ -9,7 +9,7 @@ export interface ProjectInfo{
 export interface ProjectRT {
     constructor: (api: canvas) => void;
     //Meta
-    LoadProjectFile: (file: Blob) => void;
+    LoadProjectFile: (file: File) => void;
     ClearProjectFile: () => void;
 
     //Input
