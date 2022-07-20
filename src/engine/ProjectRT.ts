@@ -1,5 +1,5 @@
 import type { KeyID } from "src/types/devices";
-import type {canvas} from "./CanvasAPI"
+import type { canvas } from "./CanvasAPI"
 
 export interface ProjectInfo{
     name: string;

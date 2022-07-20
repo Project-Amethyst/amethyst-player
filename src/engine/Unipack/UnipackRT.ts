@@ -1,5 +1,6 @@
 import JSZip from "jszip";
 import type { canvas, KeyID, ProjectInfo, ProjectRT } from "./ProjectRT";
+import  type { ColorType, Color } from "../../types/color"
 import KeySound from "./KeySound"
 import KeyLED from "./KeyLED"
 import AutoPlay from "./AutoPlay";

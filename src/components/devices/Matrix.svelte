@@ -1,5 +1,7 @@
 <script lang="ts">
     import type {KeyID, KeyPress, KeyRelease } from "../../types/devices";
+    import { ColorType, Color } from "../../types/color"
+    
     import Keypad from "./keypad.svelte";
 
     let keyPads: any[] = [];
@@ -31,7 +33,7 @@
     }
 
     
-    function get_index(keyID: KeyID): number {
+    function getKeypadIndex(keyID: KeyID): number {
         if(Array.isArray(keyID))
         {
             return keyID[1] * 10 + keyID[0];
@@ -42,7 +44,7 @@
         }
     }
 
-    export function rgb_led(keyID: KeyID, r: number, g: number, b: number) {
+export function setColor(keyID: KeyID, color: Color) {
         if(Array.isArray(keyID))
         {
             keyID = [
@@ -50,17 +52,10 @@
                 keyID[1] + grid_offset[1]
             ];
         }
-        let index = get_index(keyID)
+        let index = getKeypadIndex(keyID)
         if(keyPads[index]) {
-            r = 80 + r * 3;
-            g = 80 + g * 3;
-            b = 80 + b * 3;
-
-            if(r >= 255) r = 255;
-            if(g >= 255) g = 255;
-            if(b >= 255) b = 255;
-
-            keyPads[index].set_color(r, g, b);           
+            var screen_color = color.overlay(new Color(ColorType.RGB, [80, 80, 80]));
+            keyPads[index].set_color(screen_color);           
         }
     }
 </script>
@@ -72,7 +67,7 @@
                 {#each Array(8) as _2, x}
                     <div class="lp-btn-parent">
                         {#if (x >= 0 && x < 9) && (y >= 0 && y < 9)}
-                        <Keypad class="lp-normal-btn" style="clip-path: {getCornerRadius(x, y)};" id={[x - grid_offset[0], y - grid_offset[0]]} bind:this={keyPads[get_index([x,y])]} keyPress={keyPress} keyRelease={keyRelease}/> 
+                        <Keypad class="lp-normal-btn" style="clip-path: {getCornerRadius(x, y)};" id={[x - grid_offset[0], y - grid_offset[0]]} bind:this={keyPads[getKeypadIndex([x,y])]} keyPress={keyPress} keyRelease={keyRelease}/> 
                         {/if}
                     </div>
                 {/each}

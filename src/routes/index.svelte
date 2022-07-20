@@ -1,7 +1,8 @@
 <!-- Index file for the player route -->
 <script lang="ts">
   import type { KeyID, KeyPress, KeyRelease } from "src/types/devices";
-
+  import { ColorType, Color } from "../types/color"
+  
   import { virtualDeviceComponents } from "../components/devices/Devices";
 	
 	import type {canvas} from "../engine/CanvasAPI"
@@ -35,12 +36,14 @@
 
   const virtualKeyPressed: KeyPress = (keyID: KeyID) => {
     console.info(`Virtual Button ${keyID} has been pressed`);
-    device.rgb_led(keyID, 255, 255, 255);
+    device.setColor(keyID, new Color(ColorType.RGB, [255, 255, 255]));
+    engine?.KeyPress(0, keyID);
   };
 
   const virtualKeyReleased: KeyRelease = (keyID: KeyID) => {
     console.info(`Virtual Button ${keyID} has been released`);
-    device.rgb_led(keyID, 0, 0, 0);
+    device.setColor(keyID, new Color(ColorType.RGB, [0, 0, 0]));
+    engine?.KeyRelease(0, keyID);
   };
 
   const calculateDeviceScale = () => {
@@ -56,7 +59,6 @@
 			engine.LoadProjectFile(file).then
       (
         result => {alert("Project Loaded")},
-
       )
     };
     input.click();
@@ -64,15 +66,10 @@
 
 	var api:canvas =
 	{
-		setRGB: function(deviceID: number, keyID: KeyID, r: number, g: number, b: number)
+		setColor: function(deviceID: number, keyID: KeyID, color: Color)
 		{
-			device.rgb_led(keyID, r, g, b);
+			device.setColor(keyID, color);
 		},
-
-		// setPalette: function(deviceID: number, keyID: KeyID, paletteID: number)
-		// {
-		// 	device.rgb_led(keyID, r, g, b);
-		// }
 
 		clear: function(deviceID: number)
 		{

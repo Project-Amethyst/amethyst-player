@@ -1,6 +1,7 @@
 import type { KeyID } from "src/types/devices";
+import type { ColorType, Color } from "../types/color"
 
 export interface canvas {
-  setRGB: (deviceID: number, keyID: KeyID, r: number, g: number, b: number) => void;
+  setColor: (deviceID: number, keyID: KeyID, color: Color) => void;
   clear: (deviceID: number) => void;
 }

@@ -1,5 +1,6 @@
 <script lang="ts">
     import type {KeyID, KeyPress, KeyRelease } from "../../types/devices";
+    import type { ColorType, Color } from "../../types/color"
 
     export let id: KeyID;
     let active:boolean = false;
@@ -7,10 +8,10 @@
     export let keyRelease: KeyRelease;
     let color = 'rgb(0, 0, 0)';
     var button: HTMLButtonElement;
-    export function set_color(r:number, g:number, b:number)
+    export function set_color(color: Color)
     {
       // console.log(styles);
-      button.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+      button.style.backgroundColor = color.rgb_str();
     }
 </script>
 
