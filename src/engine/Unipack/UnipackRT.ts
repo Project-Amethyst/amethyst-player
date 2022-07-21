@@ -30,19 +30,16 @@ class UnipackRT implements ProjectRT {
         // console.log(file);
         // this.api.setRGB(0, [1, 1], 255, 255, 255);
 
-        return new Promise(async (resolve, reject) => 
-        {
+        return new Promise(async (resolve, reject) => {
             try {
                 // console.log(this.projectInfo)
                 let zip = new JSZip();
                 let files = await zip.loadAsync(file).then(
-                    function (zip) 
-                    {
+                    function (zip) {
                         return Object.values(zip.files);
                     },
 
-                    function (e) 
-                    {
+                    function (e) {
                         throw "Failed to extract selected file";
                         console.log(e);
                         return;
@@ -54,19 +51,16 @@ class UnipackRT implements ProjectRT {
                 let keyLEDFiles: { [finename: string]: string[] } = {};
 
                 //Load projectInfo and categorize files
-                for (let file of files) 
-                {
+                for (let file of files) {
                     let filename = file.name.toLowerCase();
 
                     //folder
-                    if (filename.endsWith("/")) 
-                    { 
+                    if (filename.endsWith("/")) {
                         continue
                     }
 
                     //Sound Files
-                    if (filename.includes("sounds/")) 
-                    {
+                    if (filename.includes("sounds/")) {
                         // console.log("Sound file: " + filename);
                         this.soundFiles[filename.split("/").pop()] = await file
                             .async("blob")
@@ -79,26 +73,20 @@ class UnipackRT implements ProjectRT {
 
                     //Text Files
                     let filetype: string = "unknown";
-                    if (filename.endsWith("projectInfo")) 
-                    {
+                    if (filename.endsWith("info")) {
                         filetype = "projectInfo"
-                    } 
-                    else if (filename.endsWith("keysound")) 
-                    {
+                    }
+                    else if (filename.endsWith("keysound")) {
                         filetype = "keySound"
-                    } 
-                    else if (filename.endsWith("autoplay")) 
-                    {
-
+                    }
+                    else if (filename.endsWith("autoplay")) {
                         filetype = "autoplay"
-                    } 
-                    else if (filename.includes("keyled/")) 
-                    {
+                    }
+                    else if (filename.includes("keyled/")) {
                         filetype = "keyLED"
                     }
 
-                    if (filetype == "unknown") 
-                    {
+                    if (filetype == "unknown") {
                         console.warn("Unknown file: " + filename);
                         continue;
                     }
@@ -139,7 +127,7 @@ class UnipackRT implements ProjectRT {
                         console.warn("Unknown file: " + filename);
                     }
                 }
-                
+
 
                 //Checking if vaild
                 if (projectRoot === undefined || keySoundFile === undefined) {
@@ -205,16 +193,19 @@ class UnipackRT implements ProjectRT {
 
                         let command = line.split(" ");
 
-                        // console.log(command);
-                        let [chain, x, y, filename, loop] = [
+                        let [chain, x, y, filename, loop, wormhole] = [
                             parseInt(command[0]) - 1,
                             parseInt(command[2]) - 1,
                             parseInt(command[1]) - 1,
                             command[3].toLowerCase(),
-                            parseInt(command[4]), //Might be undefined
+                            parseInt(command[4]), //Might be NaN
+                            parseInt(command[5]), //Might be NaN
                         ];
-                        // console.log([chain, x, y, filename])
-                        this.keySound[chain][x][y].push(new KeySound(this.soundFiles[filename], loop));
+                        
+                        if(isNaN(loop)) {loop = 1}
+                        if(isNaN(wormhole)) {wormhole = undefined}
+
+                        this.keySound[chain][x][y].push(new KeySound(this.soundFiles[filename], loop, wormhole));
                     } catch {
                         throw "Unable to parse line - " + line;
                     }
@@ -236,7 +227,7 @@ class UnipackRT implements ProjectRT {
 
     //Input
     KeyPress(device: DeviceInfoCanvas, keyID: KeyID): void {
-        let chain = this.IndexOfKeyID(device.projectInfo.chain_key, keyID);
+        let chain = this.IndexOfKeyID(device.info.chain_key, keyID);
         if (chain != -1) {
             this.ChainChange(chain)
             return;
@@ -247,44 +238,55 @@ class UnipackRT implements ProjectRT {
         // }
 
         let soundLoop = 1;
-        let [Canvas_x, Canvas_y] = keyID; //Canvas_XY means the grid scope XY (Square), Raw XY will be the source XY (Including the chain keys)
+        let [canvas_x, canvas_y] = keyID; //canvas_XY means the grid scope XY (Square), Raw XY will be the source XY (Including the chain keys)
 
         // console.log("Note On - " + x.toString() + " " + y.toString());
-        // // console.log([x, y, Canvas_x, Canvas_y])
+        // // console.log([x, y, canvas_x, canvas_y])
 
         // if (this.props.projectFile !== undefined) {
-        //   if (Canvas_x >= 0 && Canvas_x < 8 && Canvas_y >= 0 && Canvas_y < 8) {
+        //   if (canvas_x >= 0 && canvas_x < 8 && canvas_y >= 0 && canvas_y < 8) {
         // //LED
-        // if (led && this.keyLED !== undefined && this.keyLED[this.currentChain] !== undefined && this.keyLED[this.currentChain][Canvas_x] !== undefined && this.keyLED[this.currentChain][Canvas_x][Canvas_y] !== undefined && this.keyLED[this.currentChain][Canvas_x][Canvas_y].length > 0) {
-        //   let ledIndex = this.keypressHistory[Canvas_x][Canvas_y] % this.keyLED[this.currentChain][Canvas_x][Canvas_y].length;
-        //   this.keyLED[this.currentChain][Canvas_x][Canvas_y][ledIndex].stop();
-        //   this.keyLED[this.currentChain][Canvas_x][Canvas_y][ledIndex].play();
+        // if (led && this.keyLED !== undefined && this.keyLED[this.currentChain] !== undefined && this.keyLED[this.currentChain][canvas_x] !== undefined && this.keyLED[this.currentChain][canvas_x][canvas_y] !== undefined && this.keyLED[this.currentChain][canvas_x][canvas_y].length > 0) {
+        //   let ledIndex = this.keypressHistory[canvas_x][canvas_y] % this.keyLED[this.currentChain][canvas_x][canvas_y].length;
+        //   this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex].stop();
+        //   this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex].play();
         // }
 
         //KeyLED
-        if (this.keyLED?.[this.currentChain]?.[Canvas_x]?.[Canvas_y]?.length > 0) 
-        {
-            let ledIndex = this.keypressHistory[Canvas_x][Canvas_y] % this.keyLED[this.currentChain][Canvas_x][Canvas_y].length;
-            this.keyLED[this.currentChain][Canvas_x][Canvas_y][ledIndex].play();
+        if (this.keyLED?.[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
+            let ledIndex = this.keypressHistory[canvas_x][canvas_y] % this.keyLED[this.currentChain][canvas_x][canvas_y].length;
+            this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex].play();
         }
 
         //Sound
-        if (this.keySound?.[this.currentChain]?.[Canvas_x]?.[Canvas_y]?.length > 0) 
-        {
-            let soundIndex = this.keypressHistory[Canvas_x][Canvas_y] % this.keySound[this.currentChain][Canvas_x][Canvas_y].length;
-            this.keySound[this.currentChain][Canvas_x][Canvas_y][soundIndex].keyPress();
+        if (this.keySound?.[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
+            let soundIndex = this.keypressHistory[canvas_x][canvas_y] % this.keySound[this.currentChain][canvas_x][canvas_y].length;
+            this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].keyPress();
         }
     }
 
     KeyRelease(device: DeviceInfoCanvas, keyID: KeyID): void {
-        let [Canvas_x, Canvas_y] = keyID;
+        let [canvas_x, canvas_y] = keyID;
 
-        //Sound
-        if (this.keySound[this.currentChain]?.[Canvas_x]?.[Canvas_y]?.length > 0) 
-        {
-            let soundIndex = this.keypressHistory[Canvas_x][Canvas_y] % this.keySound[this.currentChain][Canvas_x][Canvas_y].length;
-            this.keySound[this.currentChain][Canvas_x][Canvas_y][soundIndex].keyRelease();
+        //KeyLED
+        if (this.keyLED?.[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
+            let ledIndex = this.keypressHistory[canvas_x][canvas_y] % this.keyLED[this.currentChain][canvas_x][canvas_y].length;
+            this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex].endLoop();
         }
+
+        //Sound (and wormhole)
+        if (this.keySound[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
+            let soundIndex = this.keypressHistory[canvas_x][canvas_y] % this.keySound[this.currentChain][canvas_x][canvas_y].length;
+            this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].keyRelease();
+            if(this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].wormhole != undefined)
+            {
+                this.ChainChange(this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].wormhole);
+            }
+        }
+
+        //Update History
+        if (this.keypressHistory?.[canvas_x]?.[canvas_y] != undefined)
+            this.keypressHistory[canvas_x][canvas_y]++;
 
     }
     ChainChange(chain: number): void { console.log(`Chain Change ${chain}`) }
@@ -308,14 +310,10 @@ class UnipackRT implements ProjectRT {
     }
 
     //Helper
-    IndexOfKeyID(array: KeyID[], target: KeyID): number 
-    {
-        if (Array.isArray(target)) 
-        {
-            for (var k: number = 0; k < array.length; k++) 
-            {
-                if (array[k][0] == target[0] && array[k][1] == target[1]) 
-                {
+    IndexOfKeyID(array: KeyID[], target: KeyID): number {
+        if (Array.isArray(target)) {
+            for (var k: number = 0; k < array.length; k++) {
+                if (array[k][0] == target[0] && array[k][1] == target[1]) {
                     return k
                 }
             }

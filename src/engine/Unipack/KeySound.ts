@@ -4,15 +4,18 @@ import {Howler, Howl} from "howler";
 export class KeySound {
   sound: Sound;
   loop?: number;
+  wormhole?: number;
   sound_id?: number;
-  constructor(sound: Sound, loop?:number)
+  constructor(sound: Sound, loop?:number, wormhole?:number)
   {
     this.sound = sound;
     this.loop = loop;
+    this.wormhole = wormhole;
   }
 
   keyPress(): void
   {
+    this.stop();
     this.sound_id = this.sound.play(this.loop);
   }
 
