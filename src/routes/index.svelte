@@ -36,13 +36,13 @@
 
   const virtualKeyPressed: KeyPress = (keyID: KeyID) => {
     console.info(`Virtual Button ${keyID} has been pressed`);
-    device.setColor(keyID, new Color(ColorType.RGB, [255, 255, 255]));
+    // device.setColor(keyID, new Color(ColorType.RGB, [255, 255, 255]));
     engine?.KeyPress(0, keyID);
   };
 
   const virtualKeyReleased: KeyRelease = (keyID: KeyID) => {
     console.info(`Virtual Button ${keyID} has been released`);
-    device.setColor(keyID, new Color(ColorType.RGB, [0, 0, 0]));
+    // device.setColor(keyID, new Color(ColorType.RGB, [0, 0, 0]));
     engine?.KeyRelease(0, keyID);
   };
 
@@ -59,6 +59,7 @@
 			engine.LoadProjectFile(file).then
       (
         result => {alert("Project Loaded")},
+        error => {alert(`Project failed to load: ${error}`)},
       )
     };
     input.click();

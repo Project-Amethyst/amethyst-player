@@ -1,5 +1,9 @@
 import type { KeyID } from "src/types/devices";
-import type { canvas } from "./CanvasAPI"
+export type { KeyID } from "src/types/devices";
+
+
+import type { Canvas } from "./CanvasAPI"
+export type { Canvas } from "./CanvasAPI"
 
 export interface ProjectInfo{
     name: string;
@@ -7,7 +11,7 @@ export interface ProjectInfo{
 }
 
 export interface ProjectRT {
-    constructor: (api: canvas) => void;
+    constructor: (api: Canvas) => void;
     //Meta
     LoadProjectFile: (file: File) => Promise<void>;
     ClearProjectFile: () => void;
@@ -29,3 +33,4 @@ export interface ProjectRT {
     GetAutoplayProgress: () => [number, number];
     GetChain: () => number;
 }
+

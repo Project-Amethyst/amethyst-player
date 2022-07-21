@@ -10,7 +10,7 @@
     var button: HTMLButtonElement;
     export function set_color(color: Color)
     {
-      // console.log(styles);
+      // console.log(styles);  
       button.style.backgroundColor = color.rgb_str();
     }
 </script>

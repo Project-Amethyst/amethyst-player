@@ -1,7 +1,36 @@
 // import {Howler, Howl} from "../../howler/howler.core";
 import {Howler, Howl} from "howler";
 
-class KeySound {
+export class KeySound {
+  sound: Sound;
+  loop?: number;
+  sound_id?: number;
+  constructor(sound: Sound, loop?:number)
+  {
+    this.sound = sound;
+    this.loop = loop;
+  }
+
+  keyPress(): void
+  {
+    this.sound_id = this.sound.play(this.loop);
+  }
+
+  keyRelease(): void
+  {
+    if(this.loop === 0)
+    {
+      this.sound.stop();
+    }
+  }
+
+  stop(): void
+  {
+    this.sound.stop();
+  }
+}
+
+export class Sound {
   howl?: Howl;
   loopTarget:{[key: number]: number } = {};
   loopCounter:{[key: number]: number } = {};
@@ -18,12 +47,12 @@ class KeySound {
       format: [format],
       html5: !Howler.usingWebAudio,
       onend: this.onEnd.bind(this),
-      onloaderror: KeySound.howlerLoadError,
-      onplayerror: KeySound.howlerPlayError
+      onloaderror: Sound.howlerLoadError,
+      onplayerror: Sound.howlerPlayError
     });
   }
 
-  play(loop = 1) { //Loop 0 means keep playing
+  play(loop = 1): number { //Loop 0 means keep playing
     if(loop !== 1)
     {
       this.howl._loop = true;
@@ -35,6 +64,8 @@ class KeySound {
 
     this.loopCounter[id] = 0
     this.loopTarget[id] = loop;
+
+    return id;
   }
 
   stop(id?:number) { //Force stop ALL
@@ -71,5 +102,3 @@ class KeySound {
     console.error(`Howler LoPlayad Error ${id} ${message}`)
   }
 }
-
-export default KeySound;

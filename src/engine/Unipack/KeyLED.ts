@@ -1,38 +1,42 @@
+import { ColorType, Color } from "../../types/color";
+import type { Canvas, KeyID } from "../ProjectRT";
+import {rawPalette as palette} from "./palette"
+
 class KeyLED
 {
-  keyLED = undefined
-  id = undefined
-  id_str = undefined
-  repeat = 1;
-  end = false;
-  activeThread = -1
-  nextID = 0
-  canvas = undefined
-  currentOn=[]
-  lastEventTime = undefined;
-  activeList = undefined //Global, refence to the activeKeyLED object in the projectFile
+  id:number;
+  keyLED:string[];
+  repeat:number;
+  end:boolean = false;
+  activeThread:number = -1;
+  canvas:Canvas;
+  // currentOn= [];
+  lastEventTime?:number;
 
-  constructor(text, repeat, canvas, id, activeList)
+  static activeList:{[hash:number]:KeyLED} = {};
+  static registered_count = 0;
+
+  static mc_lut: KeyID[] = [[0, -1], [1, -1], [2, -1], [3, -1], [4, -1], [5, -1], [6, -1], [7, -1],
+                            [8, 0], [8, 1], [8, 2], [8, 3], [8, 4], [8, 5], [8, 6], [8, 7],
+                            [7, 8], [6, 8], [5, 8], [4, 8], [3, 8], [2, 8], [1, 8], [0, 8],
+                            [-1, 7], [-1, 6], [-1, 5], [-1, 4], [-1, 3], [-1, 2], [-1, 1], [-1, 0]]
+
+  constructor(text:string[], repeat: number, canvas: Canvas)
   {
     this.keyLED = text;
     this.repeat = repeat;
     this.canvas = canvas;
-    this.id = id;
-    this.id_str = `${id[0]} ${id[1]} ${id[2]} ${id[3]}` 
-    this.activeList = activeList
+    this.id = KeyLED.registered_count++;
   }
 
   play = async() =>
   {
-    if(this.activeList[this.id_str] === undefined)
+    if(KeyLED.activeList[this.id] === undefined)
     {
-      this.activeList[this.id_str] = this.id
-      // console.log("Active List added")
-      // console.log(this.activeList)
+      KeyLED.activeList[this.id] = this
     }
-    var threadID = this.getID()
-    this.activeThread = threadID
-    this.currentOn = []
+    var threadID = ++this.activeThread;
+    // this.currentOn = []
     var currentLoop = 0
     this.end = false;
     this.lastEventTime = Date.now()
@@ -56,60 +60,60 @@ class KeyLED
         {
           case 'o': //set color
           case 'on': //set color
-              if(command[1] === "*")
+              var keyID: KeyID | undefined;
+              if(command[1] === "*" || command[1] === "mc" || command[1] === "l") //For "l", the y is garbage but it won't be read for the setColor functions so just gonna let it be
               {
-                command[1] = "mc"
-              }
-              if(command[1] === "mc" || command[1] === "l") //For "l", the y is garbage but it won't be read for the setColor functions so just gonna let it be
-              {
-                [x, y] = [command[1], parseInt(command[2] - 1)]
+                keyID = KeyLED.mc_lut[parseInt(command[2]) - 1]
               }
               else if(parseInt(command[1]) !== NaN)
               {
-                [x, y] = [parseInt(command[2] - 1), parseInt(command[1] - 1)]
+                keyID = [parseInt(command[2]) - 1, parseInt(command[1]) - 1]
               }
 
-              var color
+              var color: Color | undefined;
               if(command[command.length - 2] === "a" || command[command.length - 2] === "auto")
               {
-                color = parseInt(command[command.length - 1])
+                var index:number = parseInt(command[command.length - 1])
+                color = new Color(ColorType.Palette, [index, ...palette[index]])
               }
               else
               {
-                color = "#" + command[command.length - 1]
+                var r:number = parseInt(command[command.length - 1].substring(0, 2), 16)
+                var g:number = parseInt(command[command.length - 1].substring(2, 4), 16)
+                var b:number = parseInt(command[command.length - 1].substring(4, 6), 16)
+                color = new Color(ColorType.RGB, [r, g, b]);
+              }
+              
+              if(keyID != undefined && color != undefined)
+              {
+                this.canvas.setColor(0, keyID, color);
               }
 
-              this.canvas.setColor(x, y, color)
-
-              var id = x + "-" + y
-              if(this.currentOn[id] === undefined) 
-              {
-                this.currentOn[id] = [x, y]
-              }
-              else if(color === 0)
-              {
-                delete this.currentOn[id]
-              }
+              // var id = x + "-" + y
+              // if(this.currentOn[id] === undefined) 
+              // {
+              //   this.currentOn[id] = [x, y]
+              // }
+              // else if(color === 0)
+              // {
+              //   delete this.currentOn[id]
+              // }
               break;
           case 'f': //color off
           case 'off': //color off
-            var [x, y] = [undefined, undefined]
-            if(command[1] === "*")
+            var keyID: KeyID;
+            if(command[1] === "*" || command[1] === "mc" || command[1] === "l") //For "l", the y is garbage but it won't be read for the setColor functions so just gonna let it be
             {
-              command[1] = "mc"
-            }
-            if(command[1] === "mc" || command[1] === "l")
-            {
-              [x, y] = [command[1], parseInt(command[2] - 1)]
+              keyID = KeyLED.mc_lut[parseInt(command[2]) - 1]
             }
             else if(parseInt(command[1]) !== NaN)
             {
-              [x, y] = [parseInt(command[2] - 1), parseInt(command[1] - 1)]
+              keyID = [parseInt(command[2]) - 1, parseInt(command[1]) - 1]
             }
 
-            this.canvas.setColor(x, y, 0)
-            var id = x + "-" + y
-            delete this.currentOn[id]
+            this.canvas.setColor(0, keyID, new Color(ColorType.Palette, [0, 0, 0, 0]));
+            // var id = x + "-" + y
+            // delete this.currentOn[id]
             break;
           case 'd': //wait
           case 'delay': 
@@ -141,30 +145,25 @@ class KeyLED
     }
     else
     {
-      return 
+      return;
     }
   }
 
-  getID()
-  {
-    return this.nextID++;
-  }
-
-  stop(clearLight = true)
+  stop(/*clearLight = true*/)
   { 
     //Threading System (Light 1 in delay then we set it to stop and create a Light 2 so it can start right away, set )
     if(this.activeThread === -1)
       return
     this.activeThread = -1
-    if(clearLight)
-    {
-      for(var id in this.currentOn)
-      {
-        var [x,y] = this.currentOn[id]
-        this.canvas.setColor(x, y, 0)
-      }
-    }
-    this.currentOn = []
+    // if(clearLight)
+    // {
+    //   for(var id in this.currentOn)
+    //   {
+    //     var [x,y] = this.currentOn[id]
+    //     this.canvas.setColor(x, y, 0)
+    //   }
+    // }
+    // this.currentOn = []
     this.removeFromActiveList()
   }
 
@@ -175,10 +174,8 @@ class KeyLED
 
   removeFromActiveList()
   {
-    // console.log("Try to delete " + this.id_str)
-    // console.log(this.activeList)
-    delete this.activeList[this.id_str]
-    // console.log(this.activeList)
+    // console.log("Try to delete " + this.id)
+    delete KeyLED.activeList[this.id]
   }
 }
 
