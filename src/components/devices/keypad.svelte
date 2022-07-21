@@ -1,7 +1,9 @@
 <script lang="ts">
-    import type {KeyID, KeyPress, KeyRelease } from "../../types/devices";
+    import type {KeyID} from "../../types/devices";
+    import type {KeyPress, KeyRelease} from "../../engine/CanvasAPI"
     import type { ColorType, Color } from "../../types/color"
 
+    export let deviceID: number;
     export let id: KeyID;
     let active:boolean = false;
     export let keyPress: KeyPress;
@@ -19,19 +21,19 @@
   on:mousedown={() => {
     // console.log(`${id} clicked`)
     active = true;
-    keyPress(id);
+    keyPress(deviceID, id);
   }}
   on:mouseup={() => {
     // console.log(`${id} released`)
     active = false;
-    keyRelease(id);
+    keyRelease(deviceID, id);
   }}
   on:mouseleave={() => {
     if(active)
     {
       // console.log(`${id} released`)
       active = false;
-      keyRelease(id);
+      keyRelease(deviceID, id);
     }
   }}>
 </button>

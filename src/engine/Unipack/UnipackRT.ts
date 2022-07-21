@@ -1,5 +1,5 @@
 import JSZip from "jszip";
-import type { Canvas, KeyID, ProjectInfo, ProjectRT } from ",./ProjectRT";
+import type {DeviceInfoCanvas, Canvas, KeyID, ProjectInfo, ProjectRT } from "../ProjectRT";
 import type { ColorType, Color } from "../../types/color";
 import {KeySound, Sound} from "./KeySound";
 import KeyLED from "./KeyLED";
@@ -189,7 +189,13 @@ class UnipackRT implements ProjectRT {
     ClearProjectFile(): void { }
 
     //Input
-    KeyPress(deviceID: number, keyID: KeyID): void {
+    KeyPress(device: DeviceInfoCanvas, keyID: KeyID): void {
+        let chain = this.IndexOfKeyID(device.info.chain_key, keyID);
+        if(chain != -1)
+        {
+            this.ChainChange(chain)
+            return;
+        }
         // const currentKeyPressIndex = this.currentKeyPress.indexOf(keyID);
         // if (currentKeyPressIndex == -1) {
         //     this.currentKeyPress.push(keyID); // 2nd parameter means remove one item only
@@ -229,7 +235,7 @@ class UnipackRT implements ProjectRT {
         }
     }
 
-    KeyRelease(deviceID: number, keyID: KeyID): void { 
+    KeyRelease(device: DeviceInfoCanvas, keyID: KeyID): void { 
         let [Canvas_x, Canvas_y] = keyID;
         
         if (
@@ -242,7 +248,7 @@ class UnipackRT implements ProjectRT {
         }
         
     }
-    ChainChange(chain: number): void { }
+    ChainChange(chain: number): void {console.log(`Chain Change ${chain}`) }
 
     //Autoplay
     AutoplayStart(): void { }
@@ -253,13 +259,27 @@ class UnipackRT implements ProjectRT {
 
     //Info
     GetProjectInfo(): ProjectInfo {
-        return;
+        return this.info;
     }
     GetAutoplayProgress(): [number, number] {
         return [0, 0];
     }
     GetChain(): number {
         return 0;
+    }
+
+    //Helper
+    IndexOfKeyID(array: KeyID[], target: KeyID): number
+    {   
+        if(Array.isArray(target))
+        {
+            for(var k:number = 0; k < array.length; k++){
+                if(array[k][0] == target[0] && array[k][1] == target[1]){
+                    return k
+                }
+            }
+        }
+        return -1;
     }
 }
 

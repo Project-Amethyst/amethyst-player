@@ -1,9 +1,8 @@
-import type { KeyID } from "src/types/devices";
-export type { KeyID } from "src/types/devices";
+import type { DeviceInfo, KeyID } from "src/types/devices";
+export type { DeviceInfo, KeyID } from "src/types/devices";
 
-
-import type { Canvas } from "./CanvasAPI"
-export type { Canvas } from "./CanvasAPI"
+import type { Canvas, DeviceInfoCanvas } from "./CanvasAPI"
+export type { Canvas, DeviceInfoCanvas } from "./CanvasAPI"
 
 export interface ProjectInfo{
     name: string;
@@ -17,8 +16,8 @@ export interface ProjectRT {
     ClearProjectFile: () => void;
 
     //Input
-    KeyPress: (deviceID: number, keyID:KeyID) => void;
-    KeyRelease: (deviceID: number, keyID:KeyID) => void;
+    KeyPress: (device: DeviceInfoCanvas, keyID:KeyID) => void;
+    KeyRelease: (device: DeviceInfoCanvas, keyID:KeyID) => void;
     ChainChange: (chain:number) => void;
 
     //Autoplay

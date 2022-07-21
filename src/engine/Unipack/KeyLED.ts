@@ -61,9 +61,14 @@ class KeyLED
           case 'o': //set color
           case 'on': //set color
               var keyID: KeyID | undefined;
-              if(command[1] === "*" || command[1] === "mc" || command[1] === "l") //For "l", the y is garbage but it won't be read for the setColor functions so just gonna let it be
+              if(command[1] === "*" || command[1] === "mc")
               {
                 keyID = KeyLED.mc_lut[parseInt(command[2]) - 1]
+              }
+              else if(command[1] === "l")
+              {
+                continue;
+                // keyID = 0;
               }
               else if(parseInt(command[1]) !== NaN)
               {
@@ -102,9 +107,14 @@ class KeyLED
           case 'f': //color off
           case 'off': //color off
             var keyID: KeyID;
-            if(command[1] === "*" || command[1] === "mc" || command[1] === "l") //For "l", the y is garbage but it won't be read for the setColor functions so just gonna let it be
+            if(command[1] === "*" || command[1] === "mc") 
             {
               keyID = KeyLED.mc_lut[parseInt(command[2]) - 1]
+            }
+            else if(command[1] === "l")
+            {
+              continue;
+              // keyID = 0;
             }
             else if(parseInt(command[1]) !== NaN)
             {

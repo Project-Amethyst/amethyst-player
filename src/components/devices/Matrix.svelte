@@ -1,5 +1,7 @@
+<svelte:options accessors/>
 <script lang="ts">
-    import type {KeyID, KeyPress, KeyRelease } from "../../types/devices";
+    import type {KeyID, DeviceInfo} from "../../types/devices";
+    import type {KeyPress, KeyRelease} from "../../engine/CanvasAPI"
     import { ColorType, Color } from "../../types/color"
     
     import Keypad from "./keypad.svelte";
@@ -7,11 +9,17 @@
     let keyPads: any[] = [];
     export let keyPress: KeyPress;
     export let keyRelease: KeyRelease;
+    export let id:number;
+    export let pos:[number, number];
 
-    var dimension = [8, 8];
-    var grid_dimension = [8, 8];
-    var grid_offset = [0, 0];
-
+    export var deviceInfo: DeviceInfo = 
+    {
+        dimension: [10, 10],
+        grid_dimension: [8, 8],
+        grid_offset: [1, 1],
+        chain_key: [[8, 0], [8, 1], [8, 2], [8, 3], [8, 4], [8, 5], [8, 6], [8, 7], 
+                    [-1, 7], [-1, 6], [-1, 5], [-1, 4], [-1, 3], [-1, 2], [-1, 1], [-1, 0]]
+    }
     /** Get the clip path for the middle pads. */
     function getCornerRadius (x: number, y: number) {
         switch (x + y * 10) {
@@ -48,8 +56,8 @@ export function setColor(keyID: KeyID, color: Color) {
         if(Array.isArray(keyID))
         {
             keyID = [
-                keyID[0] + grid_offset[0],
-                keyID[1] + grid_offset[1]
+                keyID[0] + deviceInfo.grid_offset[0],
+                keyID[1] + deviceInfo.grid_offset[1]
             ];
         }
         let index = getKeypadIndex(keyID)
@@ -67,7 +75,7 @@ export function setColor(keyID: KeyID, color: Color) {
                 {#each Array(8) as _2, x}
                     <div class="lp-btn-parent">
                         {#if (x >= 0 && x < 9) && (y >= 0 && y < 9)}
-                        <Keypad class="lp-normal-btn" style="clip-path: {getCornerRadius(x, y)};" id={[x - grid_offset[0], y - grid_offset[0]]} bind:this={keyPads[getKeypadIndex([x,y])]} keyPress={keyPress} keyRelease={keyRelease}/> 
+                        <Keypad class="lp-normal-btn" style="clip-path: {getCornerRadius(x, y)};" deviceID={id} id={[x, y]} bind:this={keyPads[getKeypadIndex([x,y])]} keyPress={keyPress} keyRelease={keyRelease}/> 
                         {/if}
                     </div>
                 {/each}

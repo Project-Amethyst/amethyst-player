@@ -1,13 +1,14 @@
 <!-- Index file for the player route -->
 <script lang="ts">
-  import type { KeyID, KeyPress, KeyRelease } from "src/types/devices";
-  import { ColorType, Color } from "../types/color"
+  import type { KeyID} from "src/types/devices";
+  import type { Color } from "../types/color"
   
   import { virtualDeviceComponents } from "../components/devices/Devices";
 	
-	import type {canvas} from "../engine/CanvasAPI"
-	import type {ProjectRT} from "../engine/ProjectRT"
-	import {projectEngines} from "../engine/Engines"
+	import type { Canvas, KeyPress, KeyRelease } from "../engine/CanvasAPI"
+	import type { DeviceInfoCanvas, ProjectRT} from "../engine/ProjectRT"
+	
+  import {projectEngines} from "../engine/Engines"
 
   import SettingsIcon from "carbon-icons-svelte/lib/Settings.svelte";
   import MusicIcon from "carbon-icons-svelte/lib/Music.svelte";
@@ -31,19 +32,33 @@
 	let engine: ProjectRT ; //this will be unipack atm. Make it changeable in the future.
 	$: engine = projectEngines[settings.projectEngine](api);
 
-	let device: any; //Should be fine
+	let device: any[] = []; //Should be fine
   let showSettings: boolean;
 
-  const virtualKeyPressed: KeyPress = (keyID: KeyID) => {
+  const virtualKeyPressed: KeyPress = (deviceID: number, keyID: KeyID) => {
     console.info(`Virtual Button ${keyID} has been pressed`);
     // device.setColor(keyID, new Color(ColorType.RGB, [255, 255, 255]));
-    engine?.KeyPress(0, keyID);
+    var deviceInfo:DeviceInfoCanvas =  //Temp solution, we will move DeviceInfoCanvas generation to device component later
+    {
+      id: device[deviceID].id,
+      pos: device[deviceID].pos,
+      info: device[deviceID].deviceInfo
+    }
+    // console.log(deviceInfo)
+    engine?.KeyPress(deviceInfo, keyID);
   };
 
-  const virtualKeyReleased: KeyRelease = (keyID: KeyID) => {
+  const virtualKeyReleased: KeyRelease = (deviceID: number, keyID: KeyID) => {
     console.info(`Virtual Button ${keyID} has been released`);
-    // device.setColor(keyID, new Color(ColorType.RGB, [0, 0, 0]));
-    engine?.KeyRelease(0, keyID);
+    // // device.setColor(keyID, new Color(ColorType.RGB, [0, 0, 0]));
+    
+    var deviceInfo:DeviceInfoCanvas =  //Temp solution, we will move DeviceInfoCanvas generation to device component later
+    {
+      id: device[deviceID].id,
+      pos: device[deviceID].pos,
+      info: device[deviceID].deviceInfo
+    }
+    engine?.KeyRelease(deviceInfo, keyID);
   };
 
   const calculateDeviceScale = () => {
@@ -65,16 +80,16 @@
     input.click();
   };
 
-	var api:canvas =
+	var api:Canvas =
 	{
 		setColor: function(deviceID: number, keyID: KeyID, color: Color)
 		{
-			device.setColor(keyID, color);
+			device[deviceID].setColor(keyID, color);
 		},
 
 		clear: function(deviceID: number)
 		{
-			device.clear(); //TODO: Implentment this
+			device[deviceID].clear(); //TODO: Implentment this
 		}
 	}
 </script>
@@ -154,7 +169,9 @@
           >
             <svelte:component
               this={virtualDeviceComponent}
-              bind:this={device}
+              bind:this={device[0]}
+              id={0}
+              pos={[0, 0]}
               keyPress={virtualKeyPressed}
               keyRelease={virtualKeyReleased}
             />
