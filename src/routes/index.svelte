@@ -13,12 +13,16 @@
   import SettingsIcon from "carbon-icons-svelte/lib/Settings.svelte";
   import MusicIcon from "carbon-icons-svelte/lib/Music.svelte";
   import FolderIcon from "carbon-icons-svelte/lib/FolderAdd.svelte";
+  import Locked from "carbon-icons-svelte/lib/Locked.svelte"
+  import Unlocked from "carbon-icons-svelte/lib/Unlocked.svelte"
 
   import Popup from "../components/Popup.svelte";
   import Dropdown from "../components/Dropdown.svelte";
 
   import { onMount, SvelteComponent } from "svelte";
   import "../shared.css";
+
+  let sidebarLocked: boolean = false;
 
   let settings = {
     virtualDevice: Object.keys(virtualDeviceComponents)[0],
@@ -107,7 +111,7 @@
   </div>
 
   <div class="main-content">
-    <div class="sidebar-part">
+    <div class="sidebar-part {sidebarLocked? 'locked' : '' }">
       <div class="sidebar-block">
         <div class="icon-holder">
           <img
@@ -135,6 +139,20 @@
       </div>
 
       <div style="height: 100%;" />
+
+      <div class="sidebar-block clickable" on:click={() => sidebarLocked = !sidebarLocked}>
+        <div class="icon-holder">
+            {#if sidebarLocked}
+                <Locked size={32}/>
+            {:else}
+                <Unlocked size={32}/>
+            {/if}
+        </div>
+
+        <div class="control-holder left-text">
+            <span>{sidebarLocked? "Unlock Sidebar" : "Lock Sidebar" }</span>
+        </div>
+    </div>
 
       <div class="sidebar-block clickable" on:click={loadProject}>
         <div class="icon-holder">
@@ -305,6 +323,10 @@
         width: 450px;
       }
 
+      &.locked {
+        width: 450px;
+      }
+
       .sidebar-block {
         width: 450px;
         height: 100px;
@@ -313,11 +335,12 @@
 
         &.clickable {
           transition: background-color 0.1s ease-in-out;
-          cursor: pointer;
 
           &:hover {
             background-color: rgb(10, 10, 10);
           }
+
+          cursor: pointer;
         }
 
         .icon-holder {

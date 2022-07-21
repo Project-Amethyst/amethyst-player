@@ -138,7 +138,7 @@ export function setColor(keyID: KeyID, color: Color) {
                     height: 100%;
                     width: 100%;
                     
-                    padding: 2px;
+                    padding: 3px;
                     background-clip: content-box;
                     background-color: rgb(10, 10, 10);
                     border-radius: 50%;
