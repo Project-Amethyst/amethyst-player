@@ -70,7 +70,7 @@ class KeyLED
                 continue;
                 // keyID = 0;
               }
-              else if(parseInt(command[1]) !== NaN)
+              else if(isNaN(parseInt(command[1])))
               {
                 keyID = [parseInt(command[2]) - 1, parseInt(command[1]) - 1]
               }
@@ -116,7 +116,7 @@ class KeyLED
               continue;
               // keyID = 0;
             }
-            else if(parseInt(command[1]) !== NaN)
+            else if(isNaN(parseInt(command[1])))
             {
               keyID = [parseInt(command[2]) - 1, parseInt(command[1]) - 1]
             }
