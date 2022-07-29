@@ -3,6 +3,7 @@
 
     export let options: string[];
     export let value: number = 0;
+    export let value_str: string;
 
     let showOptions: boolean;
     let dropdownButton: HTMLDivElement;
@@ -47,6 +48,7 @@
             {#each options as option}
                 <div class="dropdown-option" on:click={() => {
                     value = options.indexOf(option)
+                    value_str = option;
                     showOptions = false;
                 }}>
                     {option}

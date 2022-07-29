@@ -1,22 +1,41 @@
+<svelte:options accessors/>
 <script lang="ts">
-    import type { KeyPad, KeyPress } from "../../types/devices";
+    import type {KeyID, DeviceInfo} from "../../types/devices";
+    import type {KeyPress, KeyRelease} from "../../engine/CanvasAPI"
+    import { ColorType, Color } from "../../types/color"
+    
+    import Keypad from "./keypad.svelte";
 
-    let keyPads: KeyPad[] = [];
+    let keyPads: any[] = [];
     export let keyPress: KeyPress;
+    export let keyRelease: KeyRelease;
+    export let id:number;
+    export let pos:[number, number];
+
+    export var deviceInfo: DeviceInfo = 
+    {
+        dimension: [10, 11],
+        grid_dimension: [8, 8],
+        grid_offset: [1, 1],
+        chain_key: [[8, 0], [8, 1], [8, 2], [8, 3], [8, 4], [8, 5], [8, 6], [8, 7],
+                    [7, 8], [6, 8], [5, 8], [4, 8], [3, 8], [2, 8], [1, 8], [0, 8],
+                    [-1, 7], [-1, 6], [-1, 5], [-1, 4], [-1, 3], [-1, 2], [-1, 1], [-1, 0]],
+        special_led: [8, -1]
+    }
 
     /** Get the clip path for the middle pads. */
     function getCornerRadius (x: number, y: number) {
         switch (x + y * 10) {
-            case 44:
+            case 54:
                 return "polygon(80% 0, 100% 20%, 100% 100%, 0 100%, 0 0)";
 
-            case 45:
+            case 55:
                 return "polygon(20% 0, 100% 0, 100% 100%, 0 100%, 0 20%)";
 
-            case 54:
+            case 44:
                 return "polygon(100% 0, 100% 80%, 80% 100%, 0 100%, 0 0)";
 
-            case 55:
+            case 45:
                 return "polygon(100% 0, 100% 100%, 20% 100%, 0 80%, 0 0)";
 
             default:
@@ -24,17 +43,33 @@
         }
     }
 
-    export function rgb_led(pitch: number, r: number, g: number, b: number) {
-        if(keyPads[pitch]) {
-            r = 80 + r * 3;
-            g = 80 + g * 3;
-            b = 80 + b * 3;
+    function getKeypadIndex(keyID: KeyID): number {
+        if(Array.isArray(keyID))
+        {
+            return keyID[1] * 10 + keyID[0];
+        }
+        else
+        {
+            return keyID;
+        }
+    }
 
-            if(r >= 255) r = 255;
-            if(g >= 255) g = 255;
-            if(b >= 255) b = 255;
-
-            keyPads[pitch].style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+export function setColor(keyID: KeyID, color: Color) {
+        if(Array.isArray(keyID))
+        {
+            keyID = [
+                keyID[0] + deviceInfo.grid_offset[0],
+                keyID[1] + deviceInfo.grid_offset[1]
+            ];
+        }
+        let index = getKeypadIndex(keyID)
+        if(keyPads[index]) {
+            var screen_color = color.overlay(new Color(ColorType.RGB, [80, 80, 80]));
+            keyPads[index].set_color(screen_color);  
+            if(Array.isArray(keyID) && keyID[1] == 9 && keyID[0] > 0 && keyID[0] < 9) //So both button light up
+            {
+                keyPads[index + 10].set_color(screen_color);  
+            }
         }
     }
 </script>
@@ -45,18 +80,11 @@
             <div class="lp-controls-row">
                 {#each Array(10) as _2, x}
                     <div class="lp-btn-parent">
-
-                        {#if x === 0 && y === 9}
-                            <button
-                                class="lp-shift-btn"
-                                bind:this={keyPads[x + y * 10]}
-                                on:mousedown={() => keyPress(x + y * 10)}
-                            >
-
-                            </button>
-                        {:else if (x === 9 && y === 9)}
+                        {#if x === 0 && y === 0}
+                        <Keypad class="lp-shift-btn" style="clip-path: {getCornerRadius(x, y)};" deviceID={id} id={[x - deviceInfo.grid_offset[0], y - deviceInfo.grid_offset[0]]} bind:this={keyPads[getKeypadIndex([x,y])]} keyPress={keyPress} keyRelease={keyRelease}/> 
+                        {:else if (x === 9 && y === 0)}
                             <div class="lp-logo">
-                                <div class="logo-inner" bind:this={keyPads[x + y * 10]}>
+                                <div class="logo-inner" bind:this={keyPads[getKeypadIndex([x,y])]}>
                                     <div class="logo-holder">
                                         <div class="logo-split">
                                             <div class="top-part"></div>
@@ -69,41 +97,15 @@
                                 </div>
                             </div>
                         {:else if (x > 0 && x < 9) && (y > 0 && y < 9)}
-                            <button
-                                class="lp-normal-btn"
-                                bind:this={keyPads[x + y * 10]}
-                                style="clip-path: {getCornerRadius(x, y)};"
-                                on:mousedown={() => keyPress(x + y * 10)}
-                            >
-
-                            </button>
+                        <Keypad class="lp-normal-btn" style="clip-path: {getCornerRadius(x, y)};" deviceID={id} id={[x - deviceInfo.grid_offset[0], y - deviceInfo.grid_offset[0]]} bind:this={keyPads[getKeypadIndex([x,y])]} keyPress={keyPress} keyRelease={keyRelease}/> 
                         {:else if (x > 0 && x < 9) || (y > 0 && y < 9)}
-                            {#if y === 0}
+                            {#if y === 9}
                                 <div class="lp-round-corner-btn-column">
-                                    <button
-                                        class="lp-round-corner-btn-half"
-                                        bind:this={keyPads[x + (y + 10) * 10]}
-                                        on:mousedown={() => keyPress(x + (y + 10) * 10)}
-                                    >
-
-                                    </button>
-
-                                    <button
-                                        class="lp-round-corner-btn-half"
-                                        bind:this={keyPads[x + y * 10]}
-                                        on:mousedown={() => keyPress(x + y * 10)}
-                                    >
-
-                                    </button>
+                                    <Keypad class="lp-round-corner-btn-half" deviceID={id} id={[x - deviceInfo.grid_offset[0], y - deviceInfo.grid_offset[0]]} bind:this={keyPads[getKeypadIndex([x,y])]} keyPress={keyPress} keyRelease={keyRelease}/> 
+                                    <Keypad class="lp-round-corner-btn-half" deviceID={id} id={[x - deviceInfo.grid_offset[0], y - deviceInfo.grid_offset[0]]} bind:this={keyPads[getKeypadIndex([x,y + 1])]} keyPress={keyPress} keyRelease={keyRelease}/> 
                                 </div>
                             {:else}
-                                <button
-                                    class="lp-round-corner-btn"
-                                    bind:this={keyPads[x + y * 10]}
-                                    on:mousedown={() => keyPress(x + y * 10)}
-                                >
-
-                                </button>
+                            <Keypad class="lp-round-corner-btn" deviceID={id} id={[x - deviceInfo.grid_offset[0], y - deviceInfo.grid_offset[0]]} bind:this={keyPads[getKeypadIndex([x,y])]} keyPress={keyPress} keyRelease={keyRelease}/> 
                             {/if}
                         {/if}
 
@@ -134,7 +136,7 @@
 
         display: flex;
         gap: 6px;
-        flex-direction: column-reverse;
+        flex-direction: column;
 
         .lp-controls-row {
             height: 100%;
@@ -150,7 +152,7 @@
             justify-content: center;
             align-items: center;
 
-            .lp-round-corner-btn {
+            :global(.lp-round-corner-btn) {
                 height: 90%;
                 width: 90%;
                 border-radius: 5%;
@@ -182,7 +184,7 @@
 
                 gap: 12.5%;
 
-                .lp-round-corner-btn-half {
+                :global(.lp-round-corner-btn-half) {
                     height: 100%;
                     width: 92%;
                     border-radius: 5%;
@@ -204,7 +206,7 @@
                 }
             }
 
-            .lp-normal-btn {
+            :global(.lp-normal-btn) {
                 height: 92%;
                 width: 92%;
                 border-radius: 5%;
@@ -264,7 +266,7 @@
                 }
             }
 
-            .lp-shift-btn {
+            :global(.lp-shift-btn) {
                 height: 60%;
                 width: 60%;
                 border-radius: 15%;
