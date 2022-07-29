@@ -37,7 +37,7 @@
 	$: engine = projectEngines[settings.projectEngine](api);
 
 	let device: any[] = []; //Should be fine
-  let showSettings: boolean;
+  let popup: {[key:string]: boolean} = {};
 
   const virtualKeyPressed: KeyPress = (deviceID: number, keyID: KeyID) => {
     console.info(`Virtual Button ${keyID} has been pressed`);
@@ -166,7 +166,7 @@
 
       <div
         class="sidebar-block clickable"
-        on:click={() => (showSettings = true)}
+        on:click={() => (popup["setting"] = true)}
       >
         <div class="icon-holder">
           <SettingsIcon size={32} />
@@ -204,7 +204,7 @@
     </div>
   </div>
 
-  <Popup bind:show={showSettings}>
+  <Popup bind:show={popup["setting"]}>
     <div class="settings-popup">
       <div class="popup-header center-class">
         <span>Settings</span>
