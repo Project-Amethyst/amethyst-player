@@ -8,10 +8,12 @@ class KeyLED
   keyLED:string[];
   repeat:number;
   end:boolean = false;
-  activeThread:number = -1;
   canvas:Canvas;
-  // currentOn= [];
+  currentOn:{[signature: string]: KeyID} = {};
+
   lastEventTime?:number;
+  activeThread:number = -1;
+  latestThread:number = 0;
 
   static activeList:{[hash:number]:KeyLED} = {};
   static registered_count = 0;
@@ -31,12 +33,13 @@ class KeyLED
 
   play = async() =>
   {
+    this.stop();
     if(KeyLED.activeList[this.id] === undefined)
     {
       KeyLED.activeList[this.id] = this
     }
-    var threadID = ++this.activeThread;
-    // this.currentOn = []
+    var threadID = ++this.latestThread;
+    this.activeThread = threadID;
     var currentLoop = 0
     this.end = false;
     this.lastEventTime = Date.now()
@@ -70,7 +73,7 @@ class KeyLED
                 continue;
                 // keyID = 0;
               }
-              else if(isNaN(parseInt(command[1])))
+              else if(!isNaN(parseInt(command[1])))
               {
                 keyID = [parseInt(command[2]) - 1, parseInt(command[1]) - 1]
               }
@@ -92,17 +95,18 @@ class KeyLED
               if(keyID != undefined && color != undefined)
               {
                 this.canvas.setColor(0, keyID, color);
+      
+                
+                let id_str = keyID.toString();
+                if(this.currentOn[id_str] === undefined) 
+                {
+                  this.currentOn[id_str] = keyID;
+                }
+                else if(color?.index() === 0)
+                {
+                  delete this.currentOn[id_str];
+                }
               }
-
-              // var id = x + "-" + y
-              // if(this.currentOn[id] === undefined) 
-              // {
-              //   this.currentOn[id] = [x, y]
-              // }
-              // else if(color === 0)
-              // {
-              //   delete this.currentOn[id]
-              // }
               break;
           case 'f': //color off
           case 'off': //color off
@@ -116,14 +120,21 @@ class KeyLED
               continue;
               // keyID = 0;
             }
-            else if(isNaN(parseInt(command[1])))
+            else if(!isNaN(parseInt(command[1])))
             {
               keyID = [parseInt(command[2]) - 1, parseInt(command[1]) - 1]
             }
-
-            this.canvas.setColor(0, keyID, new Color(ColorType.Palette, [0, 0, 0, 0]));
-            // var id = x + "-" + y
-            // delete this.currentOn[id]
+            
+            if(keyID != undefined)
+            {
+              this.canvas.setColor(0, keyID, new Color(ColorType.Palette, [0, 0, 0, 0]));
+              
+              let id_str = keyID.toString();
+              if(this.currentOn[id_str] !== undefined) 
+              {
+                delete this.currentOn[id_str];
+              }
+            }
             break;
           case 'd': //wait
           case 'delay': 
@@ -159,21 +170,21 @@ class KeyLED
     }
   }
 
-  stop(/*clearLight = true*/)
+  stop(clearLight = true)
   { 
     //Threading System (Light 1 in delay then we set it to stop and create a Light 2 so it can start right away, set )
     if(this.activeThread === -1)
       return
     this.activeThread = -1
-    // if(clearLight)
-    // {
-    //   for(var id in this.currentOn)
-    //   {
-    //     var [x,y] = this.currentOn[id]
-    //     this.canvas.setColor(x, y, 0)
-    //   }
-    // }
-    // this.currentOn = []
+    if(clearLight)
+    {
+      for(var id in this.currentOn)
+      {
+        var keyID = this.currentOn[id]
+        this.canvas.setColor(0, keyID, new Color(ColorType.Palette, [0, 0, 0, 0]));
+      }
+    }
+    this.currentOn = {};
     this.removeFromActiveList()
   }
 

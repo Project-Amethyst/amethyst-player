@@ -11,6 +11,7 @@ export interface ProjectInfo{
 
 export interface ProjectRT {
     constructor: (api: Canvas) => void;
+
     //Meta
     LoadProjectFile: (file: File) => Promise<void>;
     ClearProjectFile: () => void;
@@ -20,16 +21,21 @@ export interface ProjectRT {
     KeyRelease: (device: DeviceInfoCanvas, keyID:KeyID) => void;
     ChainChange: (chain:number) => void;
 
-    //Autoplay
-    AutoplayStart: () => void;
-    AutoplayStop: () => void;
-    AutoplayNext: () => void;
-    AutoplayPrevious: () => void;
-    AutoplaySeek: (position: number) => void;
+    // Info
+    readonly currentChain: number;
+    readonly projectInfo: ProjectInfo;
 
-    //Info
-    GetProjectInfo: () => ProjectInfo;
-    GetAutoplayProgress: () => [number, number];
-    GetChain: () => number;
+    //Autoplay
+    Autoplay?: 
+    {
+        readonly loaded: boolean;
+        readonly progress: number;
+        readonly total: number;
+        Start: () => void;
+        Stop: () => void;
+        Next: () => void;
+        Previous: () => void;
+        Seek: (position: number) => void;
+    }
 }
 
