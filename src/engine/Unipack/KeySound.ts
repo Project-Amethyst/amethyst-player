@@ -46,16 +46,14 @@ export class Sound {
     let format = name.toLowerCase().split(".").pop()
     // console.log(this.format)
     // console.log(Howler.codecs(this.format))
-    if(browser) {
-      this.howl = new Howl({
-        src: [fileURL],
-        format: [format],
-        html5: !Howler.usingWebAudio,
-        onend: this.onEnd.bind(this),
-        onloaderror: Sound.howlerLoadError,
-        onplayerror: Sound.howlerPlayError
-      });
-    }
+    this.howl = new Howl({
+      src: [fileURL],
+      format: [format],
+      html5: !Howler.usingWebAudio,
+      onend: this.onEnd.bind(this),
+      onloaderror: Sound.howlerLoadError,
+      onplayerror: Sound.howlerPlayError
+    });
   }
 
   play(loop = 1): number { //Loop 0 means keep playing
