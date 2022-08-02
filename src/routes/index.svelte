@@ -5,8 +5,8 @@
   
   import { virtualDeviceComponents } from "../components/devices/Devices";
 	
-	import type { Canvas, KeyPress, KeyRelease } from "../engine/CanvasAPI"
-	import type { DeviceInfoCanvas, ProjectRT} from "../engine/ProjectRT"
+  import type { Canvas, KeyPress, KeyRelease } from "../engine/CanvasAPI"
+  import type { DeviceInfoCanvas, ProjectRT} from "../engine/ProjectRT"
 	
   import {projectEngines} from "../engine/Engines"
 
@@ -19,6 +19,8 @@
   import Popup from "../components/Popup.svelte";
   import Dropdown from "../components/Dropdown.svelte";
 
+  import { browser } from '$app/env'
+
   import { onMount, SvelteComponent } from "svelte";
   import "../shared.css";
 
@@ -30,13 +32,12 @@
   };
 
   let virtualDeviceComponent: typeof virtualDeviceComponents[number]["component"];
-  $: virtualDeviceComponent =
-    virtualDeviceComponents[settings.virtualDevice].component;
+  $: virtualDeviceComponent = virtualDeviceComponents[settings.virtualDevice].component;
 
-	let engine: ProjectRT ; //this will be unipack atm. Make it changeable in the future.
-	$: engine = projectEngines[settings.projectEngine](api);
+  let engine: ProjectRT; //this will be unipack atm. Make it changeable in the future.
+  $: if(browser) engine = projectEngines[settings.projectEngine](api);
 
-	let device: any[] = []; //Should be fine
+  let device: any[] = []; //Should be fine
   let popup: {[key:string]: boolean} = {};
 
   const virtualKeyPressed: KeyPress = (deviceID: number, keyID: KeyID) => {
