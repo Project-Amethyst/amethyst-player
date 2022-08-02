@@ -65,10 +65,6 @@
     engine?.KeyRelease(deviceInfo, keyID);
   };
 
-  const calculateDeviceScale = () => {
-    // TODO: i guess ?
-  };
-
   const loadProject = () => {
     console.log("Load File Selector");
     var input = document.createElement("input");
