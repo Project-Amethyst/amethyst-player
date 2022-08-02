@@ -2,9 +2,7 @@
 
 import howler from 'howler';
 const Howl = howler.Howl;
-const Howler = howler.Howler;
 
-// import {Howler, Howl} from "howler";
 import { browser } from '$app/env';
 
 export class KeySound {
@@ -54,7 +52,7 @@ export class Sound {
     this.howl = new Howl({
       src: [fileURL],
       format: [format],
-      html5: !Howler.usingWebAudio,
+      html5: false,
       onend: this.onEnd.bind(this),
       onloaderror: Sound.howlerLoadError,
       onplayerror: Sound.howlerPlayError
