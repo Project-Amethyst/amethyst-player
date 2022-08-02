@@ -1,5 +1,10 @@
 // import {Howler, Howl} from "../../howler/howler.core";
-import {Howler, Howl} from "howler";
+
+import howler from 'howler';
+const Howl = howler.Howl;
+const Howler = howler.Howler;
+
+// import {Howler, Howl} from "howler";
 import { browser } from '$app/env';
 
 export class KeySound {
