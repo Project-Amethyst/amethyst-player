@@ -26,15 +26,6 @@
     export let project:ProjectRT;
     export let status:string;
 
-    let unloaded = true;
-    $: unloaded = status === "not loaded"
-
-    let loading = false;
-    $: loading = status === "loading"
-
-    let loaded = true;
-    $: loaded = status === "loaded"
-
     let autoplay_available:boolean;
     $: autoplay_available = project?.Autoplay === undefined;
 
@@ -72,7 +63,7 @@
             <span class="subtitle">Player</span>
         </div>
 
-        {#if unloaded}
+        {#if status === "not loaded"}
             <div class="sidebar-block-project-info">
                 <span class="block-title">Project Information</span>
                 <div class="block-side-parent">
@@ -93,7 +84,7 @@
             </div>
         {/if}
 
-        {#if loading}
+        {#if status === "loading"}
             <div class="sidebar-block-project-info">
                 <span class="block-title">Project Information</span>
                 <div class="block-side-parent">
@@ -111,7 +102,7 @@
             </div>
         {/if}
 
-        {#if loaded}
+        {#if status === "loaded"}
             <div class="sidebar-block-project-info">
                 <span class="block-title">Project Information</span>
 
