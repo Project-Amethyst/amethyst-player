@@ -1,10 +1,17 @@
-<script>
+<script lang="ts">
     import Bookmark from "carbon-icons-svelte/lib/Bookmark.svelte"
     import BookmarkFilled from "carbon-icons-svelte/lib/BookmarkFilled.svelte"
+    import User from "carbon-icons-svelte/lib/User.svelte"
     import Music from "carbon-icons-svelte/lib/Music.svelte"
+    import MusicRemove from "carbon-icons-svelte/lib/MusicRemove.svelte"
+    import InProgress from "carbon-icons-svelte/lib/InProgress.svelte"
+    import OverflowMenuVertical from "carbon-icons-svelte/lib/OverflowMenuVertical.svelte"
     import Pause from "carbon-icons-svelte/lib/Pause.svelte"
     import Play from "carbon-icons-svelte/lib/Play.svelte"
+    import ChevronLeft from "carbon-icons-svelte/lib/ChevronLeft.svelte"
+    import ChevronRight from "carbon-icons-svelte/lib/ChevronRight.svelte"
     import Settings from "carbon-icons-svelte/lib/Settings.svelte"
+    import USB from "carbon-icons-svelte/lib/USB.svelte"
     import LogoGithub from "carbon-icons-svelte/lib/LogoGithub.svelte"
 
     import Button from "./Button.svelte";
@@ -13,12 +20,36 @@
     import { goto } from "$app/navigation";
 
     import { createEventDispatcher } from 'svelte';
-    let dispatch = createEventDispatcher();
 
+    import type {ProjectRT} from "../engine/ProjectRT";
+
+    export let project:ProjectRT;
+    export let status:string;
+
+    let unloaded = true;
+    $: unloaded = status === "not loaded"
+
+    let loading = false;
+    $: loading = status === "loading"
+
+    let loaded = true;
+    $: loaded = status === "loaded"
+
+    let autoplay_available:boolean;
+    $: autoplay_available = project?.Autoplay === undefined;
+
+    let author:string;
+    let name:string;
+    $: author = project?.projectInfo.author;
+    $: name = project?.projectInfo.name;
+
+    $: project = project;
+
+    let dispatch = createEventDispatcher();
 
     let projectBookmarked = false
 
-    let autoplayValues = {
+    let demoplayValues = {
         isPlaying: false,
         playProgress: 0
     }
@@ -41,71 +72,131 @@
             <span class="subtitle">Player</span>
         </div>
 
-        <div class="sidebar-block-project-info">
-            <span class="block-title">Project Information</span>
-
-            <div class="block-side-parent">
-                <div class="block-side-left">
-                    <div class="block-info-bar">
-                        <div class="info-icon">
-                            <img src="https://yt3.ggpht.com/f4s7T6OpDAjpOLZTPXfkKCIxiIbq5qWsBtNxmfq4x3WI6TMkDnYnMSPVhRNbNowS8gGI3M5ymzU=s88-c-k-c0x00ffffff-no-rj">
+        {#if unloaded}
+            <div class="sidebar-block-project-info">
+                <span class="block-title">Project Information</span>
+                <div class="block-side-parent">
+                    <div class="block-side-left">
+                        <div class="block-info-bar">
+                            <div class="info-icon">
+                                <div class="info-icon">
+                                    <MusicRemove size={24}/>
+                                </div>
+                            </div>
+                            <span>No Project Loaded</span>
                         </div>
-
-                        <span>Project Creator Info</span>
-                    </div>
-
-                    <div class="block-info-bar">
-                        <div class="info-icon">
-                            <Music size={24}/>
-                        </div>
-
-                        <span>Artist - Project Song</span>
                     </div>
                 </div>
-
-                <div class="block-side-right">
-                    <button class="fav-btn" on:click={() => bookmarkProject()}>
-                        {#if projectBookmarked}
-                            <BookmarkFilled size={28}/>
-                        {:else}
-                            <Bookmark size={28}/>
-                        {/if}
-                    </button>
+                <div style="text-align: center; margin-top: 20px;">
+                    <Button on:click={() => dispatch("loadProject")}>Load Project</Button>
                 </div>
             </div>
+        {/if}
 
-            <a class="community-button">
-                <u>
-                    <i>Open Community Page</i>
-                </u>
-            </a>
-
-            <div style="text-align: center; margin-top: 20px;">
-                <Button on:click={changeProject}>Change Project</Button>
-            </div>
-        </div>
-
-        <div class="sidebar-block-autoplay">
-            <span class="block-title">Project Autoplay</span>
-
-            <div class="autoplay-controls">
-                <span class="time-display">00:00</span>
-
-                <Slider/>
-
-                <span class="time-display">00:00</span>
-            </div>
-
-            <div class="autoplay-play-pause">
-                <div on:click={() => autoplayValues.isPlaying = !autoplayValues.isPlaying}>
-                    {#if autoplayValues.isPlaying}
-                        <Pause size={24}></Pause>
-                    {:else}
-                        <Play size={24}></Play>
-                    {/if}
+        {#if loading}
+            <div class="sidebar-block-project-info">
+                <span class="block-title">Project Information</span>
+                <div class="block-side-parent">
+                    <div class="block-side-left">
+                        <div class="block-info-bar">
+                            <div class="info-icon">
+                                <div class="info-icon">
+                                    <InProgress size={24}/>
+                                </div>
+                            </div>
+                            <span>Project Loading In Progress...</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        {/if}
+
+        {#if loaded}
+            <div class="sidebar-block-project-info">
+                <span class="block-title">Project Information</span>
+
+                <div class="block-side-parent">
+                    <div class="block-side-left">
+                        <div class="block-info-bar">
+                            <div class="info-icon">
+                                <div class="info-icon">
+                                    <User size={24}/>
+                                </div>
+                            </div>
+                            <span>{project?.projectInfo.author}</span>
+                        </div>
+
+                        <div class="block-info-bar">
+                            <div class="info-icon">
+                                <Music size={24}/>
+                            </div>
+
+                            <span>{project?.projectInfo.name}</span>
+                        </div>
+                    </div>
+
+                    <!-- <div class="block-side-right">
+                        <button class="fav-btn" on:click={() => bookmarkProject()}>
+                            {#if projectBookmarked}
+                                <BookmarkFilled size={28}/>
+                            {:else}
+                                <Bookmark size={28}/>
+                            {/if}
+                        </button>
+                    </div> -->
+                </div>
+
+                <!-- <a class="community-button">
+                    <u>
+                        <i>Open Community Page</i>
+                    </u>
+                </a> -->
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <Button on:click={() => dispatch("loadProject")}>Change Project</Button>
+                </div>
+            </div>
+            
+            {#if autoplay_available}
+                <div class="sidebar-block-demoplay">
+                    <div>
+                        <span class="block-title">Project Demoplay
+                            <!-- <OverflowMenuVertical size={24}></OverflowMenuVertical>  -->
+                        </span>
+                        
+                    </div>
+
+                    <div class="demoplay-time">
+                        <span class="time-display">00:00</span>
+
+                        <Slider/>
+
+                        <span class="time-display">00:00</span>
+                    </div>
+                    <div class="demoplay-control-block">
+                        <div class="demoplay-button">
+                            <div>
+                                <ChevronLeft size={26}></ChevronLeft>
+                            </div>
+                        </div>
+                        <div class="demoplay-button">
+                            <div on:click={() => demoplayValues.isPlaying = !demoplayValues.isPlaying}>
+                                {#if demoplayValues.isPlaying}
+                                    <Pause size={24}></Pause>
+                                {:else}
+                                    <Play size={24}></Play>
+                                {/if}
+                            </div>
+                        </div>
+                        <div class="demoplay-button">
+                            <div>
+                                <ChevronRight size={26}></ChevronRight>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {/if}
+        {/if}
     </div>
 
     <div style="height: 100%"></div>
@@ -114,6 +205,12 @@
         <div class="icon-button">
             <div on:click={() => dispatch("settings")}>
                 <Settings size={32}></Settings>
+            </div>
+        </div>
+
+        <div class="icon-button">
+            <div on:click={() => {console.log(project); console.log(project?.projectInfo.author); console.log(name); console.log(project?.projectInfo === undefined)}}>
+                <USB size={32}></USB>
             </div>
         </div>
 
@@ -274,7 +371,7 @@
             }
         }
 
-        .sidebar-block-autoplay {
+        .sidebar-block-demoplay {
             margin-top: 150px;
             height: 200px;
             padding: 20px;
@@ -294,8 +391,11 @@
                 margin-bottom: 10px;
             }
 
-            .autoplay-controls {
+            .demoplay-time {
                 display: flex;
+                
+                margin-top: 14px;
+                margin-bottom: 2px;
 
                 .time-display {
                     font-family: 'Roboto', sans-serif;
@@ -311,32 +411,42 @@
                     color: #696969;
                 }
             }
+            .demoplay-control-block {
+            height: 60px;
+            width: 100%;
 
-            .autoplay-play-pause {
-                height: 60px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
+            display: flex;
 
-                div {
+
+                .demoplay-button {
+                    height: 60px;
+                    width: 100%;
+
                     display: flex;
                     justify-content: center;
                     align-items: center;
 
-                    height: 50px;
-                    width: 50px;
+                    div {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
 
-                    background-color: rgb(20, 20, 20);
-                    border: 2px solid rgb(40, 40, 40);
-                    border-radius: 50%;
+                        height: 50px;
+                        width: 50px;
 
-                    color: #d5d5d5;
+                        background-color: rgb(20, 20, 20);
+                        border: 2px solid rgb(40, 40, 40);
+                        border-radius: 50%;
+
+                        color: #d5d5d5;
+                    }
                 }
             }
         }
 
         .sidebar-bottom-block {
             height: 60px;
+            width: 100%;
 
             display: flex;
 

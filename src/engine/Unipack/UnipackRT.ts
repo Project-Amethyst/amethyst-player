@@ -8,7 +8,9 @@ import AutoPlay from "./AutoPlay";
 class UnipackRT implements ProjectRT {
     //Data
     api?: Canvas;
+    loaded:boolean = false;
     projectInfo: ProjectInfo = {};
+    unipackInfo = {}
     soundFiles: { [name: string]: Sound } = {};
     keySound = [];
     autoplay = undefined;
@@ -101,19 +103,24 @@ class UnipackRT implements ProjectRT {
                         projectRoot = filename.slice(0, -4);
                         // console.log(" project root: " + projectRoot);
                         text.forEach(
-                            (projectInfo: string) => (this.projectInfo[projectInfo.split("=")[0]] = projectInfo.split("=")[1])
+                            (info: string) => (this.unipackInfo[info.split("=")[0]] = info.split("=")[1])
                         );
-                        this.projectInfo["buttonX"] = parseInt(this.projectInfo["buttonX"]);
-                        this.projectInfo["buttonY"] = parseInt(this.projectInfo["buttonY"]);
-                        this.projectInfo["chain"] = parseInt(this.projectInfo["chain"]);
-                        this.projectInfo["squareButton"] =
-                            this.projectInfo["squareButton"] === "true";
-                        this.projectInfo["landscape"] = this.projectInfo["landscape"] === "true";
-                        if (this.projectInfo["buttonX"] !== 8 || this.projectInfo["buttonY"] !== 8) {
+                        this.unipackInfo["buttonX"] = parseInt(this.unipackInfo["buttonX"]);
+                        this.unipackInfo["buttonY"] = parseInt(this.unipackInfo["buttonY"]);
+                        this.unipackInfo["chain"] = parseInt(this.unipackInfo["chain"]);
+                        this.unipackInfo["squareButton"] = this.unipackInfo["squareButton"] === "true";
+                        this.unipackInfo["landscape"] = this.unipackInfo["landscape"] === "true";
+                        if (this.unipackInfo["buttonX"] !== 8 || this.unipackInfo["buttonY"] !== 8) {
                             throw "Only 8x8 Unipad project are supported";
                             return;
                         }
-                        this.keypressHistory = new Array(this.projectInfo["buttonX"]).fill(null).map(() => new Array(this.projectInfo["buttonY"]).fill(0));
+
+                        this.projectInfo.name = this.unipackInfo["title"];
+                        this.projectInfo.author = this.unipackInfo["producerName"];
+                        this.projectInfo.chain = this.unipackInfo["chain"];
+                        this.projectInfo.devices = {"main": [this.unipackInfo["buttonX"], this.unipackInfo["buttonY"]]};
+
+                        this.keypressHistory = new Array(this.unipackInfo["buttonX"]).fill(null).map(() => new Array(this.unipackInfo["buttonY"]).fill(0));
                     } else if (filetype == "keySound") {
                         // console.log("KeySound file: " + filename);
                         keySoundFile = text;
@@ -135,23 +142,23 @@ class UnipackRT implements ProjectRT {
                 }
 
                 //Initialize 4D arraies
-                this.keySound = new Array(this.projectInfo.chain)
+                this.keySound = new Array(this.unipackInfo.chain)
                     .fill(null)
                     .map(() =>
-                        new Array(this.projectInfo.buttonX)
+                        new Array(this.unipackInfo.buttonX)
                             .fill(null)
                             .map(() =>
-                                new Array(this.projectInfo.buttonY).fill(null).map(() => new Array())
+                                new Array(this.unipackInfo.buttonY).fill(null).map(() => new Array())
                             )
                     );
 
-                this.keyLED = new Array(this.projectInfo.chain)
+                this.keyLED = new Array(this.unipackInfo.chain)
                     .fill(null)
                     .map(() =>
-                        new Array(this.projectInfo.buttonX)
+                        new Array(this.unipackInfo.buttonX)
                             .fill(null)
                             .map(() =>
-                                new Array(this.projectInfo.buttonY).fill(null).map(() => new Array())
+                                new Array(this.unipackInfo.buttonY).fill(null).map(() => new Array())
                             )
                     );
 
@@ -216,6 +223,7 @@ class UnipackRT implements ProjectRT {
                 //     this.autoplay = new AutoPlay(autoplayFile, this.Canvas);
 
                 console.log("Project Loaded");
+                this.loaded = true;
                 resolve(this);
             } catch (e) {
                 reject(e);

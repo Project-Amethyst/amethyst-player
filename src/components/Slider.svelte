@@ -66,9 +66,9 @@
         .slider-thumb {
             width: 10px;
             height: 18px;
-            border-radius: 2px;
+            border-radius: 5px;
 
-            background-color: aquamarine;
+            background-color: white;
 
             cursor: grab;
 

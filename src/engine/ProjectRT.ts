@@ -7,6 +7,8 @@ export type { Canvas, DeviceInfoCanvas } from "./CanvasAPI"
 export interface ProjectInfo{
     name: string;
     author: string; //TODO we can have a number type for user ID
+    chain: number;
+    devices: {[name:string]: [number, number]}; //name and size
 }
 
 export interface ProjectRT {
@@ -22,6 +24,7 @@ export interface ProjectRT {
     ChainChange: (chain:number) => void;
 
     // Info
+    readonly loaded: boolean;
     readonly currentChain: number;
     readonly projectInfo: ProjectInfo;
 

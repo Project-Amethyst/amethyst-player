@@ -29,8 +29,9 @@
     let virtualDeviceComponent: typeof virtualDeviceComponents[number]["component"];
     $: virtualDeviceComponent = virtualDeviceComponents[settings.virtualDevice].component;
 
-    let engine: ProjectRT; //this will be unipack atm. Make it changeable in the future.
+    let engine: ProjectRT;
     $: if (browser) engine = projectEngines[settings.projectEngine](api);
+    let project_status:string = "not loaded";
 
     let device: any[] = []; //Should be fine
     let popup: { [key: string]: boolean } = {};
@@ -72,12 +73,16 @@
             engine.LoadProjectFile(file).then
             (
                 result => {
-                    alert("Project Loaded")
+                    console.log("Project Loaded")
+                    console.log(engine)
+                    project_status = "loaded";
                 },
                 error => {
                     alert(`Project failed to load: ${error}`)
+                    project_status = "not loaded";
                 },
             )
+            project_status = "loading";
         };
         input.click();
     };
@@ -96,7 +101,12 @@
 
 <main>
     <div class="main-content">
-        <Sidebar on:settings={() => popup["setting"] = true}/>
+        <Sidebar 
+            on:settings={() => popup["setting"] = true} 
+            on:loadProject={() => {loadProject()}} 
+            bind:project={engine} 
+            bind:status={project_status} 
+            />
 
         <div class="content-part">
             <div class="amethyst-player-content">
