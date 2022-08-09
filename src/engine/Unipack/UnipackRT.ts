@@ -296,7 +296,11 @@ class UnipackRT implements ProjectRT {
             this.keypressHistory[canvas_x][canvas_y]++;
 
     }
-    ChainChange(chain: number): void { console.log(`Chain Change ${chain}`); this.currentChain = chain;}
+    ChainChange(chain: number): void { 
+        console.log(`Chain Change ${chain}`); 
+        if (chain !== this.currentChain) this.clearKeypressHistory();
+        this.currentChain = chain;
+    }
 
     //Autoplay
     AutoplayStart(): void { }
@@ -314,6 +318,10 @@ class UnipackRT implements ProjectRT {
     }
     GetChain(): number {
         return 0;
+    }
+
+    clearKeypressHistory() {
+        this.keypressHistory = new Array(this.unipackInfo["buttonX"]).fill(null).map(() => new Array(this.unipackInfo["buttonY"]).fill(0));
     }
 
     //Helper
