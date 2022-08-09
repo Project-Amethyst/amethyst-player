@@ -296,7 +296,7 @@ class UnipackRT implements ProjectRT {
             this.keypressHistory[canvas_x][canvas_y]++;
 
     }
-    ChainChange(chain: number): void { console.log(`Chain Change ${chain}`) }
+    ChainChange(chain: number): void { console.log(`Chain Change ${chain}`); this.currentChain = chain;}
 
     //Autoplay
     AutoplayStart(): void { }
