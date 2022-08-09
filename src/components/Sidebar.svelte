@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Bookmark from "carbon-icons-svelte/lib/Bookmark.svelte"
+    import Bookmark from"carbon-icons-svelte/lib/Bookmark.svelte"
     import BookmarkFilled from "carbon-icons-svelte/lib/BookmarkFilled.svelte"
     import User from "carbon-icons-svelte/lib/User.svelte"
     import Music from "carbon-icons-svelte/lib/Music.svelte"
@@ -11,7 +11,7 @@
     import ChevronLeft from "carbon-icons-svelte/lib/ChevronLeft.svelte"
     import ChevronRight from "carbon-icons-svelte/lib/ChevronRight.svelte"
     import Settings from "carbon-icons-svelte/lib/Settings.svelte"
-    import USB from "carbon-icons-svelte/lib/USB.svelte"
+    import Usb from "carbon-icons-svelte/lib/Usb.svelte"
     import LogoGithub from "carbon-icons-svelte/lib/LogoGithub.svelte"
 
     import Button from "./Button.svelte";
@@ -192,7 +192,7 @@ import { Stop } from "carbon-icons-svelte"
 
         <div class="icon-button">
             <div on:click={() => dispatch("devices")}>
-                <USB size={32}></USB>
+                <Usb size={32}></Usb>
             </div>
         </div>
 
