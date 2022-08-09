@@ -28,14 +28,14 @@ export interface ProjectRT {
     readonly currentChain: number;
     readonly projectInfo: ProjectInfo;
 
-    //Autoplay
-    Autoplay?: 
+    //Demoplay
+    demoplay?: 
     {
-        readonly loaded: boolean;
+        readonly playing: boolean;
         readonly progress: number;
         readonly total: number;
         Start: () => void;
-        Stop: () => void;
+        Pause: () => void;
         Next: () => void;
         Previous: () => void;
         Seek: (position: number) => void;

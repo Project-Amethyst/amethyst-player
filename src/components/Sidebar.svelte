@@ -22,19 +22,10 @@
     import { createEventDispatcher } from 'svelte';
 
     import type {ProjectRT} from "../engine/ProjectRT";
+import { Stop } from "carbon-icons-svelte"
 
     export let project:ProjectRT;
     export let status:string;
-
-    let autoplay_available:boolean;
-    $: autoplay_available = project?.Autoplay === undefined;
-
-    let author:string;
-    let name:string;
-    $: author = project?.projectInfo.author;
-    $: name = project?.projectInfo.name;
-
-    $: project = project;
 
     let dispatch = createEventDispatcher();
 
@@ -148,7 +139,7 @@
                 </div>
             </div>
             
-            {#if autoplay_available}
+            {#if project?.demoplay !== undefined}
                 <div class="sidebar-block-demoplay">
                     <div>
                         <span class="block-title">Project Demoplay
@@ -158,20 +149,20 @@
                     </div>
 
                     <div class="demoplay-time">
-                        <span class="time-display">00:00</span>
+                        <span class="time-display">{project?.demoplay?.progress}</span>
 
                         <Slider/>
 
-                        <span class="time-display">00:00</span>
+                        <span class="time-display">{project?.demoplay?.total}</span>
                     </div>
                     <div class="demoplay-control-block">
                         <div class="demoplay-button">
-                            <div>
+                            <div on:click={() => project?.demoplay?.Previous()}>
                                 <ChevronLeft size={26}></ChevronLeft>
                             </div>
                         </div>
                         <div class="demoplay-button">
-                            <div on:click={() => demoplayValues.isPlaying = !demoplayValues.isPlaying}>
+                            <div on:click={() => project?.demoplay?.playing ? project?.demoplay?.Pause() : project?.demoplay?.Start()}>
                                 {#if demoplayValues.isPlaying}
                                     <Pause size={24}></Pause>
                                 {:else}
@@ -180,7 +171,7 @@
                             </div>
                         </div>
                         <div class="demoplay-button">
-                            <div>
+                            <div on:click={() => project?.demoplay?.Next()}>
                                 <ChevronRight size={26}></ChevronRight>
                             </div>
                         </div>

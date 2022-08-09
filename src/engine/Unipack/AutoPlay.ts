@@ -1,23 +1,23 @@
 class AutoPlay {
     autoplay = undefined;
+    playing = false;
     status = "STOPPED"
     progress = 0
     total = 0
     currentChain = 0
-    canvas = undefined;
     lastEventTime = undefined;
   
     led = true;
     highlight = false;
     highlightColor = "#00FFFF"
   
-    constructor(text, canvas) {
+    constructor(text) {
       this.autoplay = text;
       this.total = text === undefined ? 0 : text.length;
-      this.canvas = canvas;
     }
   
-    play = async (callback) => {
+    Start = async (callback) => {
+      this.playing = true;
       // console.time("Autoplay")
       if (this.progress === 0) {
         this.canvas.initlalizeCanvas();
@@ -101,17 +101,27 @@ class AutoPlay {
       this.stop();
     }
   
-    pause() {
+    Pause() {
+      this.playing = false;
       this.status = "PAUSED"
     }
   
     stop() {
+      this.playing = false;
       this.status = "STOPPED"
       this.progress = 0
       this.canvas.autoplay = null;
     }
   
-    backward()
+    Next()
+    {
+      if(this.status == "PAUSED")
+      {
+  
+      }
+    }
+
+    Previous()
     {
       if(this.status == "PAUSED")
       {
@@ -119,15 +129,7 @@ class AutoPlay {
       }
     }
   
-    forward()
-    {
-      if(this.status == "PAUSED")
-      {
-  
-      }
-    }
-  
-    seek(index)
+    Seek(position:number)
     {
   
     }

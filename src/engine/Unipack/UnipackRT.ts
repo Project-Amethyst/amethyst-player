@@ -13,7 +13,7 @@ class UnipackRT implements ProjectRT {
     unipackInfo = {}
     soundFiles: { [name: string]: Sound } = {};
     keySound = [];
-    autoplay = undefined;
+    demoplay = undefined;
     keyLED = undefined;
 
     //Runtime
@@ -124,7 +124,7 @@ class UnipackRT implements ProjectRT {
                     } else if (filetype == "keySound") {
                         // console.log("KeySound file: " + filename);
                         keySoundFile = text;
-                    } else if (filetype == "projectInfo") {
+                    } else if (filetype == "autoplay") {
                         // console.log("AutoPlay file: " + filename);
                         autoplayFile = text;
                     } else if (filetype == "keyLED") {
@@ -218,9 +218,18 @@ class UnipackRT implements ProjectRT {
                     }
                 }
 
-                //Load AutoPlay
-                // if (autoplayFile !== undefined)
-                //     this.autoplay = new AutoPlay(autoplayFile, this.Canvas);
+                // Load AutoPlay
+                if (autoplayFile !== undefined)
+                {
+                    console.log("Loading Autoplay");
+                    console.log(autoplayFile);
+                    this.demoplay = new AutoPlay(autoplayFile);
+                }
+                else
+                {
+                    console.log("Autoplay Not Exist");
+                }
+                
 
                 console.log("Project Loaded");
                 this.loaded = true;
