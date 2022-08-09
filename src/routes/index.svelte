@@ -201,7 +201,7 @@
                 </div>
 
                 <div class="setting-option">
-                    <Dropdown value={"No Device"} options={["No Device"]}}
+                    <Dropdown value={"No Device"} options={["No Device"]}
                     />
                 </div>
             </div>
@@ -212,7 +212,7 @@
                 </div>
 
                 <div class="setting-option">
-                    <Dropdown value={"No Config"} options={["No Config"]}}
+                    <Dropdown value={"No Config"} options={["No Config"]}
                     />
                 </div>
             </div>
@@ -223,7 +223,7 @@
                 </div>
 
                 <div class="setting-option">
-                    <Dropdown value={"No Device"} options={["No Device"]}}
+                    <Dropdown value={"No Device"} options={["No Device"]}
                     />
                 </div>
             </div>
@@ -234,7 +234,7 @@
                 </div>
 
                 <div class="setting-option">
-                    <Dropdown value={"No Config"} options={["No Config"]}}
+                    <Dropdown value={"No Config"} options={["No Config"]}
                     />
                 </div>
             </div>
