@@ -220,18 +220,8 @@ class UnipackRT implements ProjectRT {
 
                 // Load AutoPlay
                 if (autoplayFile !== undefined)
-                {
-                    console.log("Loading Autoplay");
-                    console.log(autoplayFile);
                     this.demoplay = new AutoPlay(autoplayFile);
-                }
-                else
-                {
-                    console.log("Autoplay Not Exist");
-                }
-                
-
-                console.log("Project Loaded");
+                ;
                 this.loaded = true;
                 resolve(this);
             } catch (e) {

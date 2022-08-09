@@ -2,8 +2,7 @@
     import CaretDownIcon from "carbon-icons-svelte/lib/CaretDown.svelte";
 
     export let options: string[];
-    export let value: number = 0;
-    export let value_str: string;
+    export let value: string;
 
     let showOptions: boolean;
     let dropdownButton: HTMLDivElement;
@@ -35,7 +34,7 @@
 <div style="display: flex; flex-direction: column;">
     <div class="dropdown-select-body" bind:this={dropdownButton} on:click={() => showOptions = !showOptions}>
         <div class="left-portion">
-            <span>{options[value]}</span>
+            <span>{value}</span>
         </div>
 
         <div class="right-portion">
@@ -47,8 +46,7 @@
         <div class="dropdown-select-options" use:clickOutsideOptions>
             {#each options as option}
                 <div class="dropdown-option" on:click={() => {
-                    value = options.indexOf(option)
-                    value_str = option;
+                    value = option;
                     showOptions = false;
                 }}>
                     {option}

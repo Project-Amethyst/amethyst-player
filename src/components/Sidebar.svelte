@@ -191,7 +191,7 @@ import { Stop } from "carbon-icons-svelte"
         </div>
 
         <div class="icon-button">
-            <div on:click={() => {console.log(project); console.log(project?.projectInfo.author); console.log(name); console.log(project?.projectInfo === undefined)}}>
+            <div on:click={() => dispatch("devices")}>
                 <USB size={32}></USB>
             </div>
         </div>

@@ -74,7 +74,6 @@
             (
                 result => {
                     console.log("Project Loaded")
-                    console.log(engine)
                     project_status = "loaded";
                 },
                 error => {
@@ -103,6 +102,7 @@
     <div class="main-content">
         <Sidebar 
             on:settings={() => popup["setting"] = true} 
+            on:devices={() => popup["devices"] = true} 
             on:loadProject={() => {loadProject()}} 
             bind:project={engine} 
             bind:status={project_status} 
@@ -147,7 +147,7 @@
 
                 <div class="setting-option">
                     <Dropdown
-                            bind:value_str={settings.virtualDevice}
+                            bind:value={settings.virtualDevice}
                             options={Object.keys(virtualDeviceComponents)}
                     />
                 </div>
@@ -160,7 +160,7 @@
 
                 <div class="setting-option">
                     <Dropdown
-                            bind:value_str={settings.projectEngine}
+                            bind:value={settings.projectEngine}
                             options={Object.keys(projectEngines)}
                     />
                 </div>
@@ -175,6 +175,60 @@
                     <Dropdown options={["🇺🇸 English"]}/>
                 </div>
             </div>
+        </div>
+    </Popup>
+
+    <Popup bind:show={popup["devices"]}>
+        <div class="settings-popup">
+            <div class="popup-header center-class">
+                <span>Devices</span>
+            </div>
+
+            <div class="setting">
+                <div class="setting-name">
+                    <span>Input Device:</span>
+                </div>
+
+                <div class="setting-option">
+                    <Dropdown value={"No Device"} options={["No Device"]}}
+                    />
+                </div>
+            </div>
+
+            <div class="setting">
+                <div class="setting-name">
+                    <span>Input Device Config:</span>
+                </div>
+
+                <div class="setting-option">
+                    <Dropdown value={"No Config"} options={["No Config"]}}
+                    />
+                </div>
+            </div>
+
+            <div class="setting">
+                <div class="setting-name">
+                    <span>Output Device:</span>
+                </div>
+
+                <div class="setting-option">
+                    <Dropdown value={"No Device"} options={["No Device"]}}
+                    />
+                </div>
+            </div>
+
+            <div class="setting">
+                <div class="setting-name">
+                    <span>Output Device Config:</span>
+                </div>
+
+                <div class="setting-option">
+                    <Dropdown value={"No Config"} options={["No Config"]}}
+                    />
+                </div>
+            </div>
+
+
         </div>
     </Popup>
 </main>
