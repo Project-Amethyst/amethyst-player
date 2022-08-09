@@ -1,4 +1,6 @@
 class AutoPlay {
+    canvas = undefined;
+    project = undefined;
     autoplay = undefined;
     playing = false;
     status = "STOPPED"
@@ -11,23 +13,26 @@ class AutoPlay {
     highlight = false;
     highlightColor = "#00FFFF"
   
-    constructor(text) {
+    constructor(text, canvas, project) {
       this.autoplay = text;
       this.total = text === undefined ? 0 : text.length;
+      this.canvas = canvas;
+      this.project = project;
     }
   
     Start = async (callback) => {
       this.playing = true;
       // console.time("Autoplay")
       if (this.progress === 0) {
-        this.canvas.initlalizeCanvas();
-        this.canvas.autoplay = this;
+        // this.canvas.clear();
         this.currentChain = 0;
       }
       else
       {
         this.syncChain();
       }
+
+      let deviceInfo = this.canvas.getDevices()[0];
       this.status = "PLAYING"
       this.lastEventTime = Date.now()
       for (this.progress; this.progress < this.autoplay.length; this.progress++) {
@@ -47,36 +52,36 @@ class AutoPlay {
         if (command.length < 2)
           continue;
   
-        if (this.canvas.currentChain != this.currentChain) {
-          this.canvas.chainChange(this.currentChain);
+        if (this.project.currentChain != this.currentChain) {
+          this.project.ChainChange(this.currentChain);
         }
   
         switch (command[0]) {
           case 'o':
           case 'on':
-            this.canvas.keyOn(parseInt(command[2]) - 1, parseInt(command[1]) - 1, undefined, true, true, this.led);
-            if(this.highlight)
-            {
-              this.canvas.setHighlight(parseInt(command[2]) - 1, parseInt(command[1]) - 1, this.highlightColor)
-            }
+            this.project.KeyPress(deviceInfo, [parseInt(command[2]) - 1, parseInt(command[1]) - 1])
+            // if(this.highlight)
+            // {
+            //   this.canvas.setHighlight(parseInt(command[2]) - 1, parseInt(command[1]) - 1, this.highlightColor)
+            // }
             break;
           case 'f':
           case 'off':
-            this.canvas.keyOff(parseInt(command[2]) - 1, parseInt(command[1]) - 1, undefined, true);
-            if(this.highlight)
-            {
-              this.canvas.setHighlight(parseInt(command[2]) - 1, parseInt(command[1]) - 1)
-            }
+            this.project.KeyRelease(deviceInfo, [parseInt(command[2]) - 1, parseInt(command[1]) - 1])
+            // if(this.highlight)
+            // {
+            //   this.canvas.setHighlight(parseInt(command[2]) - 1, parseInt(command[1]) - 1)
+            // }
             break;
           case 't':
           case 'touch':
-                this.canvas.keyOn(parseInt(command[2]) - 1, parseInt(command[1]) - 1, undefined, true, true, this.led);
-                this.canvas.keyOff(parseInt(command[2]) - 1, parseInt(command[1]) - 1, undefined, true);
-              if(this.highlight)
-              {
-                this.canvas.setHighlight(parseInt(command[2]) - 1, parseInt(command[1]) - 1, this.highlightColor)
-                setTimeout(() => {this.canvas.setHighlight(parseInt(command[2]) - 1, parseInt(command[1]) - 1)}, 200)
-              }
+                this.project.KeyPress(deviceInfo, [parseInt(command[2]) - 1, parseInt(command[1]) - 1])
+                this.project.KeyRelease(deviceInfo, [parseInt(command[2]) - 1, parseInt(command[1]) - 1])
+              // if(this.highlight)
+              // {
+              //   this.canvas.setHighlight(parseInt(command[2]) - 1, parseInt(command[1]) - 1, this.highlightColor)
+              //   setTimeout(() => {this.canvas.setHighlight(parseInt(command[2]) - 1, parseInt(command[1]) - 1)}, 200)
+              // }
               break;
           case 'd':
           case 'delay':
@@ -87,13 +92,13 @@ class AutoPlay {
             break;
           case 'c':
           case 'chain':
-            this.canvas.chainChange(parseInt(command[1]) - 1);
+            this.project.ChainChange(parseInt(command[1]) - 1);
             this.currentChain = parseInt(command[1]) - 1;
-            if(this.highlight)
-              {
-                this.canvas.setHighlight("chain", parseInt(command[1]) - 1, this.highlightColor)
-                setTimeout(() => {this.canvas.setHighlight("chain", parseInt(command[1]) - 1)}, 200)
-              }
+            // if(this.highlight)
+            //   {
+            //     this.canvas.setHighlight("chain", parseInt(command[1]) - 1, this.highlightColor)
+            //     setTimeout(() => {this.canvas.setHighlight("chain", parseInt(command[1]) - 1)}, 200)
+            //   }
             break;
           default:
         }
@@ -110,7 +115,6 @@ class AutoPlay {
       this.playing = false;
       this.status = "STOPPED"
       this.progress = 0
-      this.canvas.autoplay = null;
     }
   
     Next()
@@ -141,12 +145,12 @@ class AutoPlay {
         let command = this.autoplay[this.progress].split(" ");
         if(command == "c" || command == "chain")
         {
-          this.canvas.chainChange(parseInt(command[1]) - 1);
+          this.project.ChainChange(parseInt(command[1]) - 1);
           this.currentChain = parseInt(command[1]) - 1;
           return;
         }
       }
-      this.canvas.chainChange(0);
+      this.project.ChainChange(0);
       this.currentChain = 0;
     }
   

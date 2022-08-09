@@ -18,7 +18,7 @@
 
     import {browser} from '$app/env'
 
-    import {onMount, SvelteComponent} from "svelte";
+    import {afterUpdate} from "svelte";
     import "../shared.css";
 
     let settings = {
@@ -33,35 +33,38 @@
     $: if (browser) engine = projectEngines[settings.projectEngine](api);
     let project_status:string = "not loaded";
 
-    let device: any[] = []; //Should be fine
+    let devices: any[] = []; //Should be fine
+    let devicesInfo: DeviceInfoCanvas[] = []
     let popup: { [key: string]: boolean } = {};
 
     let projectBookmarked: boolean = false
 
+    const updateDevicesInfo = () =>
+    {
+        devicesInfo = []
+        devices.forEach(device => {
+        devicesInfo.push(
+            {
+                id: device.id,
+                pos: device.pos,
+                info: device.deviceInfo
+            }
+        )
+        });
+    }
+
     const virtualKeyPressed: KeyPress = (deviceID: number, keyID: KeyID) => {
         console.info(`Virtual Button ${keyID} has been pressed`);
         // device.setColor(keyID, new Color(ColorType.RGB, [255, 255, 255]));
-        var deviceInfo: DeviceInfoCanvas =  //Temp solution, we will move DeviceInfoCanvas generation to device component later
-            {
-                id: device[deviceID].id,
-                pos: device[deviceID].pos,
-                info: device[deviceID].deviceInfo
-            }
         // console.log(deviceInfo)
-        engine?.KeyPress(deviceInfo, keyID);
+        engine?.KeyPress(devicesInfo[deviceID], keyID);
     };
 
     const virtualKeyReleased: KeyRelease = (deviceID: number, keyID: KeyID) => {
         console.info(`Virtual Button ${keyID} has been released`);
         // // device.setColor(keyID, new Color(ColorType.RGB, [0, 0, 0]));
 
-        var deviceInfo: DeviceInfoCanvas =  //Temp solution, we will move DeviceInfoCanvas generation to device component later
-            {
-                id: device[deviceID].id,
-                pos: device[deviceID].pos,
-                info: device[deviceID].deviceInfo
-            }
-        engine?.KeyRelease(deviceInfo, keyID);
+        engine?.KeyRelease(devicesInfo[deviceID], keyID);
     };
 
     const loadProject = () => {
@@ -89,13 +92,21 @@
     var api: Canvas =
         {
             setColor: function (deviceID: number, keyID: KeyID, color: Color) {
-                device[deviceID].setColor(keyID, color);
+                devices[deviceID].setColor(keyID, color);
             },
 
             clear: function (deviceID: number) {
-                device[deviceID].clear(); //TODO: Implentment this
+                devices[deviceID].clear(); //TODO: Implentment this
+            },
+
+            getDevices: function(){
+                return devicesInfo;
             }
         }
+
+    afterUpdate(() => {
+        updateDevicesInfo();
+    });
 </script>
 
 <main>
@@ -117,7 +128,7 @@
                     >
                         <svelte:component
                                 this={virtualDeviceComponent}
-                                bind:this={device[0]}
+                                bind:this={devices[0]}
                                 id={0}
                                 pos={[0, 0]}
                                 keyPress={virtualKeyPressed}

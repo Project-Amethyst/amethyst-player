@@ -163,7 +163,7 @@ import { Stop } from "carbon-icons-svelte"
                         </div>
                         <div class="demoplay-button">
                             <div on:click={() => project?.demoplay?.playing ? project?.demoplay?.Pause() : project?.demoplay?.Start()}>
-                                {#if demoplayValues.isPlaying}
+                                {#if project?.demoplay?.playing}
                                     <Pause size={24}></Pause>
                                 {:else}
                                     <Play size={24}></Play>
