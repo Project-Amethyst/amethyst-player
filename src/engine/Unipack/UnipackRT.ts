@@ -297,9 +297,12 @@ class UnipackRT implements ProjectRT {
 
     }
     ChainChange(chain: number): void { 
-        console.log(`Chain Change ${chain}`); 
-        if (chain !== this.currentChain) this.clearKeypressHistory();
-        this.currentChain = chain;
+        if(chain < this.unipackInfo["chain"])
+        {
+            console.log(`Chain Change ${chain}`); 
+            if (chain !== this.currentChain) this.clearKeypressHistory();
+            this.currentChain = chain;
+        }
     }
 
     //Autoplay
