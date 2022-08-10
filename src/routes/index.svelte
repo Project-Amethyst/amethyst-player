@@ -9,7 +9,7 @@
     import type {DeviceInfoCanvas, ProjectRT} from "../engine/ProjectRT"
 
     import {projectEngines} from "../engine/Engines"
-
+    import {GridController} from "../hardware/hardware";
 
 
     import Popup from "../components/Popup.svelte";
@@ -33,17 +33,18 @@
     $: if (browser) engine = projectEngines[settings.projectEngine](api);
     let project_status:string = "not loaded";
 
-    let devices: any[] = []; //Should be fine
-    let devicesInfo: DeviceInfoCanvas[] = []
+    let virtualDevices: any[] = []; //Should be fine
+    let virtualDevicesInfo: DeviceInfoCanvas[] = [];
+
     let popup: { [key: string]: boolean } = {};
 
     let projectBookmarked: boolean = false
 
     const updateDevicesInfo = () =>
     {
-        devicesInfo = []
-        devices.forEach(device => {
-        devicesInfo.push(
+        virtualDevicesInfo = []
+        virtualDevices.forEach(device => {
+        virtualDevicesInfo.push(
             {
                 id: device.id,
                 pos: device.pos,
@@ -57,15 +58,54 @@
         console.info(`Virtual Button ${keyID} has been pressed`);
         // device.setColor(keyID, new Color(ColorType.RGB, [255, 255, 255]));
         // console.log(deviceInfo)
-        engine?.KeyPress(devicesInfo[deviceID], keyID);
+        engine?.KeyPress(virtualDevicesInfo[deviceID], keyID);
     };
 
     const virtualKeyReleased: KeyRelease = (deviceID: number, keyID: KeyID) => {
         console.info(`Virtual Button ${keyID} has been released`);
         // // device.setColor(keyID, new Color(ColorType.RGB, [0, 0, 0]));
 
-        engine?.KeyRelease(devicesInfo[deviceID], keyID);
+        engine?.KeyRelease(virtualDevicesInfo[deviceID], keyID);
     };
+
+    let midiDevices: GridController[] = [];
+    let midiDeviceInfo: DeviceInfoCanvas = [];
+
+    const deviceKeyPressed: KeyPress = (deviceID: number, keyID: KeyID) => {
+        console.info(`Device ${deviceID} Button ${keyID} has been pressed`);
+        // device.setColor(keyID, new Color(ColorType.RGB, [255, 255, 255]));
+        // console.log(deviceInfo)
+        engine?.KeyPress(midiDeviceInfo[deviceID], keyID);
+    };
+
+    const deviceKeyReleased: KeyRelease = (deviceID: number, keyID: KeyID) => {
+        console.info(`Device ${deviceID} Button ${keyID} has been released`);
+        // // device.setColor(keyID, new Color(ColorType.RGB, [0, 0, 0]));
+
+        engine?.KeyRelease(midiDeviceInfo[deviceID], keyID);
+    };
+
+    const deviceEvent = (deviceID: number, event: any) =>
+    {
+        console.log(`Midi Device Event from ${deviceID}`);
+        console.log(event.event);
+        switch(event.event)
+        {
+            case "connected":
+            midiDeviceInfo[deviceID] = {
+                id: deviceID,
+                pos: [0, 0],
+                info: midiDevices[deviceID].getDeviceInfo(),
+            }
+            break;
+            case "disconnected":
+            midiDeviceInfo[deviceID] = undefined;
+            break;
+        }
+    }
+    
+    GridController.start(deviceEvent);
+    midiDevices[0] = new GridController(0, deviceKeyPressed, deviceKeyReleased);
 
     const loadProject = () => {
         console.log("Load File Selector");
@@ -92,15 +132,17 @@
     var api: Canvas =
         {
             setColor: function (deviceID: number, keyID: KeyID, color: Color) {
-                devices[deviceID].setColor(keyID, color);
+                virtualDevices[deviceID].setColor(keyID, color);
+                midiDevices[deviceID]?.setColor(keyID, color);
             },
 
             clear: function (deviceID: number) {
-                devices[deviceID].clear(); //TODO: Implentment this
+                virtualDevices[deviceID].clear(); //TODO: Implentment this
+                midiDevices[deviceID].clear(); //TODO: Implentment this
             },
 
             getDevices: function(){
-                return devicesInfo;
+                return virtualDevicesInfo;
             }
         }
 
@@ -128,7 +170,7 @@
                     >
                         <svelte:component
                                 this={virtualDeviceComponent}
-                                bind:this={devices[0]}
+                                bind:this={virtualDevices[0]}
                                 id={0}
                                 pos={[0, 0]}
                                 keyPress={virtualKeyPressed}
@@ -197,49 +239,35 @@
 
             <div class="setting">
                 <div class="setting-name">
-                    <span>Input Device:</span>
+                    <span>Midi Device:</span>
                 </div>
 
                 <div class="setting-option">
-                    <Dropdown value={"No Device"} options={["No Device"]}
+                    <Dropdown value={midiDevices[0]?.activeInput?.name} options={Object.keys(GridController.availableDevices(true))} placeholder={"No Device"} on:change={(value) => 
+                    {
+                        if(value.detail)
+                        {
+                            midiDevices[0].connectDevice(GridController.availableDevices()[value.detail])
+                        }
+                        else
+                        {
+                            midiDevices[0].disconnect();
+                        }
+                    }}
                     />
                 </div>
             </div>
 
             <div class="setting">
                 <div class="setting-name">
-                    <span>Input Device Config:</span>
+                    <span>Midi Device Config:</span>
                 </div>
 
                 <div class="setting-option">
-                    <Dropdown value={"No Config"} options={["No Config"]}
+                    <Dropdown value={midiDevices[0]?.activeConfig?.name} options={Object.keys(GridController.configList())} placeholder={"No Config"}
                     />
                 </div>
             </div>
-
-            <div class="setting">
-                <div class="setting-name">
-                    <span>Output Device:</span>
-                </div>
-
-                <div class="setting-option">
-                    <Dropdown value={"No Device"} options={["No Device"]}
-                    />
-                </div>
-            </div>
-
-            <div class="setting">
-                <div class="setting-name">
-                    <span>Output Device Config:</span>
-                </div>
-
-                <div class="setting-option">
-                    <Dropdown value={"No Config"} options={["No Config"]}
-                    />
-                </div>
-            </div>
-
-
         </div>
     </Popup>
 </main>

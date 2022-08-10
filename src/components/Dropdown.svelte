@@ -1,11 +1,15 @@
 <script lang="ts">
     import CaretDownIcon from "carbon-icons-svelte/lib/CaretDown.svelte";
+    import { createEventDispatcher } from 'svelte';
 
     export let options: string[];
-    export let value: string;
+    export let value: string | undefined;
+    export let placeholder: string|undefined;
 
     let showOptions: boolean;
     let dropdownButton: HTMLDivElement;
+
+    let dispatch = createEventDispatcher();
 
     function clickOutsideOptions(node: HTMLDivElement) {
         const handleClick = (event: MouseEvent) => {
@@ -34,7 +38,7 @@
 <div style="display: flex; flex-direction: column;">
     <div class="dropdown-select-body" bind:this={dropdownButton} on:click={() => showOptions = !showOptions}>
         <div class="left-portion">
-            <span>{value}</span>
+            <span>{value !== undefined ? value : placeholder}</span>
         </div>
 
         <div class="right-portion">
@@ -44,10 +48,20 @@
 
     {#if showOptions}
         <div class="dropdown-select-options" use:clickOutsideOptions>
+            {#if placeholder}
+                <div class="dropdown-option" on:click={() => {
+                value = undefined;
+                showOptions = false;
+                dispatch("change", value);
+            }}>
+                {placeholder}
+            </div>
+            {/if}
             {#each options as option}
                 <div class="dropdown-option" on:click={() => {
                     value = option;
                     showOptions = false;
+                    dispatch("change", value);
                 }}>
                     {option}
                 </div>
