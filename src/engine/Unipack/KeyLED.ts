@@ -82,7 +82,7 @@ class KeyLED
               if(command[command.length - 2] === "a" || command[command.length - 2] === "auto")
               {
                 var index:number = parseInt(command[command.length - 1])
-                color = new Color(ColorType.Palette, [index, ...palette[index]])
+                color = new Color(ColorType.Palette, ["classic", index])
               }
               else
               {
@@ -96,7 +96,6 @@ class KeyLED
               {
                 this.canvas.setColor(0, keyID, color);
       
-                
                 let id_str = keyID.toString();
                 if(this.currentOn[id_str] === undefined) 
                 {
@@ -127,7 +126,7 @@ class KeyLED
             
             if(keyID != undefined)
             {
-              this.canvas.setColor(0, keyID, new Color(ColorType.Palette, [0, 0, 0, 0]));
+              this.canvas.setColor(0, keyID, new Color(ColorType.Palette, ["classic", 0]));
               
               let id_str = keyID.toString();
               if(this.currentOn[id_str] !== undefined) 
@@ -181,7 +180,7 @@ class KeyLED
       for(var id in this.currentOn)
       {
         var keyID = this.currentOn[id]
-        this.canvas.setColor(0, keyID, new Color(ColorType.Palette, [0, 0, 0, 0]));
+        this.canvas.setColor(0, keyID, new Color(ColorType.Palette, ["classic", 0]));
       }
     }
     this.currentOn = {};

@@ -55,14 +55,14 @@
     }
 
     const virtualKeyPressed: KeyPress = (deviceID: number, keyID: KeyID) => {
-        console.info(`Virtual Button ${keyID} has been pressed`);
+        console.info(`Virtual Device ${keyID} has been pressed`);
         // device.setColor(keyID, new Color(ColorType.RGB, [255, 255, 255]));
         // console.log(deviceInfo)
         engine?.KeyPress(virtualDevicesInfo[deviceID], keyID);
     };
 
     const virtualKeyReleased: KeyRelease = (deviceID: number, keyID: KeyID) => {
-        console.info(`Virtual Button ${keyID} has been released`);
+        console.info(`Virtual Device ${keyID} has been released`);
         // // device.setColor(keyID, new Color(ColorType.RGB, [0, 0, 0]));
 
         engine?.KeyRelease(virtualDevicesInfo[deviceID], keyID);

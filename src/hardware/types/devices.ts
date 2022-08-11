@@ -1,21 +1,32 @@
 import type { Input, Output } from "webmidi";
 
+export enum KeyType
+{
+  Note = "N",
+  CC = "C",
+  Sysex = "X",
+}
+
+export type Position = [number, number];
+export type Dimension = [number, number] 
+export type DeviceKeyID = number | [KeyType, number];
+
 export interface GridDeviceConfig {
   name: string;
-  defaultChannel:number;
+  paletteChannel:{[Name:string]: number};
   midiNameRegex?: string;
-  keymap: number[][];
+  keymap: DeviceKeyID[][];
   /** [Width, Height] */
-  dimension: [number, number];
+  dimension: Dimension;
   /** Grid Only: [Width, Height] */
-  gridDimension: [number, number];
+  gridDimension: Dimension;
   /** [X, Y] */
-  gridOffset: [number, number];
-  chainKey: [number,number][];
-  noteToXY: (note: number) => [number, number];
-  rgbSysexGen?: (x: number, y: number, color: number) => number[];
-  initializationSysex?: number[];
-  specialLED?: [number, number][];
+  gridOffset: Position;
+  chainKey: Position[];
+  noteToXY: (note: number) => Position;
+  specialLED?: DeviceKeyID[];
+  rgbSysexGen?: (keyID: DeviceKeyID, color: [number, number, number]) => number[];
+  initializationSysex?: number[][];
 }
 
 export class MidiDevice {

@@ -1,5 +1,5 @@
 import type { Input, Output } from "webmidi";
-import { MidiDevice, type GridDeviceConfig } from "./types/devices";
+import { KeyType, MidiDevice, type DeviceKeyID, type GridDeviceConfig } from "./types/devices";
 
 import type {KeyID, DeviceInfo} from "../types/devices";
 import type {KeyPress, KeyRelease} from "../engine/CanvasAPI"
@@ -31,7 +31,7 @@ export class GridController {
     {
         if(WebMidi.enabled == false)
         {
-            await WebMidi.enable()
+            await WebMidi.enable({sysex: true})
                 .catch(error => {
                 console.error("An error was thrown by WebMidi", error);
                 });
@@ -114,6 +114,8 @@ export class GridController {
                         if(this.activeConfig)
                         {
                             let xy:[number, number] = this.activeConfig.noteToXY(e.message.data[1])
+                            if(isNaN(xy[0])||isNaN(xy[1]))
+                                return;
                             if(e.message.data[2])
                             {
                                 this.keyPress(this.id, xy);
@@ -296,36 +298,55 @@ export class GridController {
                 keyID[1] + this.activeConfig.gridOffset[1]
             ];
         }
-        let note = this.activeConfig.keymap[keyID[1]][keyID[0]];
+        let deviceKeyID = this.activeConfig.keymap[keyID[1]][keyID[0]];
         // console.log(`${keyID[0]} ${keyID[1]} ${note}`)
-        if(note) {
-            if(color.type === ColorType.Palette)
-            {
-                // console.log(`Send ${this.activeConfig.defaultChannel}, ${note}, ${color.value[0]}`);
-                this.activeOutput!.sendNoteOn(note, {channels: this.activeConfig.defaultChannel, rawAttack: color.value[0]})
-            }         
+        if(deviceKeyID) {
+            this.setColorOnDevice(deviceKeyID, color);    
         }
     }
 
-    setPixel(x: number, y: number, color: number) {}
-
-    setPixelPalette(x: number, y: number, index: number, channel?: number) 
+    setColorOnDevice(keyID: DeviceKeyID, color: Color)
     {
-        if(this.outputReady() === false)
-            return false;
+        if(this.activeConfig === undefined)
+            return;
+        if(color.type === ColorType.Palette)
+        {
+            let channel = this.activeConfig.paletteChannel[color.palette()];
+            let value = color.index();
+            if(channel)
+            {
+                if(!Array.isArray(keyID))
+                {
+                    this.activeOutput!.send([0x90 + channel - 1, keyID, value!]);
+                }
+                else if(!Array.isArray(keyID) || keyID[0] == KeyType.Note)
+                {
+                    this.activeOutput!.send([0x90 + channel - 1, keyID[1], value!]);
+                }
+                else if(keyID[0] == KeyType.CC)
+                {
+                    this.activeOutput!.send([0xb0 + channel - 1, keyID[1], value!]);
+                }
+                else if(keyID[0] == KeyType.Sysex && this.activeConfig.rgbSysexGen)
+                {
+                    this.setColorOnDevice(keyID[1], new Color(ColorType.RGB, color.rgb()));
+                }
 
-        let device_x = this.activeConfig!.gridOffset[0] + x;
-        let device_y = this.activeConfig!.gridOffset[1] + y;
-        let note = this.activeConfig!.keymap[device_y][device_x];
-
-        if(note == undefined || isNaN(note))
-            return false;
-
-        if(channel == undefined) {channel = this.activeConfig?.defaultChannel}
-
-        this.activeOutput!.sendNoteOn(note, {channels: channel, rawAttack: index})
-
-        return true;
+            }
+            else if(this.activeConfig.rgbSysexGen)
+            {
+                this.setColorOnDevice(keyID, new Color(ColorType.RGB, color.rgb()));
+            }
+        }
+        else if(color.type === ColorType.RGB && this.activeConfig.rgbSysexGen)
+        {
+            if(Array.isArray(keyID))
+            {
+                keyID = keyID[1]; //Assume All messages can be triggered via sysex. Like if a message was flaired with CC, but Sysex will override it
+            }
+            let message = (this.activeConfig.rgbSysexGen(keyID, color.rgb()));
+            this.activeOutput!.sendSysex([], message);
+        } 
     }
 
     clear(){}

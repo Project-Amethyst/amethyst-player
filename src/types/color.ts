@@ -1,6 +1,8 @@
+import palettes from "./palettes";
+
 export enum ColorType
 {
-  Palette, //[Palette ID, R, G, B]
+  Palette, //[Palette name, Palette ID]
   RGB //[R, G, B]
 }
 
@@ -9,7 +11,7 @@ export class Color
   type?: ColorType;
   value?: number[];
 
-  constructor(type: ColorType, value ?: number[])
+  constructor(type: ColorType, value ?: any[])
   {
     this.type = type;
     this.value = value;
@@ -24,9 +26,9 @@ export class Color
     }
     else if(this.type === ColorType.Palette)
     {
-      rgb[0] = this.value[1];
-      rgb[1] = this.value[2];
-      rgb[2] = this.value[3];
+      if(palettes[this.value[0]] === undefined)
+        return [NaN, NaN, NaN];
+      rgb = palettes[this.value[0]][this.value[1]];
     }
     else if(this.type === ColorType.RGB)
     {
@@ -59,11 +61,20 @@ export class Color
     return new Color(ColorType.RGB, rgb);
   }
 
-  index(): number|undefined
+  palette(): string|undefined
   {
     if(this.type === ColorType.Palette)
     {
       return this.value?.[0];
+    }
+    return undefined;
+  }
+
+  index(): number|undefined
+  {
+    if(this.type === ColorType.Palette)
+    {
+      return this.value?.[1];
     }
     return undefined;
   }

@@ -1,10 +1,13 @@
 export type KeyPadElement = HTMLButtonElement | HTMLDivElement;
-export type KeyID = number|[number, number]
+
+export type Dimension = [number, number] 
+export type Position = [number, number];
+export type KeyID = number|Position;
 
 export interface DeviceInfo{
-  dimension: [number, number],
-  grid_dimension: [number, number],
-  grid_offset: [number, number],
+  dimension: Dimension,
+  grid_dimension: Dimension,
+  grid_offset: Position,
   chain_key: KeyID[] //Relative to grid center
   special_led ?: KeyID;
 }

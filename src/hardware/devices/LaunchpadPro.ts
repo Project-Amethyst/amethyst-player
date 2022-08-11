@@ -1,10 +1,14 @@
-import type { GridDeviceConfig } from "../types/devices";
+import {KeyType} from "../types/devices";
+import type {DeviceKeyID, GridDeviceConfig } from "../types/devices";
 
 const config: GridDeviceConfig = {
     name: "Launchpad Pro",
-    midiNameRegex: "^Matrix",
+    midiNameRegex: "Launchpad Pro",
 
-    defaultChannel: 2,
+    paletteChannel: {
+      "classic": 1
+    },
+
 
     keymap: [
       [NaN, 91, 92, 93, 94, 95, 96, 97, 98, NaN],
@@ -25,12 +29,18 @@ const config: GridDeviceConfig = {
                 [-1, 7], [-1, 6], [-1, 5], [-1, 4], [-1, 3], [-1, 2], [-1, 1], [-1, 0]],
     noteToXY(note)
     {
-      if(note >= 1 && note <= 99 /* && note != 9 && note != 90 */)
+      if(note >= 1 && note <= 99 && note != 9 && note != 90)
         return [note % 10, 9 - Math.floor(note / 10)]
       return [NaN, NaN];
     },
 
-    specialLED: [99],
+    specialLED: [[KeyType.Sysex, 99]],
+
+    initializationSysex:[
+      [0, 32, 41, 2, 16, 33, 0], //Enter Live Mode
+      [0, 32, 41, 2, 16, 14, 0], //Clear canvas
+      [0, 32, 41, 2, 16, 10, 99, 0], //Turn off Mode light
+    ],
 }
 
 export default config;
