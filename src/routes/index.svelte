@@ -18,7 +18,7 @@
 
     import {browser} from '$app/env'
 
-    import {afterUpdate} from "svelte";
+    import {afterUpdate, onMount} from "svelte";
     import "../shared.css";
 
     let settings = {
@@ -104,7 +104,6 @@
         }
     }
     
-    GridController.start(deviceEvent);
     midiDevices[0] = new GridController(0, deviceKeyPressed, deviceKeyReleased);
 
     const loadProject = () => {
@@ -145,6 +144,10 @@
                 return virtualDevicesInfo;
             }
         }
+
+    onMount(() => {
+        GridController.start(deviceEvent);
+    });
 
     afterUpdate(() => {
         updateDevicesInfo();
