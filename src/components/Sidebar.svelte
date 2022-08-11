@@ -36,12 +36,24 @@ import { Stop } from "carbon-icons-svelte"
         playProgress: 0
     }
 
+    $: if(project?.demoplay?.playing) {
+
+    }
+
     function bookmarkProject() {
         projectBookmarked = !projectBookmarked
     }
 
-    function changeProject() {
+    function pauseDemoplay() {
+        project?.demoplay?.Pause()
 
+        demoplayValues.isPlaying = false;
+    }
+
+    function playDemoplay() {
+        project?.demoplay?.Start()
+
+        demoplayValues.isPlaying = true;
     }
 </script>
 
@@ -141,20 +153,24 @@ import { Stop } from "carbon-icons-svelte"
             
             {#if project?.demoplay !== undefined}
                 <div class="sidebar-block-demoplay">
-                    <div>
-                        <span class="block-title">Project Demoplay
-                            <!-- <OverflowMenuVertical size={24}></OverflowMenuVertical>  -->
-                        </span>
-                        
+                    <div style="display: flex; color: gray; align-items: center; gap: 5px;">
+                        <span class="block-title">Project Demoplay</span>
+
+                        <OverflowMenuVertical style="margin-top: -10px;" size={20}></OverflowMenuVertical>
                     </div>
 
                     <div class="demoplay-time">
-                        <span class="time-display">{project?.demoplay?.progress}</span>
+                        <div class="time-display">
+                            <span >{demoplayValues.playProgress}</span>
+                        </div>
 
-                        <Slider/>
+                        <Slider min={0} bind:value={demoplayValues.playProgress} max={project?.demoplay?.total}/>
 
-                        <span class="time-display">{project?.demoplay?.total}</span>
+                        <div class="time-display">
+                            <span >{project?.demoplay?.total}</span>
+                        </div>
                     </div>
+
                     <div class="demoplay-control-block">
                         <div class="demoplay-button">
                             <div on:click={() => project?.demoplay?.Previous()}>
@@ -162,7 +178,7 @@ import { Stop } from "carbon-icons-svelte"
                             </div>
                         </div>
                         <div class="demoplay-button">
-                            <div on:click={() => project?.demoplay?.playing ? project?.demoplay?.Pause() : project?.demoplay?.Start()}>
+                            <div on:click={() => demoplayValues.isPlaying ? pauseDemoplay() : playDemoplay()}>
                                 {#if project?.demoplay?.playing}
                                     <Pause size={24}></Pause>
                                 {:else}
@@ -325,6 +341,10 @@ import { Stop } from "carbon-icons-svelte"
                         span {
                             line-height: 30px;
                             text-indent: 10px;
+                            white-space: nowrap;
+                            max-width: 80%;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
 
                             font-family: 'Roboto', sans-serif;
                             font-style: normal;
@@ -384,6 +404,10 @@ import { Stop } from "carbon-icons-svelte"
                     font-style: normal;
                     font-weight: 300;
                     font-size: 16px;
+                    max-width: 36px;
+                    min-width: 36px;
+
+                    text-align: center;
 
                     user-select: none;
                     -webkit-user-select: none;
@@ -394,10 +418,10 @@ import { Stop } from "carbon-icons-svelte"
                 }
             }
             .demoplay-control-block {
-            height: 60px;
-            width: 100%;
+                height: 60px;
+                width: 100%;
 
-            display: flex;
+                display: flex;
 
 
                 .demoplay-button {
@@ -421,6 +445,13 @@ import { Stop } from "carbon-icons-svelte"
                         border-radius: 50%;
 
                         color: #d5d5d5;
+
+                        &:hover {
+                            background-color: rgb(10, 10, 10);
+                            border: 2px solid rgb(31, 31, 31);
+
+                            color: #c5c5c5;
+                        }
                     }
                 }
             }
