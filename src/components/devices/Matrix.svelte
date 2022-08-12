@@ -14,9 +14,9 @@
 
     export var deviceInfo: DeviceInfo = 
     {
-        dimension: [10, 10],
+        dimension: [8, 8],
         grid_dimension: [8, 8],
-        grid_offset: [1, 1],
+        grid_offset: [0, 0],
         chain_key: [[8, 0], [8, 1], [8, 2], [8, 3], [8, 4], [8, 5], [8, 6], [8, 7], 
                     [-1, 7], [-1, 6], [-1, 5], [-1, 4], [-1, 3], [-1, 2], [-1, 1], [-1, 0]]
     }
