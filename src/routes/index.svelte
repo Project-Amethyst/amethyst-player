@@ -30,7 +30,6 @@
     $: virtualDeviceComponent = virtualDeviceComponents[settings.virtualDevice].component;
 
     let engine: ProjectRT;
-    $: if (browser) engine = projectEngines[settings.projectEngine](api);
     let project_status:string = "not loaded";
 
     let virtualDevices: any[] = []; //Should be fine
@@ -146,6 +145,7 @@
         }
 
     onMount(() => {
+        engine = projectEngines[settings.projectEngine](api);
         GridController.start(deviceEvent);
     });
 
@@ -218,6 +218,7 @@
                     <Dropdown
                             bind:value={settings.projectEngine}
                             options={Object.keys(projectEngines)}
+                            on:change={() => {engine = projectEngines[settings.projectEngine](api);}}
                     />
                 </div>
             </div>
