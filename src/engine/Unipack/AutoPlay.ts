@@ -72,6 +72,8 @@ class AutoPlay {
     }
   
     Start = async (callback) => {
+      this.Pause();
+      
       this.playing = true;
       // console.time("Autoplay")
       if (this.progress === 0) {
