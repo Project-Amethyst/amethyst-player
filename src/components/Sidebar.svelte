@@ -154,7 +154,7 @@ import { Stop } from "carbon-icons-svelte"
                             <span >{demoplayValues.playProgress}</span>
                         </div>
 
-                        <Slider min={0} bind:value={demoplayValues.playProgress} max={project?.demoplay?.total} on:change={e => project.demoplay.Seek(e.detail)}/>
+                        <Slider min={0} value={demoplayValues.playProgress} max={project?.demoplay?.total} on:change={e => project.demoplay.Seek(e.detail)}/>
 
                         <div class="time-display">
                             <span >{project?.demoplay?.total}</span>
