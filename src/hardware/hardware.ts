@@ -167,7 +167,6 @@ export class GridController {
             {
                 console.log("Device disconnection closed")
                 this.disconnect();
-                GridController.callback({deviceID:this.id, event: "closed"});
                 break;
             }
             default:
@@ -179,6 +178,7 @@ export class GridController {
 
     connectDevice(device: MidiDevice)
     {
+        this.disconnect();
         if(!device) return;
         console.log(`Connecting ${device.name}`)
         this.activeInput = device.input;
@@ -200,6 +200,7 @@ export class GridController {
 
     connect(input_device:Input|undefined, output_device:Output|undefined, config?:GridDeviceConfig|string) 
     {
+        this.disconnect();
         this.activeInput = input_device;
         this.activeOutput = output_device;
 
@@ -309,7 +310,7 @@ export class GridController {
         this.activeOutput = undefined;
         this.activeConfig = undefined;
         this.name = undefined;
-
+        
         GridController.callback({deviceID: this.id, event: "closed"});
     }
 

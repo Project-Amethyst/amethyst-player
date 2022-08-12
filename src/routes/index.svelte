@@ -78,20 +78,20 @@
     };
 
     let midiDevices: GridController[] = [];
-    let midiDeviceInfo: DeviceInfoCanvas = [];
+    let midiDeviceInfos: DeviceInfoCanvas = [];
 
     const deviceKeyPressed: KeyPress = (deviceID: number, keyID: KeyID) => {
         console.info(`Device ${deviceID} Button ${keyID} has been pressed`);
         // device.setColor(keyID, new Color(ColorType.RGB, [255, 255, 255]));
         // console.log(deviceInfo)
-        engine?.KeyPress(midiDeviceInfo[deviceID], keyID);
+        engine?.KeyPress(midiDeviceInfos[deviceID], keyID);
     };
 
     const deviceKeyReleased: KeyRelease = (deviceID: number, keyID: KeyID) => {
         console.info(`Device ${deviceID} Button ${keyID} has been released`);
         // // device.setColor(keyID, new Color(ColorType.RGB, [0, 0, 0]));
 
-        engine?.KeyRelease(midiDeviceInfo[deviceID], keyID);
+        engine?.KeyRelease(midiDeviceInfos[deviceID], keyID);
     };
 
     const deviceEvent = (event: {}) =>
@@ -101,7 +101,7 @@
         switch(event.event)
         {
             case "opened":
-            midiDeviceInfo[event.deviceID] = {
+            midiDeviceInfos[event.deviceID] = {
                 name: midiDevices[event.deviceID].name,
                 id: event.deviceID,
                 pos: [0, 0],
@@ -111,11 +111,24 @@
             reactiveVars.activeInput = midiDevices[event.deviceID].activeInput.name;
             reactiveVars.activeOutput = midiDevices[event.deviceID].activeOutput.name;
             reactiveVars.activeConfig = midiDevices[event.deviceID].activeConfig.name;
-            toast.push(`Device ${midiDeviceInfo[event.deviceID].name} is now the active device`);
+            toast.push(`${midiDeviceInfos[event.deviceID].name} is now the active device`, {
+                theme: {
+                    '--toastBackground': '#48BB78',
+                    '--toastBarBackground': '#2F855A'
+                }
+            });
             break;
             case "closed":
-            toast.push(`Device ${midiDeviceInfo[event.deviceID].name} is not longer the active device`);
-            midiDeviceInfo[event.deviceID] = undefined;
+            if(midiDeviceInfos[event.deviceID] != undefined) //So when user action caused port close (it will set deviceInfo to undefined). No toast will be shown
+            {
+                toast.push(`${midiDeviceInfos[event.deviceID].name} is not longer the active device`, {
+                    theme: {
+                        '--toastBackground': '#F56565',
+                        '--toastBarBackground': '#C53030'
+                    }
+                });
+            }
+            midiDeviceInfos[event.deviceID] = undefined;
             reactiveVars.activeDevice = undefined;
             reactiveVars.activeInput = undefined;
             reactiveVars.activeOutput = undefined;
@@ -123,14 +136,18 @@
             break;
 
             case "connected":
-            toast.push(`Device ${event.device} connected`);
             if(event.device == settings.deviceInput){
+                toast.push(`${event.device} connected`);
                 midiDevices[0].connect(GridController.availableDeviceInputs()[event.device], GridController.availableDeviceOutputs()[event.device], settings.deviceConfig);
+            }
+            else
+            {
+                toast.push(`${event.device} connected\nClick to set it as the active device`);
             }
             break;
 
             case "disconnected":
-            toast.push(`Device ${event.device} disconnected`);
+            toast.push(`${event.device} disconnected`);
             break;
 
         }
@@ -207,6 +224,7 @@
     afterUpdate(() => {
         updateDevicesInfo();
     });
+
 </script>
 
 <main>
@@ -326,6 +344,7 @@
                         settings.deviceOutput = value.detail;
                         if(value.detail)
                         {
+                            midiDeviceInfos[0] = undefined;
                             midiDevices[0].connectDevice(GridController.availableDevices()[value.detail]);
                         }
                         else
@@ -349,6 +368,7 @@
                         settings.deviceInput = value.detail;
                         if(value.detail)
                         {
+                            midiDeviceInfos[0] = undefined;
                             midiDevices[0].connect(GridController.availableDeviceInputs()[value.detail], midiDevices[0].activeOutput, midiDevices[0].activeConfig);
                         }
                         else
@@ -371,6 +391,7 @@
                         settings.deviceOutput = value.detail;
                         if(value.detail)
                         {
+                            midiDeviceInfos[0] = undefined;
                             midiDevices[0].connect(midiDevices[0].activeInput, GridController.availableDeviceOutputs()[value.detail], midiDevices[0].activeConfig);
                         }
                         else
@@ -394,6 +415,7 @@
                         settings.deviceConfig = value.detail;
                         if(value.detail)
                         {
+                            midiDeviceInfos[0] = undefined;
                             midiDevices[0].connect(midiDevices[0].activeInput, midiDevices[0].activeOutput, GridController.configList()[value.detail]);
                         }
                         else
@@ -545,10 +567,11 @@
     }
 
     .toast {
-    display: contents;
-    font-family: "Roboto Mono", sans-serif;
-    font-style: normal;
-    font-size: 16px;
-    font-weight: 300;
+        display: contents;
+        font-family: "Roboto Mono", sans-serif;
+        font-style: normal;
+        font-size: 16px;
+        font-weight: 300;
+        --toastBackground: #141414;
     }
 </style>
