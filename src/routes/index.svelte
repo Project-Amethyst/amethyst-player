@@ -144,7 +144,8 @@
             }
             else
             {
-                toast.push(`${event.device} connected\nClick to set it as the active device`);
+                toast.push(`${event.device} detected`);
+                // toast.push(`${event.device} connected\nClick to set it as the active device`);
             }
             break;
 
@@ -264,7 +265,6 @@
 
             <div class="amethyst-player-footer center-class">
                 <span>Amethyst Player (Alpha)</span>
-                <!-- <span>Maintained by <a href="https://github.com/anthonyhfm" target="_blank">anthonyhfm</a>, <a href="https://github.com/203Null" target="_blank">203null</a>, <a href="https://github.com/Vexcited" target="_blank">vexcited</a> and <a href="https://github.com/mtgsquad" target="_blank">molai</a></span> -->
             </div>
         </div>
     </div>

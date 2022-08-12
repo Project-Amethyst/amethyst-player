@@ -202,13 +202,13 @@ export class GridController {
             console.log("Both Input and output are undefined");
             return;
         }
-        else
-        {
-            this.activeInput?.addListener("midimessage", e => this.deviceEventHandler(e));
-            // this.activeInput?.addListener("disconnected", e => {console.log("Disconnect from input")});
-            // this.activeOutput?.addListener("disconnected", e => {console.log("Disconnect from output")});
-            WebMidi.addListener("disconnected", e => this.deviceDisconnectedHandler(e)); //work around
-        }
+
+        this.name = input_device ? input_device?.name : output_device?.name;
+        this.activeInput?.addListener("midimessage", e => this.deviceEventHandler(e));
+        // this.activeInput?.addListener("disconnected", e => {console.log("Disconnect from input")});
+        // this.activeOutput?.addListener("disconnected", e => {console.log("Disconnect from output")});
+        WebMidi.addListener("disconnected", e => this.deviceDisconnectedHandler(e)); //work around
+
         
         if(config === undefined) //We need to try to auto match device config
         {
@@ -251,19 +251,16 @@ export class GridController {
             if(output_config === input_config)
             {
                 this.activeConfig = output_config;
-                this.name = output_device?.name;
             }
             else //Not matched
             {
                 if(input_device === undefined && output_config)
                 {
                     this.activeConfig = output_config;
-                    this.name = output_device?.name;
                 }
                 else if(output_device === undefined && input_config)
                 {
                     this.activeConfig = input_config;
-                    this.name = input_device?.name;
                 }
                 else
                 {
