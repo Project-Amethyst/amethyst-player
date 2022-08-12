@@ -172,6 +172,7 @@ export class GridController {
         if(input_device === undefined && output_device === undefined)
         {
             console.log("Both Input and output are undefined");
+            return;
         }
         else
         {
@@ -257,6 +258,8 @@ export class GridController {
         {
             console.log(`${this.activeConfig.name} config used`);
         }
+
+        GridController.callback(this.id, {event: "connected"});
 
     }
 

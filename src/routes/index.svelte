@@ -155,11 +155,18 @@
     let reactiveVars = {
         activeConfig: undefined
     }
-    onMount(() => {
+    onMount(async () => {
+        await GridController.start(deviceEvent);
         if(browser && localStorage.getItem("settings") != null) 
         {
             settings = JSON.parse(localStorage.getItem("settings"));
+            midiDevices[0].connect(
+                GridController.availableDeviceInputs()[settings.deviceInput], 
+                GridController.availableDeviceOutputs()[settings.deviceOutput], 
+                GridController.configList()[settings.deviceConfig]);
+                        
             console.log(settings);
+            
         }
         settings_loaded = true;
         setInterval(() => {
@@ -167,7 +174,6 @@
                 reactiveVars.activeConfig = midiDevices[0]?.activeConfig?.name;
         }, 1000/30)
         engine = projectEngines[settings.projectEngine](api);
-        GridController.start(deviceEvent);
     });
 
     afterUpdate(() => {
@@ -313,7 +319,6 @@
                         if(value.detail)
                         {
                             midiDevices[0].connect(GridController.availableDeviceInputs()[value.detail], midiDevices[0].activeOutput, midiDevices[0].activeConfig);
-                        
                         }
                         else
                         {
