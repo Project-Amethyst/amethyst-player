@@ -23,7 +23,11 @@
 
     let settings = {
         virtualDevice: Object.keys(virtualDeviceComponents)[0],
-        projectEngine: "Unipack" //Object.keys(projectEngines)[0],
+        projectEngine: "Unipack", //Object.keys(projectEngines)[0],
+        deviceInput: undefined,
+        deviceOutput: undefined,
+        deviceConfig: undefined,
+        deviceSettingAdvanced: false,
     };
 
     let virtualDeviceComponent: typeof virtualDeviceComponents[number]["component"];
@@ -144,7 +148,13 @@
             }
         }
 
+    let reactiveVars = {
+        activeConfig: undefined
+    }
     onMount(() => {
+        setInterval(() => {
+            reactiveVars.activeConfig = midiDevices[0]?.activeConfig?.name;
+        })
         engine = projectEngines[settings.projectEngine](api);
         GridController.start(deviceEvent);
     });
@@ -159,6 +169,7 @@
         <Sidebar 
             on:settings={() => popup["setting"] = true} 
             on:devices={() => popup["devices"] = true} 
+            on:demoplay={() => popup["demoplay"] = true} 
             on:loadProject={() => {loadProject()}} 
             bind:project={engine} 
             bind:status={project_status} 
@@ -240,7 +251,8 @@
             <div class="popup-header center-class">
                 <span>Devices</span>
             </div>
-
+            
+            {#if !settings.deviceSettingAdvanced}
             <div class="setting">
                 <div class="setting-name">
                     <span>Midi Device:</span>
@@ -249,9 +261,35 @@
                 <div class="setting-option">
                     <Dropdown value={midiDevices[0]?.activeInput?.name} options={Object.keys(GridController.availableDevices(true))} placeholder={"No Device"} on:change={(value) => 
                     {
+                        settings.deviceInput = value.detail;
+                        settings.deviceOutput = value.detail;
                         if(value.detail)
                         {
-                            midiDevices[0].connectDevice(GridController.availableDevices()[value.detail])
+                            midiDevices[0].connectDevice(GridController.availableDevices()[value.detail]);
+                        }
+                        else
+                        {
+                            midiDevices[0].disconnect();
+                        }
+                    }}
+                    />
+                </div>
+            </div>
+
+            {:else}
+            <div class="setting">
+                <div class="setting-name">
+                    <span>Midi Input Device:</span>
+                </div>
+
+                <div class="setting-option">
+                    <Dropdown value={midiDevices[0]?.activeInput?.name} options={Object.keys(GridController.availableDeviceInputs())} placeholder={"No Device"} on:change={(value) => 
+                    {
+                        settings.deviceInput = value.detail;
+                        if(value.detail)
+                        {
+                            midiDevices[0].connect(GridController.availableDeviceInputs()[value.detail], midiDevices[0].activeOutput, midiDevices[0].activeConfig);
+                        
                         }
                         else
                         {
@@ -264,12 +302,86 @@
 
             <div class="setting">
                 <div class="setting-name">
+                    <span>Midi Output Device:</span>
+                </div>
+
+                <div class="setting-option">
+                    <Dropdown value={midiDevices[0]?.activeInput?.name} options={Object.keys(GridController.availableDeviceOutputs())} placeholder={"No Device"} on:change={(value) => 
+                    {
+                        settings.deviceOutput = value.detail;
+                        if(value.detail)
+                        {
+                            midiDevices[0].connect(midiDevices[0].activeInput, GridController.availableDeviceOutputs()[value.detail], midiDevices[0].activeConfig);
+                        
+                        }
+                        else
+                        {
+                            midiDevices[0].disconnect();
+                        }
+                    }}
+                    />
+                </div>
+            </div>
+            {/if}
+
+            <div class="setting">
+                <div class="setting-name">
                     <span>Midi Device Config:</span>
                 </div>
 
                 <div class="setting-option">
-                    <Dropdown value={midiDevices[0]?.activeConfig?.name} options={Object.keys(GridController.configList())} placeholder={"No Config"}
+                    <Dropdown value={reactiveVars.activeConfig} options={Object.keys(GridController.configList())} placeholder={"No Config"} on:change={(value) =>
+                    {
+                        settings.deviceConfig = value.detail;
+                        if(value.detail)
+                        {
+                            midiDevices[0].connect(midiDevices[0].activeInput, midiDevices[0].activeOutput, GridController.configList()[value.detail]);
+                        }
+                        else
+                        {
+                            midiDevices[0].disconnect();
+                        }
+                    }
+                    }
                     />
+                </div>
+            </div>
+
+            <div class="setting">
+                <div class="setting-name">
+                    <span>Advanced Mode</span>
+                </div>
+
+                <div class="setting-option">
+                    <input type="checkbox" bind:checked={settings.deviceSettingAdvanced}>
+                </div>
+            </div>
+        </div>
+    </Popup>
+
+    <Popup bind:show={popup["demoplay"]}>
+        <div class="settings-popup">
+            <div class="popup-header center-class">
+                <span>Demoplay</span>
+            </div>
+
+            <div class="setting">
+                <div class="setting-name">
+                    <span>Light Animation</span>
+                </div>
+
+                <div class="setting-option">
+                    <input type="checkbox">
+                </div>
+            </div>
+
+            <div class="setting">
+                <div class="setting-name">
+                    <span>Learning Mode</span>
+                </div>
+
+                <div class="setting-option">
+                    <input type="checkbox">
                 </div>
             </div>
         </div>

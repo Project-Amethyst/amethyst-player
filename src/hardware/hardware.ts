@@ -87,15 +87,19 @@ export class GridController {
     }
 
     /** Returns all the available MIDI inputs. */
-    static availableDeviceInputs() : Input[]
+    static availableDeviceInputs() : {[name:string]: Input}
     {
-        return WebMidi.inputs;
+        var inputs:{[name:string]: Input} = {}
+        WebMidi.inputs.forEach(input => inputs[input.name] = input);
+        return inputs;
     }
 
     /** Returns all the available MIDI ouputs. */
-    static availableDeviceOutputs() : Output[]
+    static availableDeviceOutputs() : {[name:string]: Output}
     {
-        return WebMidi.outputs;
+        var outputs:{[name:string]: Output} = {}
+        WebMidi.outputs.forEach(output => outputs[output.name] = output);
+        return outputs;
     }
 
     deviceEventHandler(e : any) // TODO Fix

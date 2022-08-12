@@ -107,7 +107,7 @@ import { Stop } from "carbon-icons-svelte"
                                     <User size={24}/>
                                 </div>
                             </div>
-                            <span>{project?.projectInfo.author}</span>
+                            <span title={project?.projectInfo.author}>{project?.projectInfo.author}</span>
                         </div>
 
                         <div class="block-info-bar">
@@ -115,7 +115,7 @@ import { Stop } from "carbon-icons-svelte"
                                 <Music size={24}/>
                             </div>
 
-                            <span>{project?.projectInfo.name}</span>
+                            <span title={project?.projectInfo.name}>{project?.projectInfo.name}</span>
                         </div>
                     </div>
 
@@ -143,10 +143,10 @@ import { Stop } from "carbon-icons-svelte"
             
             {#if project?.demoplay !== undefined}
                 <div class="sidebar-block-demoplay">
-                    <div style="display: flex; color: gray; align-items: center; gap: 5px;">
+                    <div style="display: flex; color: gray; align-items: center; gap: 5px;" on:click={() => dispatch("demoplay")}>
                         <span class="block-title">Project Demoplay</span>
 
-                        <OverflowMenuVertical style="margin-top: -10px;" size={20}></OverflowMenuVertical>
+                        <OverflowMenuVertical style="margin-top: -10px;margin-left: -4px;" size={24}></OverflowMenuVertical>
                     </div>
 
                     <div class="demoplay-time">
