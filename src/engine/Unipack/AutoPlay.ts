@@ -9,6 +9,7 @@ class AutoPlay {
     autoplay:string[];
     playing = false;
     status = "STOPPED";
+    total:number;
     progress = 0;
     lastEventTime = 0;
 
@@ -27,8 +28,10 @@ class AutoPlay {
       this.canvas = canvas;
       this.project = project;
 
+      this.total = text === undefined ? 0 : text.length;
+
       //generate split
-      for(let index = 0; index < this.autoplay.length; index++)
+      for(let index = 0; index < this.total; index++)
       {
         let command = this.getCommand(index);
         if(command.length == 0) continue;
@@ -89,7 +92,7 @@ class AutoPlay {
 
       this.status = "PLAYING"
       this.lastEventTime = Date.now()
-      for (this.progress; this.progress < this.autoplay.length; this.progress++) {
+      for (this.progress; this.progress < this.total; this.progress++) {
         // console.timeEnd("Autoplay");
         // console.time("Autoplay")
   
@@ -217,7 +220,7 @@ class AutoPlay {
       while(true)
       {
         //Check if overflow
-        if(progress >= this.autoplay.length)
+        if(progress >= this.total)
         {
           this.stop();
           break;
