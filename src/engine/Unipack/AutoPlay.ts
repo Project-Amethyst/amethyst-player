@@ -1,15 +1,16 @@
+import type { Canvas } from "../CanvasAPI";
 import KeyLED from "./KeyLED";
 import { KeySound } from "./KeySound";
+import type UnipackRT from "./UnipackRT";
 
 class AutoPlay {
-    canvas = undefined;
-    project = undefined;
-    autoplay = undefined;
+    canvas:Canvas;
+    project:UnipackRT;
+    autoplay:string[];
     playing = false;
-    status = "STOPPED"
-    progress = 0
-    total = 0
-    lastEventTime = undefined;
+    status = "STOPPED";
+    progress = 0;
+    lastEventTime = 0;
 
     activeKeys = [];
   
@@ -21,9 +22,8 @@ class AutoPlay {
 
     thread_id = 0;
   
-    constructor(text, canvas, project) {
+    constructor(text:string[], canvas:Canvas, project:UnipackRT) {
       this.autoplay = text;
-      this.total = text === undefined ? 0 : text.length;
       this.canvas = canvas;
       this.project = project;
 
@@ -31,7 +31,7 @@ class AutoPlay {
       for(let index = 0; index < this.autoplay.length; index++)
       {
         let command = this.getCommand(index);
-        if(!command) continue;
+        if(command.length == 0) continue;
         if(command[0] === "chain")
         {
           this.sections.push([parseInt(command[1]) - 1, index]);
@@ -39,18 +39,18 @@ class AutoPlay {
       }
     }
 
-    getCommand(index: number): [] | undefined
+    getCommand(index: number): string[]
     {
       if(index < 0)
-      return undefined;
+      return [];
 
       let raw_command = this.autoplay?.[index];
       if(!raw_command)
-        return undefined;
+        return [];
 
       let command = raw_command.split(" ");
       if (command.length < 2)
-          return undefined;
+          return [];
       switch (command[0]) {
         case 'o':
           command[0] = "on";
@@ -71,7 +71,7 @@ class AutoPlay {
       return command;
     }
   
-    Start = async (callback) => {
+    Start = async () => {
       this.Pause();
       
       this.playing = true;
@@ -98,11 +98,9 @@ class AutoPlay {
         }
   
         // console.log(this.autoplay[this.progress])
-        if(callback !== undefined)
-          callback([this.progress, this.autoplay.length])
   
         var command = this.getCommand(this.progress);
-        if(command) await this.executeCommand(command);
+        if(command.length > 0) await this.executeCommand(command);
       }
       this.stop(false);
     }
@@ -168,7 +166,7 @@ class AutoPlay {
       while(true)
       {
         let command = this.getCommand(this.progress++);
-        if(!command) continue;
+        if(command.length == 0) continue;
         if(command[0] === "delay") break;
         this.executeCommand(command);
       }
@@ -184,12 +182,13 @@ class AutoPlay {
       {
         console.log(this.progress);
         if(this.progress <= 1) {this.progress = 0; break;}
-
+        
+        var prev_command = this.getCommand(--this.progress);
+        if(prev_command.length == 0) continue;
         let new_command = command;
-        command = this.getCommand(--this.progress);
-        if(!command) continue;
+        command = prev_command;
 
-        if((command?.[0] !== "on" || command?.[0] === "touch") && (new_command?.[0] === "on" || new_command?.[0] === "touch") )
+        if((command[0] !== "on" && command[0] !== "touch") && (new_command[0] === "on" || new_command[0] === "touch") )
         {
           console.log(`Back seek to ${--this.progress}`)
           break;
@@ -227,10 +226,10 @@ class AutoPlay {
         //Check if condiction met (after target, last event was not on or touch, next event is on or touch)
         let old_command = command;
         command = this.getCommand(++progress);
-        if(!command)
+        if(command.length == 0)
           continue;
 
-        if(progress >= target && (old_command?.[0] !== "on" || old_command?.[0] === "touch") && (command?.[0] === "on" || command?.[0] === "touch") )
+        if(progress >= target && (old_command?.[0] !== "on" && old_command?.[0] !== "touch") && (command?.[0] === "on" || command?.[0] === "touch") )
           break;
         
         // console.log(`Seeking ${progress}`)
