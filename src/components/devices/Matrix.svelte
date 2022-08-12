@@ -88,7 +88,7 @@ export function setColor(keyID: KeyID, color: Color) {
     .lp-border {
         background: rgb(20, 20, 20);
         border: 2px solid rgb(120, 120, 120);
-        border-radius: 4%;
+        border-radius: 2%;
 
         position: relative;
 
