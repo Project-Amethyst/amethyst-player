@@ -19,7 +19,7 @@
 
     import { goto } from "$app/navigation";
 
-    import { createEventDispatcher } from 'svelte';
+    import { createEventDispatcher, onMount} from 'svelte';
 
     import type {ProjectRT} from "../engine/ProjectRT";
 import { Stop } from "carbon-icons-svelte"
@@ -36,25 +36,15 @@ import { Stop } from "carbon-icons-svelte"
         playProgress: 0
     }
 
-    $: if(project?.demoplay?.playing) {
-
-    }
-
     function bookmarkProject() {
         projectBookmarked = !projectBookmarked
     }
 
-    function pauseDemoplay() {
-        project?.demoplay?.Pause()
-
-        demoplayValues.isPlaying = false;
-    }
-
-    function playDemoplay() {
-        project?.demoplay?.Start()
-
-        demoplayValues.isPlaying = true;
-    }
+    onMount(() => {
+        window.setInterval(function(){
+        demoplayValues.playProgress = project?.demoplay?.progress;
+        demoplayValues.isPlaying = project?.demoplay?.status === "PLAYING";
+    }, 1000/30)});
 </script>
 
 <div class="sidebar">
@@ -164,7 +154,7 @@ import { Stop } from "carbon-icons-svelte"
                             <span >{demoplayValues.playProgress}</span>
                         </div>
 
-                        <Slider min={0} bind:value={demoplayValues.playProgress} max={project?.demoplay?.total}/>
+                        <Slider min={0} bind:value={demoplayValues.playProgress} max={project?.demoplay?.total} on:change={e => project.demoplay.Seek(e.detail)}/>
 
                         <div class="time-display">
                             <span >{project?.demoplay?.total}</span>
@@ -178,8 +168,8 @@ import { Stop } from "carbon-icons-svelte"
                             </div>
                         </div>
                         <div class="demoplay-button">
-                            <div on:click={() => demoplayValues.isPlaying ? pauseDemoplay() : playDemoplay()}>
-                                {#if project?.demoplay?.playing}
+                            <div on:click={() => project?.demoplay?.status === "PLAYING" ? project?.demoplay?.Pause() : project?.demoplay?.Start()}>
+                                {#if demoplayValues.isPlaying}
                                     <Pause size={24}></Pause>
                                 {:else}
                                     <Play size={24}></Play>

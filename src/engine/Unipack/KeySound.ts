@@ -36,6 +36,11 @@ export class KeySound {
   {
     this.sound.stop();
   }
+
+  static stopAll()
+  {
+    Howler.stop();
+  }
 }
 
 export class Sound {

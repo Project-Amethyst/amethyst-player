@@ -15,7 +15,7 @@ class KeyLED
   activeThread:number = -1;
   latestThread:number = 0;
 
-  static activeList:{[hash:number]:KeyLED} = {};
+  static activeList:KeyLED[] = [];
   static registered_count = 0;
 
   static mc_lut: KeyID[] = [[0, -1], [1, -1], [2, -1], [3, -1], [4, -1], [5, -1], [6, -1], [7, -1],
@@ -34,10 +34,7 @@ class KeyLED
   play = async() =>
   {
     this.stop();
-    if(KeyLED.activeList[this.id] === undefined)
-    {
-      KeyLED.activeList[this.id] = this
-    }
+    this.addToActiveList();
     var threadID = ++this.latestThread;
     this.activeThread = threadID;
     var currentLoop = 0
@@ -192,10 +189,30 @@ class KeyLED
     this.end = true
   }
 
+  addToActiveList()
+  {
+    if(KeyLED.activeList.indexOf(this) === -1)
+    {
+      KeyLED.activeList.push(this);
+    }
+  }
+
   removeFromActiveList()
   {
-    // console.log("Try to delete " + this.id)
-    delete KeyLED.activeList[this.id]
+    let index = KeyLED.activeList.indexOf(this);
+    if(index !== -1)
+    {
+      KeyLED.activeList.splice(index, 1);
+    }
+  }
+
+  static stopAll()
+  {
+    for(var active of KeyLED.activeList)
+    {
+      active.stop();
+    }
+    KeyLED.activeList = [];
   }
 }
 

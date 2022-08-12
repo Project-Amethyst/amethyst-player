@@ -32,6 +32,7 @@ class UnipackRT implements ProjectRT {
         // console.log(file);
         // this.api.setRGB(0, [1, 1], 255, 255, 255);
 
+        this.currentChain = 0;
         return new Promise(async (resolve, reject) => {
             try {
                 // console.log(this.projectInfo)
@@ -292,10 +293,10 @@ class UnipackRT implements ProjectRT {
         }
 
         //Update History
-        if (this.keypressHistory?.[canvas_x]?.[canvas_y] != undefined)
-            this.keypressHistory[canvas_x][canvas_y]++;
+        this.logKeypressHistory(canvas_x, canvas_y);
 
     }
+
     ChainChange(chain: number): void { 
         if(chain < this.unipackInfo["chain"])
         {
@@ -321,6 +322,12 @@ class UnipackRT implements ProjectRT {
     }
     GetChain(): number {
         return 0;
+    }
+
+    logKeypressHistory(x: number, y:number)
+    {
+        if (this.keypressHistory?.[x]?.[y] != undefined)
+        this.keypressHistory[x][y]++;
     }
 
     clearKeypressHistory() {

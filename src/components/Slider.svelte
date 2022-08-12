@@ -1,5 +1,6 @@
 <script>
     import {browser} from "$app/env";
+    import { createEventDispatcher } from 'svelte';
 
     let sliderBody;
     let slider;
@@ -7,6 +8,8 @@
     export let value;
     export let max;
     export let min;
+
+    let dispatch = createEventDispatcher();
 </script>
 
 <!--<div class="slider-body {$$props.class}" style={$$props.style} on:click={clickSlider} on:mousemove={mouseMove} bind:this={sliderBody}>
@@ -18,7 +21,7 @@
 </div>-->
 
 <div class="slider-body {$$props.class}" style={$$props.style} bind:this={sliderBody}>
-    <input type="range" class="slider" on:change={e => value = e.target.value} bind:this={slider} min={min} max={max} value={value}>
+    <input type="range" class="slider" on:change={e => {value = e.target.value; dispatch("change", e.target.value)}} bind:this={slider} min={min} max={max} value={value}>
 </div>
 
 <style lang="scss">
