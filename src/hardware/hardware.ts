@@ -130,6 +130,14 @@ export class GridController {
         return outputs;
     }
 
+    deviceDisconnectedHandler(e: any)
+    {
+        if(e.port === this.activeInput || e.port === this.activeOutput)
+        {
+            this.disconnect();
+        }
+    }
+
     deviceEventHandler(e : any) // TODO Fix
     {
         // console.log(e)
@@ -165,7 +173,7 @@ export class GridController {
             case "closed":
             case "disconnected":
             {
-                console.log("Device disconnection closed")
+                console.log("Device connection closed")
                 this.disconnect();
                 break;
             }
@@ -180,22 +188,7 @@ export class GridController {
     {
         this.disconnect();
         if(!device) return;
-        console.log(`Connecting ${device.name}`)
-        this.activeInput = device.input;
-        this.activeOutput = device.output;
-        this.activeConfig = device.config;
-        this.name = device.input?.name;
-
-        this.activeInput?.addListener("midimessage", e => this.deviceEventHandler(e));
-        // this.activeInput?.addListener("closed", e => this.deviceEventHandler(e));
-        this.activeInput?.addListener("disconnected", e => this.deviceEventHandler(e));
-        this.activeOutput?.addListener("disconnected", e => this.deviceEventHandler(e));
-
-        // console.log(this.activeInput);
-        // console.log(this.activeOutput);
-        // console.log(this.activeConfig);
-
-        GridController.callback({deviceID:this.id, event: "opened"});
+        this.connect(device.input, device.output, device.config);
     }
 
     connect(input_device:Input|undefined, output_device:Output|undefined, config?:GridDeviceConfig|string) 
@@ -212,8 +205,9 @@ export class GridController {
         else
         {
             this.activeInput?.addListener("midimessage", e => this.deviceEventHandler(e));
-            this.activeInput?.addListener("disconnected", e => this.deviceEventHandler(e));
-            this.activeOutput?.addListener("disconnected", e => this.deviceEventHandler(e));
+            // this.activeInput?.addListener("disconnected", e => {console.log("Disconnect from input")});
+            // this.activeOutput?.addListener("disconnected", e => {console.log("Disconnect from output")});
+            WebMidi.addListener("disconnected", e => this.deviceDisconnectedHandler(e)); //work around
         }
         
         if(config === undefined) //We need to try to auto match device config
@@ -303,15 +297,18 @@ export class GridController {
 
     disconnect() 
     {
-        this.activeInput?.removeListener();
-        this.activeOutput?.removeListener();
+        if(this.activeInput || this.activeOutput)
+        {
+            this.activeInput?.removeListener();
+            this.activeOutput?.removeListener();
 
-        this.activeInput = undefined;
-        this.activeOutput = undefined;
-        this.activeConfig = undefined;
-        this.name = undefined;
-        
-        GridController.callback({deviceID: this.id, event: "closed"});
+            this.activeInput = undefined;
+            this.activeOutput = undefined;
+            this.activeConfig = undefined;
+            this.name = undefined;
+            
+            GridController.callback({deviceID: this.id, event: "closed"});
+        }
     }
 
     getDeviceInfo(): DeviceInfo | undefined

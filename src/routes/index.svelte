@@ -113,6 +113,7 @@
             reactiveVars.activeConfig = midiDevices[event.deviceID].activeConfig.name;
             toast.push(`${midiDeviceInfos[event.deviceID].name} is now the active device`, {
                 theme: {
+                    '--toastColor': '#FFFFFF;',
                     '--toastBackground': '#48BB78',
                     '--toastBarBackground': '#2F855A'
                 }
@@ -123,6 +124,7 @@
             {
                 toast.push(`${midiDeviceInfos[event.deviceID].name} is not longer the active device`, {
                     theme: {
+                        '--toastColor': '#FFFFFF;',
                         '--toastBackground': '#F56565',
                         '--toastBarBackground': '#C53030'
                     }
@@ -572,6 +574,8 @@
         font-style: normal;
         font-size: 16px;
         font-weight: 300;
+        --toastColor: #CBCBCB;
         --toastBackground: #141414;
+        --toastBarBackground: #3E3E3E;
     }
 </style>
