@@ -41,7 +41,7 @@ import { Stop } from "carbon-icons-svelte"
     }
 
     onMount(() => {
-        window.setInterval(function(){
+        setInterval(function(){
         demoplayValues.playProgress = project?.demoplay?.progress;
         demoplayValues.isPlaying = project?.demoplay?.status === "PLAYING";
     }, 1000/30)});
