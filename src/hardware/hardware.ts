@@ -338,7 +338,7 @@ export class GridController {
                 keyID[1] + this.activeConfig.gridOffset[1]
             ];
         }
-        let deviceKeyID = this.activeConfig.keymap[keyID[1]][keyID[0]];
+        let deviceKeyID = this.activeConfig.keymap?.[keyID[1]]?.[keyID[0]];
         // console.log(`${keyID[0]} ${keyID[1]} ${note}`)
         if(deviceKeyID) {
             this.setColorOnDevice(deviceKeyID, color);    

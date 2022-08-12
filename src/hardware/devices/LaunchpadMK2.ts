@@ -21,21 +21,20 @@ const config: GridDeviceConfig = {
       [21, 22, 23, 24, 25, 26, 27, 28, 29],
       [11, 12, 13, 14, 15, 16, 17, 18, 19]],
     
-    dimension: [10, 10],
+    dimension: [9, 9],
     gridDimension: [8, 8],
-    gridOffset: [1, 1],
-    chainKey: [[8, 0], [8, 1], [8, 2], [8, 3], [8, 4], [8, 5], [8, 6], [8, 7],
-                [-1, 7], [-1, 6], [-1, 5], [-1, 4], [-1, 3], [-1, 2], [-1, 1], [-1, 0]],
+    gridOffset: [0, 1],
+    chainKey: [[8, 0], [8, 1], [8, 2], [8, 3], [8, 4], [8, 5], [8, 6], [8, 7]],
 
     noteToXY(note)
     {
       if(note >= 11 && note <= 89)
       {
-        return [(note % 10) - 1, 9 - Math.floor(note / 10)]
+        return [(note % 10) - 1 - this.gridOffset[0], 9 - Math.floor(note / 10)  - this.gridOffset[1]]
       }
       else if(note >= 104 && note <= 111)
       {
-        return [note - 104, 0];
+        return [note - 104 - this.gridOffset[0], 0 - this.gridOffset[1]];
       }
       return [NaN, NaN]
     },

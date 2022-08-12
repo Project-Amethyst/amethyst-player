@@ -30,7 +30,7 @@ const config: GridDeviceConfig = {
     noteToXY(note)
     {
       if(note >= 1 && note <= 99 && note != 9 && note != 90)
-        return [note % 10, 9 - Math.floor(note / 10)]
+        return [note % 10 - this.gridOffset[0], 9 - Math.floor(note / 10)  - this.gridOffset[1]]
       return [NaN, NaN];
     },
 
