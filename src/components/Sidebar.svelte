@@ -19,7 +19,7 @@
 
     import { goto } from "$app/navigation";
 
-    import { createEventDispatcher, onMount} from 'svelte';
+    import { createEventDispatcher, afterUpdate, onMount} from 'svelte';
 
     import type {ProjectRT} from "../engine/ProjectRT";
 import { Stop } from "carbon-icons-svelte"
@@ -42,8 +42,11 @@ import { Stop } from "carbon-icons-svelte"
 
     onMount(() => {
         setInterval(() => {
-        demoplayValues.playProgress = project?.demoplay?.progress;
-        demoplayValues.isPlaying = project?.demoplay?.status === "PLAYING";
+        if(demoplayValues.playProgress != project?.demoplay?.progress)
+            demoplayValues.playProgress = project?.demoplay?.progress;
+
+        if(demoplayValues.isPlaying != (project?.demoplay?.status === "PLAYING"))
+            demoplayValues.isPlaying = project?.demoplay?.status === "PLAYING";
     }, 1000/30)});
 </script>
 

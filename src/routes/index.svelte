@@ -23,12 +23,16 @@
 
     let settings = {
         virtualDevice: Object.keys(virtualDeviceComponents)[0],
+        virtualDeviceScale: "100%",
         projectEngine: "Unipack", //Object.keys(projectEngines)[0],
         deviceInput: undefined,
         deviceOutput: undefined,
         deviceConfig: undefined,
         deviceSettingAdvanced: false,
     };
+    var settings_loaded = false;
+
+    $: if(browser && settings_loaded){console.log("Saving setting"); console.log(settings); localStorage.setItem("settings", JSON.stringify(settings))};
 
     let virtualDeviceComponent: typeof virtualDeviceComponents[number]["component"];
     $: virtualDeviceComponent = virtualDeviceComponents[settings.virtualDevice].component;
@@ -42,7 +46,7 @@
     let popup: { [key: string]: boolean } = {};
 
     let projectBookmarked: boolean = false
-
+    
     const updateDevicesInfo = () =>
     {
         virtualDevicesInfo = []
@@ -152,9 +156,16 @@
         activeConfig: undefined
     }
     onMount(() => {
+        if(browser && localStorage.getItem("settings") != null) 
+        {
+            settings = JSON.parse(localStorage.getItem("settings"));
+            console.log(settings);
+        }
+        settings_loaded = true;
         setInterval(() => {
-            reactiveVars.activeConfig = midiDevices[0]?.activeConfig?.name;
-        })
+            if(reactiveVars.activeConfig != midiDevices[0]?.activeConfig?.name)
+                reactiveVars.activeConfig = midiDevices[0]?.activeConfig?.name;
+        }, 1000/30)
         engine = projectEngines[settings.projectEngine](api);
         GridController.start(deviceEvent);
     });
@@ -179,7 +190,7 @@
             <div class="amethyst-player-content">
                 <div class="amethyst-player-launchpad-holder center-class">
                     <div
-                            style="height: 50vh; width: 50vh; padding: 20px;"
+                            style={`height: 50vh; width: 50vh; padding: 20px; scale:${settings.virtualDeviceScale};`}
                             class="center-class"
                     >
                         <svelte:component
@@ -216,6 +227,19 @@
                     <Dropdown
                             bind:value={settings.virtualDevice}
                             options={Object.keys(virtualDeviceComponents)}
+                    />
+                </div>
+            </div>
+
+            <div class="setting">
+                <div class="setting-name">
+                    <span>Virtual Device Scale:</span>
+                </div>
+
+                <div class="setting-option">
+                    <Dropdown
+                            bind:value={settings.virtualDeviceScale}
+                            options={["50%", "75%", "100%", "125%", "150%"]}
                     />
                 </div>
             </div>
