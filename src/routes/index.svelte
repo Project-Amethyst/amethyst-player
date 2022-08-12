@@ -16,6 +16,8 @@
     import Dropdown from "../components/Dropdown.svelte";
     import Sidebar from "../components/Sidebar.svelte";
 
+    import { SvelteToast, toast } from '@zerodevx/svelte-toast'
+
     import {browser} from '$app/env'
 
     import {afterUpdate, onMount} from "svelte";
@@ -92,22 +94,45 @@
         engine?.KeyRelease(midiDeviceInfo[deviceID], keyID);
     };
 
-    const deviceEvent = (deviceID: number, event: any) =>
+    const deviceEvent = (event: {}) =>
     {
-        console.log(`Midi Device Event from ${deviceID}`);
-        console.log(event.event);
+        console.log(`Midi Device Event`);
+        console.log(event);
         switch(event.event)
         {
-            case "connected":
-            midiDeviceInfo[deviceID] = {
-                id: deviceID,
+            case "opened":
+            midiDeviceInfo[event.deviceID] = {
+                name: midiDevices[event.deviceID].name,
+                id: event.deviceID,
                 pos: [0, 0],
-                info: midiDevices[deviceID].getDeviceInfo(),
+                info: midiDevices[event.deviceID].getDeviceInfo(),
+            }
+            reactiveVars.activeDevice = midiDevices[event.deviceID].name;
+            reactiveVars.activeInput = midiDevices[event.deviceID].activeInput.name;
+            reactiveVars.activeOutput = midiDevices[event.deviceID].activeOutput.name;
+            reactiveVars.activeConfig = midiDevices[event.deviceID].activeConfig.name;
+            toast.push(`Device ${midiDeviceInfo[event.deviceID].name} is now the active device`);
+            break;
+            case "closed":
+            toast.push(`Device ${midiDeviceInfo[event.deviceID].name} is not longer the active device`);
+            midiDeviceInfo[event.deviceID] = undefined;
+            reactiveVars.activeDevice = undefined;
+            reactiveVars.activeInput = undefined;
+            reactiveVars.activeOutput = undefined;
+            reactiveVars.activeConfig = undefined;
+            break;
+
+            case "connected":
+            toast.push(`Device ${event.device} connected`);
+            if(event.device == settings.deviceInput){
+                midiDevices[0].connect(GridController.availableDeviceInputs()[event.device], GridController.availableDeviceOutputs()[event.device], settings.deviceConfig);
             }
             break;
+
             case "disconnected":
-            midiDeviceInfo[deviceID] = undefined;
+            toast.push(`Device ${event.device} disconnected`);
             break;
+
         }
     }
     
@@ -153,7 +178,10 @@
         }
 
     let reactiveVars = {
-        activeConfig: undefined
+        activeDevice: undefined,
+        activeInput: undefined,
+        activeOutput: undefined,
+        activeConfig: undefined,
     }
     onMount(async () => {
         await GridController.start(deviceEvent);
@@ -183,6 +211,9 @@
 
 <main>
     <div class="main-content">
+        <div class="toast">
+            <SvelteToast/>
+        </div>
         <Sidebar 
             on:settings={() => popup["setting"] = true} 
             on:devices={() => popup["devices"] = true} 
@@ -289,7 +320,7 @@
                 </div>
 
                 <div class="setting-option">
-                    <Dropdown value={midiDevices[0]?.activeInput?.name} options={Object.keys(GridController.availableDevices(true))} placeholder={"No Device"} on:change={(value) => 
+                    <Dropdown value={reactiveVars.activeDevice} options={Object.keys(GridController.availableDevices())} placeholder={"No Device"} on:change={(value) => 
                     {
                         settings.deviceInput = value.detail;
                         settings.deviceOutput = value.detail;
@@ -313,7 +344,7 @@
                 </div>
 
                 <div class="setting-option">
-                    <Dropdown value={midiDevices[0]?.activeInput?.name} options={Object.keys(GridController.availableDeviceInputs())} placeholder={"No Device"} on:change={(value) => 
+                    <Dropdown value={reactiveVars.activeInput} options={Object.keys(GridController.availableDeviceInputs())} placeholder={"No Device"} on:change={(value) => 
                     {
                         settings.deviceInput = value.detail;
                         if(value.detail)
@@ -335,13 +366,12 @@
                 </div>
 
                 <div class="setting-option">
-                    <Dropdown value={midiDevices[0]?.activeInput?.name} options={Object.keys(GridController.availableDeviceOutputs())} placeholder={"No Device"} on:change={(value) => 
+                    <Dropdown value={reactiveVars.activeOutput} options={Object.keys(GridController.availableDeviceOutputs())} placeholder={"No Device"} on:change={(value) => 
                     {
                         settings.deviceOutput = value.detail;
                         if(value.detail)
                         {
                             midiDevices[0].connect(midiDevices[0].activeInput, GridController.availableDeviceOutputs()[value.detail], midiDevices[0].activeConfig);
-                        
                         }
                         else
                         {
@@ -512,5 +542,13 @@
                 flex-direction: row-reverse;
             }
         }
+    }
+
+    .toast {
+    display: contents;
+    font-family: "Roboto Mono", sans-serif;
+    font-style: normal;
+    font-size: 16px;
+    font-weight: 300;
     }
 </style>

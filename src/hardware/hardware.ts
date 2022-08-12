@@ -8,9 +8,11 @@ import { ColorType, Color } from "../types/color"
 
 import { WebMidi } from "webmidi";
 import DeviceConfigs from "./devices";
+import { dev } from "$app/env";
 
 export class GridController {
     id: number;
+    name?: string;
     activeInput?: Input;
     activeOutput?: Output;
     activeConfig?: GridDeviceConfig
@@ -18,7 +20,7 @@ export class GridController {
     keyPress: KeyPress;
     keyRelease: KeyRelease;
 
-    static callback?: (deviceID: number, event: object) => unknown
+    static callback?: ({}) => unknown
 
     constructor(id: number, keyPress: KeyPress, keyRelease: KeyRelease)
     {
@@ -27,7 +29,7 @@ export class GridController {
         this.keyRelease = keyRelease;
     }
 
-    static async start(callback: any)
+    static async start(callback: typeof GridController.callback)
     {
         if(WebMidi.enabled == false)
         {
@@ -35,23 +37,21 @@ export class GridController {
                 .catch(error => {
                 console.error("An error was thrown by WebMidi", error);
                 });
-            
+
+            WebMidi.addListener("portschanged", (e) => {
+                GridController.updateDeviceList(true, true);
+            })
+            GridController.updateDeviceList(true, false);
         }
         GridController.callback = callback;
     }
 
-    /** Returns the configuration of all the devices. */
-    static configList(): {[name:string]: GridDeviceConfig}
-    {
-        return DeviceConfigs;
+    static onMidiStateChange(e) {
+        console.log(e);
     }
 
-    static addConfig(config : GridDeviceConfig)
-    {
-        DeviceConfigs[config.name] = config;
-    }
-
-    static availableDevices(strict_mode:boolean = false) : {[name:string]: MidiDevice}
+    static deviceList:{[name:string]: MidiDevice} = {};
+    static updateDeviceList(strict_mode = true, callback = false)
     {
         let devices:{[name:string]: MidiDevice} = {};
 
@@ -82,8 +82,36 @@ export class GridController {
             }
         }
 
+        if(callback)
+        {
+            for(var new_connection of Object.keys(devices).filter(x => !Object.keys(GridController.deviceList).includes(x)))
+            {
+                this.callback({event:"connected", device:new_connection});
+            }
+            for(var removed_connection of Object.keys(GridController.deviceList).filter(x => !Object.keys(devices).includes(x)))
+            {
+                this.callback({event:"disconnected", device:removed_connection});
+            }
+        }
+
+        GridController.deviceList = devices;
         return devices;
-        
+    }
+
+    /** Returns the configuration of all the devices. */
+    static configList(): {[name:string]: GridDeviceConfig}
+    {
+        return DeviceConfigs;
+    }
+
+    static addConfig(config : GridDeviceConfig)
+    {
+        DeviceConfigs[config.name] = config;
+    }
+
+    static availableDevices() : {[name:string]: MidiDevice}
+    {
+        return GridController.updateDeviceList(true, false);
     }
 
     /** Returns all the available MIDI inputs. */
@@ -134,10 +162,12 @@ export class GridController {
             }
                 break;
             }
+            case "closed":
             case "disconnected":
             {
-                console.log("Device disconnected")
+                console.log("Device disconnection closed")
                 this.disconnect();
+                GridController.callback({deviceID:this.id, event: "closed"});
                 break;
             }
             default:
@@ -149,19 +179,23 @@ export class GridController {
 
     connectDevice(device: MidiDevice)
     {
+        if(!device) return;
         console.log(`Connecting ${device.name}`)
         this.activeInput = device.input;
         this.activeOutput = device.output;
         this.activeConfig = device.config;
+        this.name = device.input?.name;
 
         this.activeInput?.addListener("midimessage", e => this.deviceEventHandler(e));
+        // this.activeInput?.addListener("closed", e => this.deviceEventHandler(e));
         this.activeInput?.addListener("disconnected", e => this.deviceEventHandler(e));
+        this.activeOutput?.addListener("disconnected", e => this.deviceEventHandler(e));
 
         // console.log(this.activeInput);
         // console.log(this.activeOutput);
         // console.log(this.activeConfig);
 
-        GridController.callback(this.id, {event: "connected"});
+        GridController.callback({deviceID:this.id, event: "opened"});
     }
 
     connect(input_device:Input|undefined, output_device:Output|undefined, config?:GridDeviceConfig|string) 
@@ -176,8 +210,9 @@ export class GridController {
         }
         else
         {
-            this.activeInput?.addListener("midimessage", e => this.deviceEventHandler(e))
-            this.activeInput?.addListener("disconnected", e => this.deviceEventHandler(e))
+            this.activeInput?.addListener("midimessage", e => this.deviceEventHandler(e));
+            this.activeInput?.addListener("disconnected", e => this.deviceEventHandler(e));
+            this.activeOutput?.addListener("disconnected", e => this.deviceEventHandler(e));
         }
         
         if(config === undefined) //We need to try to auto match device config
@@ -221,16 +256,19 @@ export class GridController {
             if(output_config === input_config)
             {
                 this.activeConfig = output_config;
+                this.name = output_device?.name;
             }
             else //Not matched
             {
                 if(input_device === undefined && output_config)
                 {
                     this.activeConfig = output_config;
+                    this.name = output_device?.name;
                 }
                 else if(output_device === undefined && input_config)
                 {
                     this.activeConfig = input_config;
+                    this.name = input_device?.name;
                 }
                 else
                 {
@@ -259,8 +297,7 @@ export class GridController {
             console.log(`${this.activeConfig.name} config used`);
         }
 
-        GridController.callback(this.id, {event: "connected"});
-
+        GridController.callback({deviceID: this.id, event: "opened"});
     }
 
     disconnect() 
@@ -271,8 +308,9 @@ export class GridController {
         this.activeInput = undefined;
         this.activeOutput = undefined;
         this.activeConfig = undefined;
+        this.name = undefined;
 
-        GridController.callback(this.id, {event: "disconnected"});
+        GridController.callback({deviceID: this.id, event: "closed"});
     }
 
     getDeviceInfo(): DeviceInfo | undefined
