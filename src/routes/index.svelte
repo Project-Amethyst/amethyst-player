@@ -662,6 +662,7 @@
         font-style: normal;
         font-size: 16px;
         font-weight: 300;
+        --toastWidth: 20rem;
         --toastColor: #cbcbcb;
         --toastBackground: #141414;
         --toastBarBackground: #3e3e3e;

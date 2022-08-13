@@ -202,7 +202,7 @@
 
         <div class="icon-button">
             <div on:click={() => dispatch("devices")}>
-                <Usb size={32}></Usb>
+                <Usb size={36}></Usb>
             </div>
         </div>
 
