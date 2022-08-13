@@ -20,9 +20,10 @@
     import { goto } from "$app/navigation";
 
     import { createEventDispatcher, afterUpdate, onMount} from 'svelte';
+    import { t, locales } from '$lib/translations'; 
 
     import type {ProjectRT} from "../engine/ProjectRT";
-import { Stop } from "carbon-icons-svelte"
+    import { Stop } from "carbon-icons-svelte"
 
     export let project:ProjectRT;
     export let status:string;
@@ -61,7 +62,7 @@ import { Stop } from "carbon-icons-svelte"
 
         {#if status === "not loaded"}
             <div class="sidebar-block-project-info">
-                <span class="block-title">Project Information</span>
+                <span class="block-title">{$t('sidebar.project_infomation')}</span>
                 <div class="block-side-parent">
                     <div class="block-side-left">
                         <div class="block-info-bar">
@@ -70,19 +71,19 @@ import { Stop } from "carbon-icons-svelte"
                                     <MusicRemove size={24}/>
                                 </div>
                             </div>
-                            <span>No Project Loaded</span>
+                            <span>{$t('sidebar.no_project_loaded')}</span>
                         </div>
                     </div>
                 </div>
                 <div style="text-align: center; margin-top: 20px;">
-                    <Button on:click={() => dispatch("loadProject")}>Load Project</Button>
+                    <Button on:click={() => dispatch("loadProject")}>{$t('sidebar.load_project')}</Button>
                 </div>
             </div>
         {/if}
 
         {#if status === "loading"}
             <div class="sidebar-block-project-info">
-                <span class="block-title">Project Information</span>
+                <span class="block-title">{$t('sidebar.project_infomation')}</span>
                 <div class="block-side-parent">
                     <div class="block-side-left">
                         <div class="block-info-bar">
@@ -91,7 +92,7 @@ import { Stop } from "carbon-icons-svelte"
                                     <InProgress size={24}/>
                                 </div>
                             </div>
-                            <span>Project Loading In Progress...</span>
+                            <span>{$t('sidebar.project_loading_in_progress')}</span>
                         </div>
                     </div>
                 </div>
@@ -100,7 +101,7 @@ import { Stop } from "carbon-icons-svelte"
 
         {#if status === "loaded"}
             <div class="sidebar-block-project-info">
-                <span class="block-title">Project Information</span>
+                <span class="block-title">{$t('sidebar.project_infomation')}</span>
 
                 <div class="block-side-parent">
                     <div class="block-side-left">
@@ -140,14 +141,14 @@ import { Stop } from "carbon-icons-svelte"
                 </a> -->
 
                 <div style="text-align: center; margin-top: 20px;">
-                    <Button on:click={() => dispatch("loadProject")}>Change Project</Button>
+                    <Button on:click={() => dispatch("loadProject")}>{$t('sidebar.change_project')}</Button>
                 </div>
             </div>
             
             {#if project?.demoplay !== undefined}
                 <div class="sidebar-block-demoplay">
                     <div style="display: flex; color: gray; align-items: center; gap: 5px;" on:click={() => dispatch("demoplay")}>
-                        <span class="block-title">Project Demoplay</span>
+                        <span class="block-title">{$t('sidebar.project_demoplay')}</span>
 
                         <OverflowMenuVertical style="margin-top: -10px;margin-left: -4px;" size={24}></OverflowMenuVertical>
                     </div>

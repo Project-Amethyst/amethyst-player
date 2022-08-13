@@ -13,7 +13,6 @@ export interface ProjectInfo{
 
 export interface ProjectRT {
     constructor: (api: Canvas) => void;
-
     //Meta
     LoadProjectFile: (file: File) => Promise<void>;
     ClearProjectFile: () => void;
@@ -27,6 +26,8 @@ export interface ProjectRT {
     readonly loaded: boolean;
     readonly currentChain: number;
     readonly projectInfo: ProjectInfo;
+
+    readonly fileFormat:string; //Format of file
 
     //Demoplay
     demoplay?: 

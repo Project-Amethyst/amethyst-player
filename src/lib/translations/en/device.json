@@ -1,0 +1,8 @@
+{
+    "device": "Device",
+    "midi_device": "MIDI Device",
+    "midi_input_device": "MIDI Input Device",
+    "midi_output_device": "MIDI Output Device",
+    "midi_device_config": "MIDI Device Config",
+    "advanced_mode": "Advanced Mode"
+}

@@ -1,0 +1,8 @@
+{
+    "device": "设备配置",
+    "midi_device": "MIDI 设备",
+    "midi_input_device": "MIDI 输入设备",
+    "midi_output_device": "MIDI 输出设备",
+    "midi_device_config": "MIDI 设备配置",
+    "advanced_mode": "高级配置"
+}

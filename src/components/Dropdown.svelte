@@ -5,6 +5,7 @@
     export let options: string[];
     export let value: string | undefined;
     export let placeholder: string|undefined;
+    let index:number;
 
     let showOptions: boolean;
     let dropdownButton: HTMLDivElement;
@@ -52,7 +53,8 @@
                 <div class="dropdown-option" on:click={() => {
                 value = undefined;
                 showOptions = false;
-                dispatch("change", value);
+                index = NaN;
+                dispatch("change", {value:value, index:index});
             }}>
                 {placeholder}
             </div>
@@ -61,7 +63,8 @@
                 <div class="dropdown-option" on:click={() => {
                     value = option;
                     showOptions = false;
-                    dispatch("change", value);
+                    index = options.indexOf(option);
+                    dispatch("change", {value:value, index:index});
                 }}>
                     {option}
                 </div>

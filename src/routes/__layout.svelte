@@ -1,0 +1,39 @@
+<script context="module">
+import { browser } from '$app/env';
+
+    import { locale, locales, loadTranslations } from '$lib/translations';
+  
+    export const load = async ({ url }) => {
+      const { pathname } = url;
+  
+      var storedLocale;
+      if(browser)
+      {
+        storedLocale = JSON.parse(localStorage.getItem("settings"))?.language;
+      }
+
+      var perferedLocale = 'en';
+      if(!storedLocale && browser)
+      { 
+        var broserLocales = navigator.languages || [navigator.language || navigator.userLanguage];
+
+        for(var broserLocale of broserLocales)
+        {
+          if(locales.get().indexOf(broserLocale) != -1)
+          {
+            perferedLocale = broserLocale; //Default back to English
+            break;
+          }
+        }
+        console.log(`Auto determained language: ${perferedLocale}`)
+      }
+      
+      const initLocale = storedLocale || perferedLocale; // set default if no locale already set
+      
+      await loadTranslations(initLocale, pathname); // keep this just before the `return`
+  
+      return {};
+    }
+  </script>
+
+<slot></slot>

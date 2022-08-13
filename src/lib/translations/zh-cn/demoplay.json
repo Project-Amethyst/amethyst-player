@@ -1,0 +1,7 @@
+{
+    "demoplay": "演示播放",
+    "light_animation": "灯光动画",
+    "show_key_press": "显示按键",
+    "learning_mode": "学习模式",
+    "learning_mode_info": "学习模式下，演奏会强制跟随演奏播放进行。如果按键触发和演示播放不符，一键多音等不会进行更新。当正确的按键被按下后，演示播放也会自动前进。"
+}
