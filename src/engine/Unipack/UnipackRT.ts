@@ -209,7 +209,7 @@ class UnipackRT implements ProjectRT {
                             parseInt(command[1]) - 1,
                             command[3].toLowerCase(),
                             parseInt(command[4]), //Might be NaN
-                            parseInt(command[5]), //Might be NaN
+                            parseInt(command[5]) - 1, //Might be NaN
                         ];
                         
                         if(isNaN(loop)) {loop = 1}
