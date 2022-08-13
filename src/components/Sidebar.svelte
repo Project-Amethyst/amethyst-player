@@ -53,10 +53,10 @@ import { Stop } from "carbon-icons-svelte"
 <div class="sidebar">
     <div>
         <div class="sidebar-header">
-            <img src="logo-256.png">
+            <img src="logo-256.png" style="margin-top: 14px;">
 
-            <span class="title">Amethyst</span>
-            <span class="subtitle">Player</span>
+            <span class="title" style="margin-left: -18px;">Amethyst</span>
+            <span class="subtitle" style="margin-left: -5px;">Player</span>
         </div>
 
         {#if status === "not loaded"}
