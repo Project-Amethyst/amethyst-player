@@ -29,13 +29,14 @@ export class GridController {
         this.keyRelease = keyRelease;
     }
 
-    static async start(callback: typeof GridController.callback)
+    static async start(callback: typeof GridController.callback):boolean
     {
         if(WebMidi.enabled == false)
         {
             await WebMidi.enable({sysex: true})
                 .catch(error => {
                 console.error("An error was thrown by WebMidi", error);
+                return false;
                 });
 
             WebMidi.addListener("portschanged", (e) => {
@@ -44,6 +45,7 @@ export class GridController {
             GridController.updateDeviceList(true, false);
         }
         GridController.callback = callback;
+        return true;
     }
 
     static onMidiStateChange(e) {

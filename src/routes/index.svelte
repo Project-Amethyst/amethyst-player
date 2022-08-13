@@ -33,7 +33,7 @@
         deviceOutput: undefined,
         deviceConfig: undefined,
         deviceSettingAdvanced: false,
-        language: "us",
+        language: undefined,
     };
     var settings_loaded = false;
 
@@ -227,7 +227,20 @@
 
     if (browser) {
         (async () => {
-            await GridController.start(deviceEvent);
+            if(!await GridController.start(deviceEvent))
+            {
+                toast.push(
+                        $t("toast.webmidi_unavailable"),
+                        {
+                            theme: {
+                                "--toastColor": "#FFFFFF;",
+                                "--toastBackground": "#F56565",
+                                "--toastBarBackground": "#C53030",
+                            },
+                            duration: 10000
+                        }
+                    );
+            }
             if (browser && localStorage.getItem("settings") != null) {
                 settings = JSON.parse(localStorage.getItem("settings"));
                 midiDevices[0].connect(
@@ -263,7 +276,7 @@
 <main>
     <div class="main-content">
         <div class="toast">
-            <SvelteToast />
+            <SvelteToast options={{pausable: true}} />
         </div>
         <Sidebar
             on:settings={() => (popup["setting"] = true)}
