@@ -6,6 +6,8 @@ import KeyLED from "./KeyLED";
 import AutoPlay from "./AutoPlay";
 
 class UnipackRT implements ProjectRT {
+    fileFormat = ".zip";
+
     //Data
     api?: Canvas;
     loaded:boolean = false;

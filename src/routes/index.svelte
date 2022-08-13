@@ -162,6 +162,7 @@
         console.log("Load File Selector");
         var input = document.createElement("input");
         input.type = "file";
+        input.accept = engine.fileFormat;
         input.onchange = (e) => {
             var file = e?.target?.files[0];
             engine.LoadProjectFile(file).then
