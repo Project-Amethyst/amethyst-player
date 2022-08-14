@@ -402,7 +402,7 @@
                             options={Object.keys(
                                 GridController.availableDevices()
                             )}
-                            placeholder={"No Device"}
+                            placeholder={$t("device.no_device")}
                             on:change={(e) => {
                                 settings.deviceInput = e.detail.value;
                                 settings.deviceOutput = e.detail.value;
@@ -432,7 +432,7 @@
                             options={Object.keys(
                                 GridController.availableDeviceInputs()
                             )}
-                            placeholder={"No Device"}
+                            placeholder={$t("device.no_device")}
                             on:change={(value) => {
                                 settings.deviceInput = e.detail.value;
                                 if (e.detail.value) {
@@ -463,7 +463,7 @@
                             options={Object.keys(
                                 GridController.availableDeviceOutputs()
                             )}
-                            placeholder={"No Device"}
+                            placeholder={$t("device.no_device")}
                             on:change={(e) => {
                                 settings.deviceOutput = e.detail.value;
                                 if (e.detail.value) {
@@ -493,7 +493,7 @@
                     <Dropdown
                         value={reactiveVars.activeConfig}
                         options={Object.keys(GridController.configList())}
-                        placeholder={"No Config"}
+                        placeholder={$t("device.no_config")}
                         on:change={(e) => {
                             settings.deviceConfig = e.detail.value;
                             if (e.detail.value) {
