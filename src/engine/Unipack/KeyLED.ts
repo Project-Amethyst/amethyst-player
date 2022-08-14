@@ -141,7 +141,7 @@ class KeyLED
       }
       if(this.end)
       {
-        this.stop()
+        this.stop(false);
         break;
       }
     }
