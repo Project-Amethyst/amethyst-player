@@ -37,6 +37,15 @@
     };
     var settings_loaded = false;
 
+    function settingsRefresh() {
+        if(localStorage.getItem("settings")) {
+
+        }
+        else {
+
+        }
+    }
+
     $: if (browser && settings_loaded) {
         console.log("Saving setting");
         localStorage.setItem("settings", JSON.stringify(settings));
@@ -255,6 +264,10 @@
 
                 console.log(settings);
             }
+            else if(browser && localStorage.getItem("settings") == null) {
+                localStorage.setItem("settings", JSON.stringify(settings))
+                console.log("Creating localStorage Settings")
+            }
             settings_loaded = true;
             engine = projectEngines[settings.projectEngine](api);
         })();
@@ -279,30 +292,30 @@
             <SvelteToast options={{pausable: true}} />
         </div>
         <Sidebar
-            on:settings={() => (popup["setting"] = true)}
-            on:devices={() => (popup["devices"] = true)}
-            on:demoplay={() => (popup["demoplay"] = true)}
-            on:loadProject={() => {
+                on:settings={() => (popup["setting"] = true)}
+                on:devices={() => (popup["devices"] = true)}
+                on:demoplay={() => (popup["demoplay"] = true)}
+                on:loadProject={() => {
                 loadProject();
             }}
-            bind:project={engine}
-            bind:status={project_status}
+                bind:project={engine}
+                bind:status={project_status}
         />
 
         <div class="content-part">
             <div class="amethyst-player-content">
                 <div class="amethyst-player-launchpad-holder center-class">
                     <div
-                        style={`height: 50vh; width: 50vh; padding: 20px; scale:${settings.virtualDeviceScale};`}
-                        class="center-class"
+                            style={`height: 50vh; width: 50vh; padding: 20px; scale:${settings.virtualDeviceScale};`}
+                            class="center-class"
                     >
                         <svelte:component
-                            this={virtualDeviceComponent}
-                            bind:this={virtualDevices[0]}
-                            id={0}
-                            pos={[0, 0]}
-                            keyPress={virtualKeyPressed}
-                            keyRelease={virtualKeyReleased}
+                                this={virtualDeviceComponent}
+                                bind:this={virtualDevices[0]}
+                                id={0}
+                                pos={[0, 0]}
+                                keyPress={virtualKeyPressed}
+                                keyRelease={virtualKeyReleased}
                         />
                     </div>
                 </div>
@@ -327,8 +340,8 @@
 
                 <div class="setting-option">
                     <Dropdown
-                        bind:value={settings.virtualDevice}
-                        options={Object.keys(virtualDeviceComponents)}
+                            bind:value={settings.virtualDevice}
+                            options={Object.keys(virtualDeviceComponents)}
                     />
                 </div>
             </div>
@@ -340,8 +353,8 @@
 
                 <div class="setting-option">
                     <Dropdown
-                        bind:value={settings.virtualDeviceScale}
-                        options={["50%", "75%", "100%", "125%", "150%"]}
+                            bind:value={settings.virtualDeviceScale}
+                            options={["50%", "75%", "100%", "125%", "150%"]}
                     />
                 </div>
             </div>
@@ -353,9 +366,9 @@
 
                 <div class="setting-option">
                     <Dropdown
-                        bind:value={settings.projectEngine}
-                        options={Object.keys(projectEngines)}
-                        on:change={() => {
+                            bind:value={settings.projectEngine}
+                            options={Object.keys(projectEngines)}
+                            on:change={() => {
                             engine =
                                 projectEngines[settings.projectEngine](api);
                         }}
@@ -370,11 +383,11 @@
 
                 <div class="setting-option">
                     <Dropdown
-                        value={$t(`lang.${locale.get()}`)}
-                        options={$locales.map((x) =>
+                            value={$t(`lang.${locale.get()}`)}
+                            options={$locales.map((x) =>
                             $t(`lang.${x}`)
                         )}
-                        on:change={(e) => {
+                            on:change={(e) => {
                             $locale = $locales[e.detail.index];
                             settings.language = $locales[e.detail.index];
                         }}
@@ -398,12 +411,12 @@
 
                     <div class="setting-option">
                         <Dropdown
-                            value={reactiveVars.activeDevice}
-                            options={Object.keys(
+                                value={reactiveVars.activeDevice}
+                                options={Object.keys(
                                 GridController.availableDevices()
                             )}
-                            placeholder={$t("device.no_device")}
-                            on:change={(e) => {
+                                placeholder={$t("device.no_device")}
+                                on:change={(e) => {
                                 settings.deviceInput = e.detail.value;
                                 settings.deviceOutput = e.detail.value;
                                 if (e.detail.value) {
@@ -428,12 +441,12 @@
 
                     <div class="setting-option">
                         <Dropdown
-                            value={reactiveVars.activeInput}
-                            options={Object.keys(
+                                value={reactiveVars.activeInput}
+                                options={Object.keys(
                                 GridController.availableDeviceInputs()
                             )}
-                            placeholder={$t("device.no_device")}
-                            on:change={(value) => {
+                                placeholder={$t("device.no_device")}
+                                on:change={(value) => {
                                 settings.deviceInput = e.detail.value;
                                 if (e.detail.value) {
                                     midiDeviceInfos[0] = undefined;
@@ -459,12 +472,12 @@
 
                     <div class="setting-option">
                         <Dropdown
-                            value={reactiveVars.activeOutput}
-                            options={Object.keys(
+                                value={reactiveVars.activeOutput}
+                                options={Object.keys(
                                 GridController.availableDeviceOutputs()
                             )}
-                            placeholder={$t("device.no_device")}
-                            on:change={(e) => {
+                                placeholder={$t("device.no_device")}
+                                on:change={(e) => {
                                 settings.deviceOutput = e.detail.value;
                                 if (e.detail.value) {
                                     midiDeviceInfos[0] = undefined;
@@ -491,10 +504,10 @@
 
                 <div class="setting-option">
                     <Dropdown
-                        value={reactiveVars.activeConfig}
-                        options={Object.keys(GridController.configList())}
-                        placeholder={$t("device.no_config")}
-                        on:change={(e) => {
+                            value={reactiveVars.activeConfig}
+                            options={Object.keys(GridController.configList())}
+                            placeholder={$t("device.no_config")}
+                            on:change={(e) => {
                             settings.deviceConfig = e.detail.value;
                             if (e.detail.value) {
                                 midiDeviceInfos[0] = undefined;
@@ -518,8 +531,8 @@
 
                 <div class="setting-option">
                     <input
-                        type="checkbox"
-                        bind:checked={settings.deviceSettingAdvanced}
+                            type="checkbox"
+                            bind:checked={settings.deviceSettingAdvanced}
                     />
                 </div>
             </div>
@@ -554,13 +567,13 @@
 
             <div class="setting">
                 <div
-                    class="setting-name"
-                    title={$t("demoplay.learning_mode_info")}
+                        class="setting-name"
+                        title={$t("demoplay.learning_mode_info")}
                 >
                     <span>{$t("demoplay.learning_mode")}</span>
                     <Information
-                        size={14}
-                        style="margin-left: 4px; margin-top: 2px; color:#A0A0A0;"
+                            size={14}
+                            style="margin-left: 4px; margin-top: 2px; color:#A0A0A0;"
                     />
                 </div>
 
