@@ -290,6 +290,13 @@ export class GridController {
         else
         {
             console.log(`${this.activeConfig.name} config used`);
+            if(this.activeOutput && this.activeConfig.initializationSysex)
+            {
+                for(let message of this.activeConfig.initializationSysex)
+                {
+                    this.activeOutput!.sendSysex([], message);
+                }
+            }
         }
 
         GridController.callback({deviceID: this.id, event: "opened"});
