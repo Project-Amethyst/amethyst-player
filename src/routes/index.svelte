@@ -17,6 +17,7 @@
     import Dropdown from "../components/Dropdown.svelte";
     import Sidebar from "../components/Sidebar.svelte";
     import CircularLoader from "../components/CircularLoader.svelte";
+    import Multibutton from "../components/Multibutton.svelte";
 
     import { SvelteToast, toast } from "@zerodevx/svelte-toast";
     import { t, locale, locales } from "$lib/translations";
@@ -355,7 +356,7 @@
                 </div>
 
                 <div class="setting-option">
-                    <Dropdown
+                    <Multibutton
                             bind:value={settings.virtualDeviceScale}
                             options={["50%", "75%", "100%", "125%", "150%"]}
                     />
@@ -686,7 +687,7 @@
             }
 
             .setting-option {
-                min-width: 250px;
+                min-width: 300px;
                 display: flex;
                 flex-direction: row-reverse;
             }
