@@ -151,6 +151,7 @@ export class GridController {
                 {
                     case "noteon":
                     case "noteoff":
+                    case "controlchange":
                     {
                         // console.log(`${e.message.type} - ${e.message.data}`)
                         if(this.activeConfig)
