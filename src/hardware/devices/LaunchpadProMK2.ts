@@ -2,16 +2,15 @@ import {KeyType} from "../types/devices";
 import type {DeviceKeyID, GridDeviceConfig } from "../types/devices";
 
 const config: GridDeviceConfig = {
-    name: "Launchpad Pro",
+    name: "Launchpad Pro MK2",
     midiNameRegex: "Launchpad Pro",
 
     paletteChannel: {
       "classic": 1
     },
 
-
     keymap: [
-      [NaN, 91, 92, 93, 94, 95, 96, 97, 98, NaN],
+      [NaN, 91, 92, 93, 94, 95, 96, 97, 98, [KeyType.Sysex, 99]],
       [80, 81, 82, 83, 84, 85, 86, 87, 88, 89],
       [70, 71, 72, 73, 74, 75, 76, 77, 78, 79],
       [60, 61, 62, 63, 64, 65, 66, 67, 68, 69],
@@ -34,7 +33,7 @@ const config: GridDeviceConfig = {
       return [NaN, NaN];
     },
 
-    specialLED: [[KeyType.Sysex, 99]],
+    specialLED: [8, -1],
 
     initializationSysex:[
       [0, 32, 41, 2, 16, 33, 0], //Enter Live Mode

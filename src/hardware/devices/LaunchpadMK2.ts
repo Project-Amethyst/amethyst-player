@@ -1,7 +1,6 @@
 import {KeyType} from "../types/devices";
 import type {DeviceKeyID, GridDeviceConfig } from "../types/devices";
 
-
 const config: GridDeviceConfig = {
     name: "Launchpad MK2",
     midiNameRegex: "Launchpad MK2",
