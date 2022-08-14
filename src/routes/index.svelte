@@ -37,15 +37,6 @@
     };
     var settings_loaded = false;
 
-    function settingsRefresh() {
-        if(localStorage.getItem("settings")) {
-
-        }
-        else {
-
-        }
-    }
-
     $: if (browser && settings_loaded) {
         console.log("Saving setting");
         localStorage.setItem("settings", JSON.stringify(settings));
@@ -239,17 +230,18 @@
             if(!await GridController.start(deviceEvent))
             {
                 toast.push(
-                        $t("toast.webmidi_unavailable"),
-                        {
-                            theme: {
-                                "--toastColor": "#FFFFFF;",
-                                "--toastBackground": "#F56565",
-                                "--toastBarBackground": "#C53030",
-                            },
-                            duration: 10000
-                        }
-                    );
+                    $t("toast.webmidi_unavailable"),
+                    {
+                        theme: {
+                            "--toastColor": "#FFFFFF;",
+                            "--toastBackground": "#F56565",
+                            "--toastBarBackground": "#C53030",
+                        },
+                        duration: 10000
+                    }
+                );
             }
+
             if (browser && localStorage.getItem("settings") != null) {
                 settings = JSON.parse(localStorage.getItem("settings"));
                 midiDevices[0].connect(
@@ -268,6 +260,7 @@
                 localStorage.setItem("settings", JSON.stringify(settings))
                 console.log("Creating localStorage Settings")
             }
+
             settings_loaded = true;
             engine = projectEngines[settings.projectEngine](api);
         })();
@@ -309,14 +302,18 @@
                             style={`height: 50vh; width: 50vh; padding: 20px; scale:${settings.virtualDeviceScale};`}
                             class="center-class"
                     >
-                        <svelte:component
-                                this={virtualDeviceComponent}
-                                bind:this={virtualDevices[0]}
-                                id={0}
-                                pos={[0, 0]}
-                                keyPress={virtualKeyPressed}
-                                keyRelease={virtualKeyReleased}
-                        />
+                        {#if settings_loaded}
+                            <svelte:component
+                                    this={virtualDeviceComponent}
+                                    bind:this={virtualDevices[0]}
+                                    id={0}
+                                    pos={[0, 0]}
+                                    keyPress={virtualKeyPressed}
+                                    keyRelease={virtualKeyReleased}
+                            />
+                        {:else}
+
+                        {/if}
                     </div>
                 </div>
             </div>
