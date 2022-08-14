@@ -304,7 +304,7 @@
                             style={`height: 50vh; width: 50vh; padding: 20px; scale:${settings.virtualDeviceScale};`}
                             class="center-class"
                     >
-                        {#if !settings_loaded}
+                        {#if settings_loaded}
                             <svelte:component
                                     this={virtualDeviceComponent}
                                     bind:this={virtualDevices[0]}
