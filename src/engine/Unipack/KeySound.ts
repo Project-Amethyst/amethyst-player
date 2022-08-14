@@ -58,7 +58,7 @@ export class Sound {
     this.howl = new Howl({
       src: [fileURL],
       format: [format],
-      html5: !Howler.usingWebAudio,
+      // html5: !Howler.usingWebAudio,
       onend: this.onEnd.bind(this),
       onloaderror: Sound.howlerLoadError,
       onplayerror: Sound.howlerPlayError
