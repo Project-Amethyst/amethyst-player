@@ -16,6 +16,7 @@
     import Popup from "../components/Popup.svelte";
     import Dropdown from "../components/Dropdown.svelte";
     import Sidebar from "../components/Sidebar.svelte";
+    import CircularLoader from "../components/CircularLoader.svelte";
 
     import { SvelteToast, toast } from "@zerodevx/svelte-toast";
     import { t, locale, locales } from "$lib/translations";
@@ -45,6 +46,7 @@
     let virtualDeviceComponent: typeof virtualDeviceComponents[number]["component"];
     $: virtualDeviceComponent =
         virtualDeviceComponents[settings.virtualDevice].component;
+
 
     let engine: ProjectRT;
     let project_status: string = "not loaded";
@@ -302,7 +304,7 @@
                             style={`height: 50vh; width: 50vh; padding: 20px; scale:${settings.virtualDeviceScale};`}
                             class="center-class"
                     >
-                        {#if settings_loaded}
+                        {#if !settings_loaded}
                             <svelte:component
                                     this={virtualDeviceComponent}
                                     bind:this={virtualDevices[0]}
@@ -312,7 +314,13 @@
                                     keyRelease={virtualKeyReleased}
                             />
                         {:else}
+                            <div style="display: flex; flex-direction: column; gap: 40px;">
+                                <div>
+                                    <CircularLoader/>
+                                </div>
 
+                                <span class="circular-loader-bottom-text">Loading Virtual Device</span>
+                            </div>
                         {/if}
                     </div>
                 </div>
@@ -612,6 +620,14 @@
 
         .amethyst-player-launchpad-holder {
             height: calc(100%);
+
+            .circular-loader-bottom-text {
+                font-family: 'Roboto', sans-serif;
+                font-style: normal;
+                font-weight: 300;
+                font-size: 20px;
+                color: rgba(245, 245, 245, 0.52);
+            }
         }
     }
 
