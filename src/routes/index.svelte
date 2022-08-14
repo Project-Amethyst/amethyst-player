@@ -315,9 +315,7 @@
                             />
                         {:else}
                             <div style="display: flex; flex-direction: column; gap: 40px;">
-                                <div>
-                                    <CircularLoader/>
-                                </div>
+                                <CircularLoader/>
 
                                 <span class="circular-loader-bottom-text">Loading Virtual Device</span>
                             </div>
