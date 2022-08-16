@@ -4,7 +4,7 @@
     import type {KeyPress, KeyRelease} from "../../engine/CanvasAPI"
     import { Color, ColorType } from "../../types/color";
     
-    import Keypad from "./keypad.svelte";
+    import Keypad from "../keypad.svelte";
 
     let keyPads: any[] = [];
     export let keyPress: KeyPress;
