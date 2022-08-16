@@ -1,4 +1,5 @@
 {
+    "webmidi_available": "WebMIDI is available on this browser",
     "webmidi_unavailable": "WebMIDI is not available on this browser",
     "connected": "{{device_name}} connected",
     "disconnected": "{{device_name}} disconnected",
