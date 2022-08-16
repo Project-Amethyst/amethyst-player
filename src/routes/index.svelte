@@ -230,7 +230,7 @@
 
     if (browser) {
         (async () => {
-            if(!await GridController.start(deviceEvent))
+            if(!GridController.start(deviceEvent))
             {
                 toast.push(
                     $t("toast.webmidi_unavailable"),
@@ -243,26 +243,25 @@
                         duration: 10000
                     }
                 );
-            }
+            }})();
 
-            if (browser && localStorage.getItem("settings") != null) {
-                settings = JSON.parse(localStorage.getItem("settings"));
-                midiDevices[0].connect(
-                    GridController.availableDeviceInputs()[
-                        settings.deviceInput
-                    ],
-                    GridController.availableDeviceOutputs()[
-                        settings.deviceOutput
-                    ],
-                    GridController.configList()[settings.deviceConfig]
-                );
+        if (browser && localStorage.getItem("settings") != null) {
+            settings = JSON.parse(localStorage.getItem("settings"));
+            midiDevices[0].connect(
+                GridController.availableDeviceInputs()[
+                    settings.deviceInput
+                ],
+                GridController.availableDeviceOutputs()[
+                    settings.deviceOutput
+                ],
+                GridController.configList()[settings.deviceConfig]
+            );
 
-                console.log(settings);
-            }
+            console.log(settings);
+        }
 
-            player_ready = true;
-            engine = projectEngines[settings.projectEngine](api);
-        })();
+        player_ready = true;
+        engine = projectEngines[settings.projectEngine](api);
     }
 
     onMount(() => {
@@ -322,10 +321,10 @@
             </div>
         </div>
     </div>
-    {:else}
+    <!-- {:else}
     <div class="center-class">
         <CircularLoader/>
-    </div>
+    </div> -->
     {/if}
 
     <Popup bind:show={popup["setting"]}>
