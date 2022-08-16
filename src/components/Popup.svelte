@@ -1,5 +1,7 @@
 <script lang="ts">
     export let show: boolean;
+    export let manuallyExittable: boolean = true;
+    export let clearPopup: boolean = false;
 
     export function clickOutside(node: HTMLDivElement) {
         const handleClick = (event: MouseEvent) => {
@@ -23,10 +25,12 @@
 </script>
 
 <div class="popup-element {show? 'active' : 'inactive'}">
-    {#if show}
+    {#if show && !clearPopup}
         <div class="popup-inner" use:clickOutside>
             <slot />
         </div>
+    {:else if show && clearPopup}
+        <slot />
     {/if}
 </div>
 
