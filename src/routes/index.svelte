@@ -37,9 +37,9 @@
         deviceSettingAdvanced: false,
         language: undefined,
     };
-    var settings_loaded = false;
+    var player_ready = false;
 
-    $: if (browser && settings_loaded) {
+    $: if (browser && player_ready) {
         console.log("Saving setting");
         localStorage.setItem("settings", JSON.stringify(settings));
     }
@@ -260,7 +260,7 @@
                 console.log(settings);
             }
 
-            settings_loaded = true;
+            player_ready = true;
             engine = projectEngines[settings.projectEngine](api);
         })();
     }
@@ -279,10 +279,14 @@
 </script>
 
 <main>
-    <div class="main-content">
-        <div class="toast">
+    <div class="toast">
+        <SvelteToast options={{pausable: true}} />
+    </div>
+            <div class="toast">
             <SvelteToast options={{pausable: true}} />
-        </div>
+    </div>
+    {#if player_ready}
+    <div class="main-content">
         <Sidebar
                 on:settings={() => (popup["setting"] = true)}
                 on:devices={() => (popup["devices"] = true)}
@@ -298,25 +302,17 @@
             <div class="amethyst-player-content">
                 <div class="amethyst-player-launchpad-holder center-class">
                     <div
-                            style={`height: 50vh; width: 50vh; padding: 20px; scale:${settings.virtualDeviceScale};`}
-                            class="center-class"
+                        style={`height: 50vh; width: 50vh; padding: 20px; scale:${settings.virtualDeviceScale};`}
+                        class="center-class"
                     >
-                        {#if settings_loaded}
-                            <svelte:component
-                                    this={virtualDeviceComponent}
-                                    bind:this={virtualDevices[0]}
-                                    id={0}
-                                    pos={[0, 0]}
-                                    keyPress={virtualKeyPressed}
-                                    keyRelease={virtualKeyReleased}
-                            />
-                        {:else}
-                            <div style="display: flex; flex-direction: column; gap: 40px;">
-                                <CircularLoader/>
-
-                                <span class="circular-loader-bottom-text">Loading Virtual Device</span>
-                            </div>
-                        {/if}
+                        <svelte:component
+                                this={virtualDeviceComponent}
+                                bind:this={virtualDevices[0]}
+                                id={0}
+                                pos={[0, 0]}
+                                keyPress={virtualKeyPressed}
+                                keyRelease={virtualKeyReleased}
+                        />
                     </div>
                 </div>
             </div>
@@ -326,6 +322,11 @@
             </div>
         </div>
     </div>
+    {:else}
+    <div class="center-class">
+        <CircularLoader/>
+    </div>
+    {/if}
 
     <Popup bind:show={popup["setting"]}>
         <div class="settings-popup">
