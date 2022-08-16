@@ -259,10 +259,6 @@
 
                 console.log(settings);
             }
-            else if(browser && localStorage.getItem("settings") == null) {
-                localStorage.setItem("settings", JSON.stringify(settings))
-                console.log("Creating localStorage Settings")
-            }
 
             settings_loaded = true;
             engine = projectEngines[settings.projectEngine](api);
