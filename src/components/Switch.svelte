@@ -31,7 +31,7 @@
         &.toggled {
             .switch-thumb {
                 width: 100%;
-                background-color: #75ea5a;
+                background-color: #67E953;
 
                 transition: width 0.2s, background-color 0.1s 0.1s;
             }
