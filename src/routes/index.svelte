@@ -229,10 +229,30 @@
     };
 
     if (browser) {
-        (async () => {
-            if(!GridController.start(deviceEvent))
+        if (browser && localStorage.getItem("settings")) {
+            settings = JSON.parse(localStorage.getItem("settings")!);
+
+            GridController.start(deviceEvent).then((midi_available) =>
             {
-                toast.push(
+                if(midi_available)
+                {
+                    toast.push(
+                        $t("toast.webmidi_available"),
+                        {
+                            theme: {
+                                "--toastColor": "#FFFFFF;",
+                                "--toastBackground": "#48BB78",
+                                "--toastBarBackground": "#2F855A",
+                            },
+                        }
+                    );
+                    midiDevices[0].connect(
+                        GridController.availableDeviceInputs()[settings.deviceInput!],
+                        GridController.availableDeviceOutputs()[settings.deviceOutput!],
+                        GridController.configList()[settings.deviceConfig!]
+                    );
+                }else{
+                    toast.push(
                     $t("toast.webmidi_unavailable"),
                     {
                         theme: {
@@ -243,19 +263,8 @@
                         duration: 10000
                     }
                 );
-            }})();
-
-        if (browser && localStorage.getItem("settings") != null) {
-            settings = JSON.parse(localStorage.getItem("settings"));
-            midiDevices[0].connect(
-                GridController.availableDeviceInputs()[
-                    settings.deviceInput
-                ],
-                GridController.availableDeviceOutputs()[
-                    settings.deviceOutput
-                ],
-                GridController.configList()[settings.deviceConfig]
-            );
+                }
+            })
 
             console.log(settings);
         }

@@ -29,23 +29,26 @@ export class GridController {
         this.keyRelease = keyRelease;
     }
 
-    static async start(callback: typeof GridController.callback):boolean
+    static async start(callback: typeof GridController.callback): Promise<boolean>
     {
-        if(WebMidi.enabled == false)
+        try
         {
-            await WebMidi.enable({sysex: true})
-                .catch(error => {
-                console.error("An error was thrown by WebMidi", error);
-                return false;
-                });
-
-            WebMidi.addListener("portschanged", (e) => {
-                GridController.updateDeviceList(true, true);
-            })
-            GridController.updateDeviceList(true, false);
+            if(WebMidi.enabled == false)
+            {
+                await WebMidi.enable({sysex: true})
+                WebMidi.addListener("portschanged", (e) => {
+                    GridController.updateDeviceList(true, true);
+                })
+                GridController.updateDeviceList(true, false);
+            }
+            GridController.callback = callback;
+            return true;
         }
-        GridController.callback = callback;
-        return true;
+        catch(e)
+        {
+            console.log(e);
+            return false;
+        }
     }
 
     static onMidiStateChange(e) {
