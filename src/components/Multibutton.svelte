@@ -51,7 +51,7 @@
         }
 
         &.active {
-            background-color: #74009f;
+            background-color: #323232;
         }
     }
 </style>
