@@ -18,6 +18,7 @@
     import Sidebar from "../components/Sidebar.svelte";
     import CircularLoader from "../components/CircularLoader.svelte";
     import Multibutton from "../components/Multibutton.svelte";
+    import Switch from "../components/Switch.svelte";
 
     import { SvelteToast, toast } from "@zerodevx/svelte-toast";
     import { t, locale, locales } from "$lib/translations";
@@ -539,10 +540,7 @@
                 </div>
 
                 <div class="setting-option">
-                    <input
-                            type="checkbox"
-                            bind:checked={settings.deviceSettingAdvanced}
-                    />
+                    <Switch bind:checked={settings.deviceSettingAdvanced}/>
                 </div>
             </div>
         </div>
@@ -560,7 +558,7 @@
                 </div>
 
                 <div class="setting-option">
-                    <input type="checkbox" />
+                    <Switch />
                 </div>
             </div>
 
@@ -570,7 +568,7 @@
                 </div>
 
                 <div class="setting-option">
-                    <input type="checkbox" />
+                    <Switch />
                 </div>
             </div>
 
@@ -587,7 +585,7 @@
                 </div>
 
                 <div class="setting-option">
-                    <input type="checkbox" />
+                    <Switch />
                 </div>
             </div>
         </div>
