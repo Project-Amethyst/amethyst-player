@@ -51,7 +51,7 @@
     }, 1000/30)});
 </script>
 
-<div class="sidebar">
+<div class="sidebar {$$props.class}" style={$$props.style}>
     <div>
         <div class="sidebar-header">
             <img src="logo-256.png" style="margin-top: 12px;">
@@ -216,7 +216,8 @@
 
 <style lang="scss">
     .sidebar {
-        width: 400px;
+        min-width: 400px;
+        max-width: 400px;
         background-color: rgb(20, 20, 20);
         box-shadow: 0 0 10px 0.5px black;
         overflow: hidden;
@@ -469,6 +470,12 @@
 
                 color: grey;
             }
+        }
+    }
+
+    @media only screen and (max-width: 600px) {
+        .sidebar {
+            display: none;
         }
     }
 </style>
