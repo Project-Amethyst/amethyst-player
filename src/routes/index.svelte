@@ -1,15 +1,15 @@
 <!-- Index file for the player route -->
 <script lang="ts">
-    import type { KeyID } from "src/types/devices";
-    import type { Color } from "../types/color";
+    import type {KeyID} from "src/types/devices";
+    import type {Color} from "../types/color";
 
-    import { virtualDeviceComponents } from "../components/devices/Devices";
+    import {virtualDeviceComponents} from "../components/devices/Devices";
 
-    import type { Canvas, KeyPress, KeyRelease } from "../engine/CanvasAPI";
-    import type { DeviceInfoCanvas, ProjectRT } from "../engine/ProjectRT";
+    import type {Canvas, KeyPress, KeyRelease} from "../engine/CanvasAPI";
+    import type {DeviceInfoCanvas, ProjectRT} from "../engine/ProjectRT";
 
-    import { projectEngines } from "../engine/Engines";
-    import { GridController } from "../hardware/hardware";
+    import {projectEngines} from "../engine/Engines";
+    import {GridController} from "../hardware/hardware";
 
     import Information from "carbon-icons-svelte/lib/Information.svelte";
 
@@ -19,15 +19,18 @@
     import CircularLoader from "../components/CircularLoader.svelte";
     import Multibutton from "../components/Multibutton.svelte";
     import Switch from "../components/Switch.svelte";
+    import MobileSidebarButton from "../components/MobileSidebarButton.svelte";
 
-    import { SvelteToast, toast } from "@zerodevx/svelte-toast";
-    import { t, locale, locales } from "$lib/translations";
+    import {SvelteToast, toast} from "@zerodevx/svelte-toast";
+    import {t, locale, locales} from "$lib/translations";
 
-    import { browser } from "$app/env";
+    import DeviceDetector from "svelte-device-detector";
 
-    import { afterUpdate, onMount } from "svelte";
+    import {browser} from "$app/env";
+
+    import {afterUpdate, onMount} from "svelte";
     import "../shared.css";
-    
+
     let settings = {
         virtualDevice: Object.keys(virtualDeviceComponents)[0],
         virtualDeviceScale: "100%",
@@ -159,7 +162,7 @@
             case "connected":
                 if (event.device == settings.deviceInput) {
                     toast.push(
-                        $t("toast.connected", { device_name: event.device })
+                        $t("toast.connected", {device_name: event.device})
                     );
                     midiDevices[0].connect(
                         GridController.availableDeviceInputs()[event.device],
@@ -168,7 +171,7 @@
                     );
                 } else {
                     toast.push(
-                        $t("toast.detected", { device_name: event.device })
+                        $t("toast.detected", {device_name: event.device})
                     );
                     // toast.push(`${event.device} connected\nClick to set it as the active device`);
                 }
@@ -176,7 +179,7 @@
 
             case "disconnected":
                 toast.push(
-                    $t("toast.disconnected", { device_name: event.device })
+                    $t("toast.disconnected", {device_name: event.device})
                 );
                 break;
         }
@@ -233,10 +236,8 @@
         if (browser && localStorage.getItem("settings")) {
             settings = JSON.parse(localStorage.getItem("settings")!);
 
-            GridController.start(deviceEvent).then((midi_available) =>
-            {
-                if(midi_available)
-                {
+            GridController.start(deviceEvent).then((midi_available) => {
+                if (midi_available) {
                     toast.push(
                         $t("toast.webmidi_available"),
                         {
@@ -252,18 +253,18 @@
                         GridController.availableDeviceOutputs()[settings.deviceOutput!],
                         GridController.configList()[settings.deviceConfig!]
                     );
-                }else{
+                } else {
                     toast.push(
-                    $t("toast.webmidi_unavailable"),
-                    {
-                        theme: {
-                            "--toastColor": "#FFFFFF;",
-                            "--toastBackground": "#F56565",
-                            "--toastBarBackground": "#C53030",
-                        },
-                        duration: 10000
-                    }
-                );
+                        $t("toast.webmidi_unavailable"),
+                        {
+                            theme: {
+                                "--toastColor": "#FFFFFF;",
+                                "--toastBackground": "#F56565",
+                                "--toastBarBackground": "#C53030",
+                            },
+                            duration: 10000
+                        }
+                    );
                 }
             })
 
@@ -275,8 +276,8 @@
     }
 
     onMount(() => {
-        setInterval(() => {
-            if (reactiveVars.activeConfig != midiDevices[0]?.activeConfig?.name)
+            setInterval(() => {
+                if (reactiveVars.activeConfig != midiDevices[0]?.activeConfig?.name)
                     reactiveVars.activeConfig = midiDevices[0]?.activeConfig?.name;
             }, 1000 / 30);
         }
@@ -289,52 +290,70 @@
 
 <main>
     <div class="toast">
-        <SvelteToast options={{pausable: true}} />
+        <SvelteToast options={{pausable: true}}/>
     </div>
-            <div class="toast">
-            <SvelteToast options={{pausable: true}} />
+    <div class="toast">
+        <SvelteToast options={{pausable: true}}/>
     </div>
     {#if player_ready}
-    <div class="main-content">
-        <Sidebar
-                on:settings={() => (popup["setting"] = true)}
-                on:devices={() => (popup["devices"] = true)}
-                on:demoplay={() => (popup["demoplay"] = true)}
-                on:loadProject={() => {
-                loadProject();
-            }}
-                bind:project={engine}
-                bind:status={project_status}
-        />
+        <div class="main-content">
+            <DeviceDetector showInDevice="desktop">
+                <Sidebar
+                    on:settings={() => (popup["setting"] = true)}
+                    on:devices={() => (popup["devices"] = true)}
+                    on:demoplay={() => (popup["demoplay"] = true)}
+                    on:loadProject={() => {
+                        loadProject();
+                    }}
+                    bind:project={engine}
+                    bind:status={project_status}
+                />
+            </DeviceDetector>
 
-        <div class="content-part">
-            <div class="amethyst-player-content">
-                <div class="amethyst-player-launchpad-holder center-class">
-                    <div
-                        style={`height: 50vh; width: 50vh; padding: 20px; transform: scale(${settings.virtualDeviceScale});`}
-                        class="center-class"
-                    >
-                        <svelte:component
-                                this={virtualDeviceComponent}
-                                bind:this={virtualDevices[0]}
-                                id={0}
-                                pos={[0, 0]}
-                                keyPress={virtualKeyPressed}
-                                keyRelease={virtualKeyReleased}
-                        />
+            <div class="content-part">
+                <DeviceDetector showInDevice="mobile">
+                    <div class="mobile-header">
+                        <div class="amethyst-bar center-class">
+                            <img src="logo-256.png">
+
+                            <div style="margin-left: 10px">
+                                <span>Amethyst</span>
+                            </div>
+                        </div>
+
+                        <div class="show-controls-icon-parent center-class">
+                            <MobileSidebarButton/>
+                        </div>
+                    </div>
+                </DeviceDetector>
+
+                <div class="amethyst-player-content">
+                    <div class="amethyst-player-launchpad-holder center-class">
+                        <div
+                                style={`height: 50vh; width: 50vh; padding: 20px; transform: scale(${settings.virtualDeviceScale});`}
+                                class="center-class"
+                        >
+                            <svelte:component
+                                    this={virtualDeviceComponent}
+                                    bind:this={virtualDevices[0]}
+                                    id={0}
+                                    pos={[0, 0]}
+                                    keyPress={virtualKeyPressed}
+                                    keyRelease={virtualKeyReleased}
+                            />
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="amethyst-player-footer center-class">
-                <span>Amethyst Player (Alpha)</span>
+                <div class="amethyst-player-footer center-class">
+                    <span>Amethyst Player (Alpha)</span>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- {:else}
-    <div class="center-class">
-        <CircularLoader/>
-    </div> -->
+        <!-- {:else}
+        <div class="center-class">
+            <CircularLoader/>
+        </div> -->
     {/if}
 
     <Popup bind:show={popup["setting"]}>
@@ -558,7 +577,7 @@
                 </div>
 
                 <div class="setting-option">
-                    <Switch />
+                    <Switch/>
                 </div>
             </div>
 
@@ -568,7 +587,7 @@
                 </div>
 
                 <div class="setting-option">
-                    <Switch />
+                    <Switch/>
                 </div>
             </div>
 
@@ -585,7 +604,7 @@
                 </div>
 
                 <div class="setting-option">
-                    <Switch />
+                    <Switch/>
                 </div>
             </div>
         </div>
@@ -630,6 +649,12 @@
                 font-size: 20px;
                 color: rgba(245, 245, 245, 0.52);
             }
+        }
+    }
+
+    @media only screen and (max-width: 600px) {
+        .amethyst-player-content {
+            height: calc(100vh - 160px);
         }
     }
 
@@ -707,5 +732,39 @@
         --toastColor: #cbcbcb;
         --toastBackground: #141414;
         --toastBarBackground: #3e3e3e;
+    }
+
+    .mobile-header {
+        height: 60px;
+
+        background-color: rgb(20, 20, 20);
+
+        .show-controls-icon-parent {
+            position: fixed;
+
+            height: 60px;
+            width: 60px;
+        }
+
+        .amethyst-bar {
+            position: fixed;
+
+            height: 60px;
+            width: 100%;
+
+            img {
+                height: 52px;
+            }
+
+            span {
+                font-family: 'Roboto', sans-serif;
+                font-style: normal;
+                font-weight: 300;
+                font-size: 22px;
+
+                letter-spacing: 0.125rem;
+                color: #f5f5f5;
+            }
+        }
     }
 </style>
