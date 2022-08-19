@@ -2,7 +2,7 @@
     export let active = true;
 </script>
 
-<div class="mobile-sidebar-parent {active? 'active-sidebar' : ''}">
+<div class="mobile-sidebar-parent {$$props.class} {active? 'active-sidebar' : ''}">
     <div class="mobile-sidebar">
 
     </div>

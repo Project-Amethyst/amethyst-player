@@ -25,8 +25,6 @@
     import {SvelteToast, toast} from "@zerodevx/svelte-toast";
     import {t, locale, locales} from "$lib/translations";
 
-    import DeviceDetector from "svelte-device-detector";
-
     import {browser} from "$app/env";
 
     import {afterUpdate, onMount} from "svelte";
@@ -300,8 +298,7 @@
     </div>
     {#if player_ready}
         <div class="main-content">
-            <DeviceDetector showInDevice="desktop">
-                <Sidebar
+            <Sidebar
                     on:settings={() => (popup["setting"] = true)}
                     on:devices={() => (popup["devices"] = true)}
                     on:demoplay={() => (popup["demoplay"] = true)}
@@ -310,25 +307,22 @@
                     }}
                     bind:project={engine}
                     bind:status={project_status}
-                />
-            </DeviceDetector>
+            />
 
             <div class="content-part">
-                <DeviceDetector showInDevice="mobile">
-                    <div class="mobile-header">
-                        <div class="amethyst-bar center-class">
-                            <img src="logo-256.png">
+                <div class="mobile-header show-on-mobile">
+                    <div class="amethyst-bar center-class">
+                        <img src="logo-256.png">
 
-                            <div style="margin-left: 10px">
-                                <span>Amethyst</span>
-                            </div>
-                        </div>
-
-                        <div class="show-controls-icon-parent center-class">
-                            <MobileSidebarButton bind:checked={mobileSidebarShown}/>
+                        <div style="margin-left: 10px">
+                            <span>Amethyst</span>
                         </div>
                     </div>
-                </DeviceDetector>
+
+                    <div class="show-controls-icon-parent center-class">
+                        <MobileSidebarButton bind:checked={mobileSidebarShown}/>
+                    </div>
+                </div>
 
                 <div class="amethyst-player-content">
                     <div class="amethyst-player-launchpad-holder center-class">
@@ -359,7 +353,7 @@
         </div> -->
     {/if}
 
-    <MobileSidebar bind:active={mobileSidebarShown}></MobileSidebar>
+    <MobileSidebar class="show-on-mobile" bind:active={mobileSidebarShown}></MobileSidebar>
 
     <Popup bind:show={popup["setting"]}>
         <div class="settings-popup">
@@ -772,6 +766,20 @@
                 letter-spacing: 0.125rem;
                 color: #f5f5f5;
             }
+        }
+    }
+
+    .show-on-mobile {
+        display: none;
+    }
+
+    @media only screen and (max-width: 600px) {
+        .show-on-mobile {
+            display: block;
+        }
+
+        .dont-show-on-mobile {
+            display: none;
         }
     }
 </style>
