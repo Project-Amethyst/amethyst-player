@@ -216,8 +216,8 @@
 
 <style lang="scss">
     .sidebar {
-        min-width: 400px;
-        max-width: 400px;
+        min-width: 350px;
+        max-width: 450px;
         background-color: rgb(20, 20, 20);
         box-shadow: 0 0 10px 0.5px black;
         overflow: hidden;
