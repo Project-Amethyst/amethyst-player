@@ -20,6 +20,7 @@
     import Multibutton from "../components/Multibutton.svelte";
     import Switch from "../components/Switch.svelte";
     import MobileSidebarButton from "../components/MobileSidebarButton.svelte";
+    import MobileSidebar from "../components/MobileSidebar.svelte";
 
     import {SvelteToast, toast} from "@zerodevx/svelte-toast";
     import {t, locale, locales} from "$lib/translations";
@@ -60,6 +61,8 @@
     let virtualDevicesInfo: DeviceInfoCanvas[] = [];
 
     let popup: { [key: string]: boolean } = {};
+
+    let mobileSidebarShown = false;
 
     let projectBookmarked: boolean = false;
 
@@ -322,7 +325,7 @@
                         </div>
 
                         <div class="show-controls-icon-parent center-class">
-                            <MobileSidebarButton/>
+                            <MobileSidebarButton bind:checked={mobileSidebarShown}/>
                         </div>
                     </div>
                 </DeviceDetector>
@@ -355,6 +358,8 @@
             <CircularLoader/>
         </div> -->
     {/if}
+
+    <MobileSidebar bind:active={mobileSidebarShown}></MobileSidebar>
 
     <Popup bind:show={popup["setting"]}>
         <div class="settings-popup">
@@ -616,6 +621,8 @@
         background-color: #1d1d1d;
         height: 100vh;
         width: 100vw;
+
+        overflow: hidden;
     }
 
     .center-class {
