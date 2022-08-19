@@ -27,7 +27,7 @@
 
     import { afterUpdate, onMount } from "svelte";
     import "../shared.css";
-
+    
     let settings = {
         virtualDevice: Object.keys(virtualDeviceComponents)[0],
         virtualDeviceScale: "100%",
@@ -311,7 +311,7 @@
             <div class="amethyst-player-content">
                 <div class="amethyst-player-launchpad-holder center-class">
                     <div
-                        style={`height: 50vh; width: 50vh; padding: 20px; scale:${settings.virtualDeviceScale};`}
+                        style={`height: 50vh; width: 50vh; padding: 20px; transform: scale(${settings.virtualDeviceScale});`}
                         class="center-class"
                     >
                         <svelte:component
