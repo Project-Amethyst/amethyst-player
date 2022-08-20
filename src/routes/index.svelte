@@ -340,7 +340,7 @@
             />
 
             <div class="content-part">
-                <div class="amethyst-player-content">
+                <div class="amethyst-player-content {mobileView ? 'mobile' : ''}">
                     <div class="amethyst-player-launchpad-holder center-class">
                         <div
                                 style={`height: 50vh; width: 50vh; padding: 20px; transform: scale(${mobileView ? "100%" : settings.virtualDeviceScale});`}
@@ -650,6 +650,10 @@
 
         overflow: auto;
 
+        &.mobile{
+            height: calc(100vh - 160px);
+        }
+
         .amethyst-player-launchpad-holder {
             height: calc(100%);
 
@@ -662,10 +666,6 @@
             }
         }
     }
-
-        .amethyst-player-content {
-            height: calc(100vh - 100px);
-        }
 
     .amethyst-player-footer {
         height: 100px;

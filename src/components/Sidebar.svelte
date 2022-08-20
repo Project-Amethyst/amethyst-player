@@ -57,7 +57,7 @@
     }, 1000/30)});
 </script>
 
-<div class="sidebar {animation ? 'animation' : ''} {mobile ? 'sidebar-mobile' : ''} {$$props.class} {show ? '' : 'hide-sidebar'}" style={$$props.style} >
+<div class="sidebar {animation ? 'animation' : ''} {mobile ? 'mobile' : ''} {$$props.class} {show ? '' : 'hide'}" style={$$props.style} >
     <div>
         {#if !mobile}
         <div class="sidebar-header">
@@ -223,7 +223,7 @@
             transition: margin-left 0.4s ease-in-out;
         }
 
-        &.sidebar-mobile
+        &.mobile
         {
             position: fixed;
             max-width: 100vw;
@@ -232,7 +232,7 @@
             height: calc(100% - 60px);
         }
 
-        &.hide-sidebar {
+        &.hide {
             margin-left: -110vw;
         }
 
