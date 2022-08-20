@@ -304,11 +304,8 @@
 </script>
 
 <main>
-    <div class="toast">
-        <SvelteToast options={{pausable: true}}/>
-    </div>
-    <div class="toast">
-        <SvelteToast options={{pausable: true}}/>
+    <div class="toast {mobileView ? "mobile": ""}">
+        <SvelteToast options={{pausable: true, intro: mobileView ? { y: -192 } : undefined}}/>
     </div>
     {#if player_ready}
         {#if mobileView}
@@ -745,6 +742,14 @@
         --toastColor: #cbcbcb;
         --toastBackground: #141414;
         --toastBarBackground: #3e3e3e;
+
+        &.mobile
+        {
+            --toastWidth: 100vw;
+            --toastHeight: 4rem;
+            --toastContainerTop: 0;
+            --toastContainerLeft: 0;
+        }
     }
 
     .mobile-header {
