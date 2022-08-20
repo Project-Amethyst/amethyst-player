@@ -335,7 +335,7 @@
                     on:loadProject={() => {loadProject();}}
                     bind:project={engine}
                     bind:status={project_status}
-                    show={showSidebar}
+                    bind:show={showSidebar}
                     bind:mobile={mobileView}
             />
 

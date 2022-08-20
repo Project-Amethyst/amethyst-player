@@ -30,6 +30,15 @@
 
     export let show:boolean;
     export let mobile:boolean;
+    let animation:boolean = false;
+    let animationChangeCount: number = 0;
+    $:{mobile, (() => {animationChangeCount = -1; show = !mobile})()}
+    $:{show, (async() => {
+        if(animationChangeCount == -1){animationChangeCount++; return;}
+        animation = true; let localAnimationChangeCount = ++animationChangeCount; 
+        new Promise(resolve => setTimeout(resolve, 500)).then(() => {if(localAnimationChangeCount === animationChangeCount){animation = false;}})}
+        )()
+    }
 
     let dispatch = createEventDispatcher();
 
@@ -48,7 +57,7 @@
     }, 1000/30)});
 </script>
 
-<div class="sidebar {mobile ? 'sidebar-mobile' : ''} {$$props.class} {show ? '' : 'hide-sidebar'}" style={$$props.style} >
+<div class="sidebar {animation ? 'animation' : ''} {mobile ? 'sidebar-mobile' : ''} {$$props.class} {show ? '' : 'hide-sidebar'}" style={$$props.style} >
     <div>
         {#if !mobile}
         <div class="sidebar-header">
@@ -206,10 +215,13 @@
         overflow: hidden;
         z-index: 1;
 
-        transition: margin-left 0.4s ease-in-out;
-
         display: flex;
         flex-direction: column;
+
+        &.animation
+        {
+            transition: margin-left 0.4s ease-in-out;
+        }
 
         &.sidebar-mobile
         {
@@ -221,7 +233,7 @@
         }
 
         &.hide-sidebar {
-            margin-left: -100vw;
+            margin-left: -110vw;
         }
 
         .sidebar-header {
