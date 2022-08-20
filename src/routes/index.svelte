@@ -343,7 +343,7 @@
                 <div class="amethyst-player-content {mobileView ? 'mobile' : ''}">
                     <div class="amethyst-player-launchpad-holder center-class">
                         <div
-                                style={`height: 50vh; width: 50vh; padding: 20px; transform: scale(${mobileView ? "100%" : settings.virtualDeviceScale});`}
+                                style={`width: 85%; height: 85%; max-width: ${50 * parseInt(settings.virtualDeviceScale) / 100}vh; padding: 20px;`}
                                 class="center-class"
                         >
                             <svelte:component
@@ -656,6 +656,7 @@
 
         .amethyst-player-launchpad-holder {
             height: calc(100%);
+            overflow: hidden;
 
             .circular-loader-bottom-text {
                 font-family: 'Roboto', sans-serif;
