@@ -206,7 +206,7 @@
         overflow: hidden;
         z-index: 1;
 
-        // transition: width 0.4s ease-in-out;
+        transition: margin-left 0.4s ease-in-out;
 
         display: flex;
         flex-direction: column;
@@ -214,14 +214,14 @@
         &.sidebar-mobile
         {
             position: fixed;
-            max-width: 450vw;
+            max-width: 100vw;
             width: 100vw;
             top: 60px;
             height: calc(100% - 60px);
         }
 
         &.hide-sidebar {
-            left:100vw;
+            margin-left: -100vw;
         }
 
         .sidebar-header {
