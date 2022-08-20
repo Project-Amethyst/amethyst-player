@@ -64,7 +64,7 @@
             <img src="logo-256.png" style="margin-top: 12px;">
 
             <span class="title" style="margin-left: -18px;">Amethyst</span>
-            <span class="subtitle" style="margin-left: -5px;">Player</span>
+            <span class="subtitle" >Player</span>
         </div>
         {/if}
 
@@ -267,8 +267,8 @@
             }
 
             span.subtitle {
-                position: fixed;
-                margin-left: 0.8rem;
+                width:0%;
+                transform: translateX(-141.5px);
                 margin-top: 2.5rem;
 
                 font-family: 'Roboto', sans-serif;
