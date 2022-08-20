@@ -120,13 +120,13 @@
                     pos: [0, 0],
                     info: midiDevices[event.deviceID].getDeviceInfo(),
                 };
-                reactiveVars.activeDevice = midiDevices[event.deviceID].name;
+                reactiveVars.activeDevice = midiDevices[event.deviceID]?.name;
                 reactiveVars.activeInput =
-                    midiDevices[event.deviceID].activeInput.name;
+                    midiDevices[event.deviceID]?.activeInput?.name;
                 reactiveVars.activeOutput =
-                    midiDevices[event.deviceID].activeOutput.name;
+                    midiDevices[event.deviceID]?.activeOutput?.name;
                 reactiveVars.activeConfig =
-                    midiDevices[event.deviceID].activeConfig.name;
+                    midiDevices[event.deviceID]?.activeConfig?.name;
                 toast.push(
                     $t("toast.is_now_the_active_device", {
                         device_name: midiDeviceInfos[event.deviceID].name,
@@ -484,18 +484,14 @@
                                 placeholder={$t("device.no_device")}
                                 on:change={(e) => {
                                 settings.deviceInput = e.detail.value;
-                                if (e.detail.value) {
-                                    midiDeviceInfos[0] = undefined;
-                                    midiDevices[0].connect(
-                                        GridController.availableDeviceInputs()[
-                                            e.detail.value
-                                        ],
-                                        midiDevices[0].activeOutput,
-                                        midiDevices[0].activeConfig
-                                    );
-                                } else {
-                                    midiDevices[0].disconnect();
-                                }
+                                midiDeviceInfos[0] = undefined;
+                                midiDevices[0].connect(
+                                    GridController.availableDeviceInputs()[
+                                        e.detail.value
+                                    ],
+                                    midiDevices[0].activeOutput,
+                                    midiDevices[0].activeConfig
+                                );
                             }}
                         />
                     </div>
@@ -515,18 +511,14 @@
                                 placeholder={$t("device.no_device")}
                                 on:change={(e) => {
                                 settings.deviceOutput = e.detail.value;
-                                if (e.detail.value) {
-                                    midiDeviceInfos[0] = undefined;
-                                    midiDevices[0].connect(
-                                        midiDevices[0].activeInput,
-                                        GridController.availableDeviceOutputs()[
-                                            e.detail.value
-                                        ],
-                                        midiDevices[0].activeConfig
-                                    );
-                                } else {
-                                    midiDevices[0].disconnect();
-                                }
+                                midiDeviceInfos[0] = undefined;
+                                midiDevices[0].connect(
+                                    midiDevices[0].activeInput,
+                                    GridController.availableDeviceOutputs()[
+                                        e.detail.value
+                                    ],
+                                    midiDevices[0].activeConfig
+                                );
                             }}
                         />
                     </div>
