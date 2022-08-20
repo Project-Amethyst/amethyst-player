@@ -114,8 +114,6 @@
 
         width: 100%;
         aspect-ratio: 1/1;
-
-        padding: 4%;
     }
 
     .lp-controls {
@@ -125,6 +123,7 @@
         display: flex;
         gap: 6px;
         flex-direction: column;
+        padding: 4%;
 
         .lp-controls-row {
             height: 100%;

@@ -94,8 +94,6 @@ export function setColor(keyID: KeyID, color: Color) {
 
         width: 100%;
         aspect-ratio: 1/1;
-
-        padding: 3%;
     }
 
     .lp-controls {
@@ -105,6 +103,7 @@ export function setColor(keyID: KeyID, color: Color) {
         display: flex;
         gap: 1.5%;
         flex-direction: column;
+        padding: 3%;
 
         .lp-controls-row {
             height: 100%;
