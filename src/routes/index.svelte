@@ -482,7 +482,7 @@
                                 GridController.availableDeviceInputs()
                             )}
                                 placeholder={$t("device.no_device")}
-                                on:change={(value) => {
+                                on:change={(e) => {
                                 settings.deviceInput = e.detail.value;
                                 if (e.detail.value) {
                                     midiDeviceInfos[0] = undefined;
