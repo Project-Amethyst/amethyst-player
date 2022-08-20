@@ -21,6 +21,7 @@
     import Switch from "../components/Switch.svelte";
     import MobileSidebarButton from "../components/MobileSidebarButton.svelte";
     import MobileSidebar from "../components/MobileSidebar.svelte";
+    import ResizeObserver from "svelte-resize-observer";
 
     import {SvelteToast, toast} from "@zerodevx/svelte-toast";
     import {t, locale, locales} from "$lib/translations";
@@ -29,6 +30,9 @@
 
     import {afterUpdate, onMount} from "svelte";
     import "../shared.css";
+
+    const mobileViewWidthThreshold = 800;
+    const mobileViewAspectThreshold = 3/5;
 
     let settings = {
         virtualDevice: Object.keys(virtualDeviceComponents)[0],
@@ -60,9 +64,8 @@
 
     let popup: { [key: string]: boolean } = {};
 
-    let mobileSidebarShown = false;
-
-    let projectBookmarked: boolean = false;
+    let mobileView = false;
+    let showSidebar = true;
 
     const updateDevicesInfo = () => {
         virtualDevicesInfo = [];
@@ -234,7 +237,7 @@
     };
 
     if (browser) {
-        if (browser && localStorage.getItem("settings")) {
+        if (localStorage.getItem("settings")) {
             settings = JSON.parse(localStorage.getItem("settings")!);
 
             GridController.start(deviceEvent).then((midi_available) => {
@@ -287,6 +290,17 @@
     afterUpdate(() => {
         updateDevicesInfo();
     });
+
+    function onResize(e) {
+        let width = e.detail.clientWidth;
+        let height = e.detail.clientHeight;
+        let newMobileView = width/height <= mobileViewAspectThreshold || width < mobileViewWidthThreshold;
+
+        if(newMobileView != mobileView)
+        {
+            mobileView = newMobileView;
+        }
+    }
 </script>
 
 <main>
@@ -297,37 +311,39 @@
         <SvelteToast options={{pausable: true}}/>
     </div>
     {#if player_ready}
+        {#if mobileView}
+            <div class="mobile-header">
+                <div class="amethyst-bar center-class">
+                    <img src="logo-256.png">
+
+                    <div style="margin-left: 10px">
+                        <span>Amethyst</span>
+                    </div>
+                </div>
+
+                <div class="show-controls-icon-parent center-class">
+                    <MobileSidebarButton bind:checked={showSidebar}/>
+                </div>
+            </div>
+        {/if}
         <div class="main-content">
+            <ResizeObserver on:resize={onResize} />
             <Sidebar
                     on:settings={() => (popup["setting"] = true)}
                     on:devices={() => (popup["devices"] = true)}
                     on:demoplay={() => (popup["demoplay"] = true)}
-                    on:loadProject={() => {
-                        loadProject();
-                    }}
+                    on:loadProject={() => {loadProject();}}
                     bind:project={engine}
                     bind:status={project_status}
+                    show={showSidebar}
+                    bind:mobile={mobileView}
             />
 
             <div class="content-part">
-                <div class="mobile-header show-on-mobile">
-                    <div class="amethyst-bar center-class">
-                        <img src="logo-256.png">
-
-                        <div style="margin-left: 10px">
-                            <span>Amethyst</span>
-                        </div>
-                    </div>
-
-                    <div class="show-controls-icon-parent center-class">
-                        <MobileSidebarButton bind:checked={mobileSidebarShown}/>
-                    </div>
-                </div>
-
                 <div class="amethyst-player-content">
                     <div class="amethyst-player-launchpad-holder center-class">
                         <div
-                                style={`height: 50vh; width: 50vh; padding: 20px; transform: scale(${settings.virtualDeviceScale});`}
+                                style={`height: 50vh; width: 50vh; padding: 20px; transform: scale(${mobileView ? "100%" : settings.virtualDeviceScale});`}
                                 class="center-class"
                         >
                             <svelte:component
@@ -347,13 +363,7 @@
                 </div>
             </div>
         </div>
-        <!-- {:else}
-        <div class="center-class">
-            <CircularLoader/>
-        </div> -->
     {/if}
-
-    <MobileSidebar class="show-on-mobile" bind:active={mobileSidebarShown}></MobileSidebar>
 
     <Popup bind:show={popup["setting"]}>
         <div class="settings-popup">
@@ -653,11 +663,9 @@
         }
     }
 
-    @media only screen and (max-width: 600px) {
         .amethyst-player-content {
-            height: calc(100vh - 160px);
+            height: calc(100vh - 60px);
         }
-    }
 
     .amethyst-player-footer {
         height: 100px;
@@ -766,20 +774,6 @@
                 letter-spacing: 0.125rem;
                 color: #f5f5f5;
             }
-        }
-    }
-
-    .show-on-mobile {
-        display: none;
-    }
-
-    @media only screen and (max-width: 600px) {
-        .show-on-mobile {
-            display: block;
-        }
-
-        .dont-show-on-mobile {
-            display: none;
         }
     }
 </style>

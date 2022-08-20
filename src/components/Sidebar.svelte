@@ -23,22 +23,19 @@
     import { t, locales } from '$lib/translations'; 
 
     import type {ProjectRT} from "../engine/ProjectRT";
-    import { Stop } from "carbon-icons-svelte"
+    import { Mobile, Stop } from "carbon-icons-svelte"
 
     export let project:ProjectRT;
     export let status:string;
 
-    let dispatch = createEventDispatcher();
+    export let show:boolean;
+    export let mobile:boolean;
 
-    let projectBookmarked = false
+    let dispatch = createEventDispatcher();
 
     let demoplayValues = {
         isPlaying: false,
         playProgress: 0
-    }
-
-    function bookmarkProject() {
-        projectBookmarked = !projectBookmarked
     }
 
     onMount(() => {
@@ -51,14 +48,16 @@
     }, 1000/30)});
 </script>
 
-<div class="sidebar {$$props.class}" style={$$props.style}>
+<div class="sidebar {mobile ? 'sidebar-mobile' : ''} {$$props.class} {show ? '' : 'hide-sidebar'}" style={$$props.style} >
     <div>
+        {#if !mobile}
         <div class="sidebar-header">
             <img src="logo-256.png" style="margin-top: 12px;">
 
             <span class="title" style="margin-left: -18px;">Amethyst</span>
             <span class="subtitle" style="margin-left: -5px;">Player</span>
         </div>
+        {/if}
 
         {#if status === "not loaded"}
             <div class="sidebar-block-project-info">
@@ -122,23 +121,7 @@
                             <span title={project?.projectInfo.name}>{project?.projectInfo.name}</span>
                         </div>
                     </div>
-
-                    <!-- <div class="block-side-right">
-                        <button class="fav-btn" on:click={() => bookmarkProject()}>
-                            {#if projectBookmarked}
-                                <BookmarkFilled size={28}/>
-                            {:else}
-                                <Bookmark size={28}/>
-                            {/if}
-                        </button>
-                    </div> -->
                 </div>
-
-                <!-- <a class="community-button">
-                    <u>
-                        <i>Open Community Page</i>
-                    </u>
-                </a> -->
 
                 <div style="text-align: center; margin-top: 20px;">
                     <Button on:click={() => dispatch("loadProject")}>{$t('sidebar.change_project')}</Button>
@@ -221,9 +204,25 @@
         background-color: rgb(20, 20, 20);
         box-shadow: 0 0 10px 0.5px black;
         overflow: hidden;
+        z-index: 1;
+
+        // transition: width 0.4s ease-in-out;
 
         display: flex;
         flex-direction: column;
+
+        &.sidebar-mobile
+        {
+            position: fixed;
+            max-width: 450vw;
+            width: 100vw;
+            top: 60px;
+            height: calc(100% - 60px);
+        }
+
+        &.hide-sidebar {
+            left:100vw;
+        }
 
         .sidebar-header {
             height: 75px;
@@ -470,12 +469,6 @@
 
                 color: grey;
             }
-        }
-    }
-
-    @media only screen and (max-width: 600px) {
-        .sidebar {
-            display: none;
         }
     }
 </style>
