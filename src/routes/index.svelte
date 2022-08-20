@@ -339,21 +339,22 @@
                     bind:mobile={mobileView}
             />
 
-            <div class="content-part">
-                <div class="amethyst-player-content {mobileView ? 'mobile' : ''}">
+            <div class="content-part" on:click={(e) => {console.log(e); showSidebar = !showSidebar}}>
+                <div class="amethyst-player-content {mobileView ? 'mobile' : ''}" >
                     <div class="amethyst-player-launchpad-holder center-class">
                         <div
-                                style={`width: 85%; height: 85%; max-width: ${50 * parseInt(settings.virtualDeviceScale) / 100}vh; padding: 20px;`}
+                                style={`width: 85%; max-width: ${50 * parseInt(settings.virtualDeviceScale) / 100}vh;`}
                                 class="center-class"
+                                on:click={(e) => {e.stopPropagation()}}
                         >
-                            <svelte:component
-                                    this={virtualDeviceComponent}
-                                    bind:this={virtualDevices[0]}
-                                    id={0}
-                                    pos={[0, 0]}
-                                    keyPress={virtualKeyPressed}
-                                    keyRelease={virtualKeyReleased}
-                            />
+                                <svelte:component
+                                        this={virtualDeviceComponent}
+                                        bind:this={virtualDevices[0]}
+                                        id={0}
+                                        pos={[0, 0]}
+                                        keyPress={virtualKeyPressed}
+                                        keyRelease={virtualKeyReleased}
+                                />
                         </div>
                     </div>
                 </div>
@@ -638,9 +639,11 @@
     .main-content {
         display: flex;
         flex-direction: row;
+        justify-content: space-between;
 
         .content-part {
             width: 100%;
+            max-width: 100vw;
         }
     }
 

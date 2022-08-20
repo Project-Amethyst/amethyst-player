@@ -219,9 +219,11 @@
         display: flex;
         flex-direction: column;
 
+        --width: 450px;
+
         &.animation
         {
-            transition: margin-left 0.4s ease-in-out;
+            transition: position 0.4s ease-in-out, margin-left 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
         }
 
         &.mobile
@@ -231,10 +233,13 @@
             width: 100vw;
             top: 60px;
             height: calc(100% - 60px);
+            --width: 100vw;
         }
 
         &.hide {
-            margin-left: -110vw;
+            // left: 0px;
+            margin-left: calc(var(--width) * -1);
+            box-shadow: 0 0 10px 0.5px rgba(0, 0, 0, 0);
         }
 
         .sidebar-header {
