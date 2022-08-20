@@ -68,6 +68,7 @@
         }
 
         .popup-inner {
+            max-width: 90vw;
             padding: 20px;
             background-color: rgb(20, 20, 20);
             border-radius: 10px;
