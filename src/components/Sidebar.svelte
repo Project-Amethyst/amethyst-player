@@ -210,6 +210,7 @@
     .sidebar {
         min-width: 350px;
         max-width: 450px;
+        width: 33vw;
         background-color: rgb(20, 20, 20);
         box-shadow: 0 0 10px 0.5px black;
         overflow: hidden;
