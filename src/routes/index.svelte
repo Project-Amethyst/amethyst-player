@@ -664,7 +664,7 @@
     }
 
         .amethyst-player-content {
-            height: calc(100vh - 60px);
+            height: calc(100vh - 100px);
         }
 
     .amethyst-player-footer {
