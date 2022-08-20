@@ -336,7 +336,7 @@
                     bind:mobile={mobileView}
             />
 
-            <div class="content-part" on:click={(e) => {console.log(e); showSidebar = !showSidebar}}>
+            <div class="content-part" on:click={(e) => {if(!mobileView)showSidebar = !showSidebar}}>
                 <div class="amethyst-player-content {mobileView ? 'mobile' : ''}" >
                     <div class="amethyst-player-launchpad-holder center-class">
                         <div
