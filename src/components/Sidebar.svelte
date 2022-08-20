@@ -233,6 +233,7 @@
             width: 100vw;
             top: 60px;
             height: calc(100% - 60px);
+            box-shadow: 0 0 10px 0.5px rgba(0, 0, 0, 0);
             --width: 100vw;
         }
 
