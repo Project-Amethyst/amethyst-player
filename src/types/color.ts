@@ -78,4 +78,11 @@ export class Color
     }
     return undefined;
   }
+
+  isBlack(): boolean
+  {
+    let [r, g, b] = this.rgb();
+
+    return !(r || g || b)
+  }
 }

@@ -1,7 +1,9 @@
-import type { Canvas } from "../CanvasAPI";
+import type { Canvas, KeyID } from "../ProjectRT";
 import KeyLED from "./KeyLED";
 import { KeySound } from "./KeySound";
 import type UnipackRT from "./UnipackRT";
+import { ColorType, Color } from "../../types/color";
+
 
 class AutoPlay {
     canvas:Canvas;
@@ -112,29 +114,56 @@ class AutoPlay {
     {
       let deviceInfo = this.canvas.getDevices()[0];
       switch (command[0]) {
-        case 'o':
+        case 'o':deviceInfo
         case 'on':
-          this.project.KeyPress(deviceInfo, [parseInt(command[2]) - 1, parseInt(command[1]) - 1])
-          break;
+          {
+            const keyID:KeyID =  [parseInt(command[2]) - 1, parseInt(command[1]) - 1];
+            this.project.KeyPress(deviceInfo, keyID)
+            if(this.canvas.options.showKeyPress) {this.canvas.setOverlay(0, keyID, new Color(ColorType.RGB, [255, 255, 255]))}
+            break;
+          }
         case 'f':
         case 'off':
-          this.project.KeyRelease(deviceInfo, [parseInt(command[2]) - 1, parseInt(command[1]) - 1])
-          break;
+          {
+            const keyID:KeyID =  [parseInt(command[2]) - 1, parseInt(command[1]) - 1];
+            this.project.KeyRelease(deviceInfo, keyID)
+            if(this.canvas.options.showKeyPress) {this.canvas.setOverlay(0, keyID, new Color(ColorType.RGB, [0, 0, 0]))}
+            break;
+          }
         case 't':
         case 'touch':
-              this.project.KeyPress(deviceInfo, [parseInt(command[2]) - 1, parseInt(command[1]) - 1])
-              this.project.KeyRelease(deviceInfo, [parseInt(command[2]) - 1, parseInt(command[1]) - 1])
-            break;
+            {
+              const keyID:KeyID =  [parseInt(command[2]) - 1, parseInt(command[1]) - 1];
+              this.project.KeyPress(deviceInfo, keyID)
+              this.project.KeyRelease(deviceInfo, keyID)
+              if(this.canvas.options.showKeyPress)
+              {   
+                  this.canvas.setOverlay(0, keyID, new Color(ColorType.RGB, [255, 255, 255]));
+                  this.wait(200)!.then(() => {
+                  this.canvas.setOverlay(0, keyID, new Color(ColorType.RGB, [0, 0, 0]))});
+              }
+              break;
+            }
         case 'd':
         case 'delay':
           var ms = parseInt(command[1])
           if(ms < 10)
             break;
-          await this.wait(parseInt(command[1]));
+          var adjusted_ms = this.lastEventTime + ms - Date.now()
+          this.lastEventTime += ms
+          await this.wait(adjusted_ms);
           break;
         case 'c':
         case 'chain':
           this.project.ChainChange(parseInt(command[1]) - 1);
+          if(this.canvas.options.showKeyPress)
+          {
+              const keyID:KeyID = deviceInfo.info.chain_key[parseInt(command[1]) - 1];
+              this.canvas.setOverlay(0, keyID, new Color(ColorType.RGB, [255, 255, 255]));
+              this.wait(200)!.then(() =>{
+              this.canvas.setOverlay(0, keyID, new Color(ColorType.RGB, [0, 0, 0]));
+            });
+          }
           break;
         default:
       }
@@ -199,7 +228,7 @@ class AutoPlay {
       }
     }
   
-    Seek(target:number)
+    Seek(target: number)
     {
       this.Pause();
       console.log(`Seeking to ${target}`)
@@ -245,17 +274,9 @@ class AutoPlay {
       console.log(`Seeked to ${progress}`)
     }
   
-    wait(ms) {
-      var adjusted_ms = this.lastEventTime + ms - Date.now()
-      this.lastEventTime += ms
-      if(adjusted_ms > 5)
-      {
-        return new Promise(resolve => setTimeout(resolve, adjusted_ms))
-      }
-      else
-      {
-        return 
-      }
+    wait(ms: number) 
+    {
+      return new Promise(resolve => setTimeout(resolve, ms))
     }
   }
   

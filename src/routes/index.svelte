@@ -220,8 +220,31 @@
         input.click();
     };
 
+    let overlay:string[] = [];
+
     var api: Canvas = {
         setColor: function (deviceID: number, keyID: KeyID, color: Color) {
+            var signature = [deviceID, keyID].toString();
+            if(!overlay.includes(signature))
+            {
+                virtualDevices[deviceID].setColor(keyID, color);
+                midiDevices[deviceID]?.setColor(keyID, color);
+            }
+        },
+
+        setOverlay: function (deviceID: number, keyID: KeyID, color: Color) {
+            var signature = [deviceID, keyID].toString();
+
+            if(!color.isBlack())
+            {
+                if(!overlay.includes(signature)) {overlay.push(signature);}
+            }
+            else
+            {
+                let index = overlay.indexOf(signature);
+                if(index != -1) {overlay.splice(index, 1);}
+            }
+
             virtualDevices[deviceID].setColor(keyID, color);
             midiDevices[deviceID]?.setColor(keyID, color);
         },
