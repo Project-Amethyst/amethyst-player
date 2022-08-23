@@ -44,6 +44,13 @@
         deviceSettingAdvanced: false,
         language: undefined,
     };
+
+    let options = 
+    {
+        lightAnimation: true,
+        showKeyPress: false,
+        learningMode: false
+    }
     var player_ready = false;
 
     $: if (browser && player_ready) {
@@ -227,6 +234,8 @@
         getDevices: function () {
             return virtualDevicesInfo;
         },
+
+        options: options
     };
 
     let reactiveVars = {
@@ -576,7 +585,7 @@
                 </div>
 
                 <div class="setting-option">
-                    <Switch/>
+                    <Switch bind:checked={options.lightAnimation}/>
                 </div>
             </div>
 
@@ -586,7 +595,7 @@
                 </div>
 
                 <div class="setting-option">
-                    <Switch/>
+                    <Switch bind:checked={options.showKeyPress}/>
                 </div>
             </div>
 
@@ -603,7 +612,7 @@
                 </div>
 
                 <div class="setting-option">
-                    <Switch/>
+                    <Switch bind:checked={options.learningMode}/>
                 </div>
             </div>
         </div>
