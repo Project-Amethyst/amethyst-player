@@ -2,7 +2,7 @@ import {KeyType} from "../types/devices";
 import type {DeviceKeyID, GridDeviceConfig } from "../types/devices";
 
 const config: GridDeviceConfig = {
-    name: "Launchpad X",
+    name: "Launchpad Mini MK3",
     midiNameRegex: "Launchpad Mini|LPMiniMK3 MIDI",
 
     paletteChannel: {
