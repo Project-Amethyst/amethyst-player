@@ -336,7 +336,7 @@
 </script>
 
 <main>
-    <div class="toast {mobileView ? "mobile": ""}">
+    <div class="toast {mobileView ? 'mobile': ''}">
         <SvelteToast options={{pausable: true, intro: mobileView ? { y: -192 } : undefined}}/>
     </div>
     {#if player_ready}
@@ -395,13 +395,13 @@
         </div>
     {/if}
 
-    <Popup bind:show={popup["setting"]}>
+    <Popup bind:mobile={mobileView} bind:show={popup["setting"]}>
         <div class="settings-popup">
             <div class="popup-header center-class">
                 <span>{$t("setting.settings")}</span>
             </div>
 
-            <div class="setting">
+            <div class="setting {mobileView? 'setting-mobile' : 'setting-mobile'}">
                 <div class="setting-name">
                     <span>{$t("setting.virtual_device") + ":"}</span>
                 </div>
@@ -414,7 +414,7 @@
                 </div>
             </div>
 
-            <div class="setting">
+            <div class="setting {mobileView? 'setting-mobile' : 'setting-mobile'}">
                 <div class="setting-name">
                     <span>{$t("setting.virtual_device_Scale") + ":"}</span>
                 </div>
@@ -427,7 +427,7 @@
                 </div>
             </div>
 
-            <div class="setting">
+            <div class="setting {mobileView? 'setting-mobile' : 'setting-mobile'}">
                 <div class="setting-name">
                     <span>{$t("setting.project_engine") + ":"}</span>
                 </div>
@@ -444,7 +444,7 @@
                 </div>
             </div>
 
-            <div class="setting">
+            <div class="setting {mobileView? 'setting-mobile' : 'setting-mobile'}">
                 <div class="setting-name">
                     <span>{$t("setting.language") + ":"}</span>
                 </div>
@@ -465,14 +465,14 @@
         </div>
     </Popup>
 
-    <Popup bind:show={popup["devices"]}>
+    <Popup bind:mobile={mobileView} bind:show={popup["devices"]}>
         <div class="settings-popup">
             <div class="popup-header center-class">
                 <span>{$t("device.device")}</span>
             </div>
 
             {#if !settings.deviceSettingAdvanced}
-                <div class="setting">
+                <div class="setting {mobileView? 'setting-mobile' : 'setting-mobile'}">
                     <div class="setting-name">
                         <span>{$t("device.midi_device") + ":"}</span>
                     </div>
@@ -502,7 +502,7 @@
                     </div>
                 </div>
             {:else}
-                <div class="setting">
+                <div class="setting {mobileView? 'setting-mobile' : 'setting-mobile'}">
                     <div class="setting-name">
                         <span>{$t("device.midi_input_device") + ":"}</span>
                     </div>
@@ -529,7 +529,7 @@
                     </div>
                 </div>
 
-                <div class="setting">
+                <div class="setting {mobileView? 'setting-mobile' : 'setting-mobile'}">
                     <div class="setting-name">
                         <span>{$t("device.midi_output_device") + ":"}</span>
                     </div>
@@ -557,7 +557,7 @@
                 </div>
             {/if}
 
-            <div class="setting">
+            <div class="setting {mobileView? 'setting-mobile' : 'setting-mobile'}">
                 <div class="setting-name">
                     <span>{$t("device.midi_device_config") + ":"}</span>
                 </div>
@@ -584,7 +584,7 @@
                 </div>
             </div>
 
-            <div class="setting">
+            <div class="setting {mobileView? 'setting-mobile' : 'setting-mobile'}">
                 <div class="setting-name">
                     <span>{$t("device.advanced_mode") + ":"}</span>
                 </div>
@@ -596,13 +596,13 @@
         </div>
     </Popup>
 
-    <Popup bind:show={popup["demoplay"]}>
+    <Popup bind:mobile={mobileView} bind:show={popup["demoplay"]}>
         <div class="settings-popup">
             <div class="popup-header center-class">
                 <span>{$t("demoplay.demoplay")}</span>
             </div>
 
-            <div class="setting">
+            <div class="setting {mobileView? 'setting-mobile' : 'setting-mobile'}">
                 <div class="setting-name">
                     <span>{$t("demoplay.light_animation")}</span>
                 </div>
@@ -612,7 +612,7 @@
                 </div>
             </div>
 
-            <div class="setting">
+            <div class="setting {mobileView? 'setting-mobile' : 'setting-mobile'}">
                 <div class="setting-name">
                     <span>{$t("demoplay.show_key_press")}</span>
                 </div>
@@ -622,7 +622,7 @@
                 </div>
             </div>
 
-            <div class="setting">
+            <div class="setting {mobileView? 'setting-mobile' : 'setting-mobile'}">
                 <div
                         class="setting-name"
                         title={$t("demoplay.learning_mode_info")}
@@ -752,6 +752,21 @@
                 min-width: 300px;
                 display: flex;
                 flex-direction: row-reverse;
+            }
+
+            &.setting-mobile {
+                flex-direction: column;
+                height: auto;
+                gap: 10px;
+
+                .setting-name {
+                    width: 100%;
+                }
+
+                .setting-option {
+                    width: 100%;
+                    flex-direction: row;
+                }
             }
         }
     }
