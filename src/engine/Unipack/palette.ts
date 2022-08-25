@@ -131,8 +131,8 @@ export const palette = [
 ];
 
 export const rawPalette = [
-  //LaunchpadXcolorPalette
-  [0, 0, 0],  //0
+//LaunchpadXcolorPalette
+[0, 0, 0],  //0
 [63, 63, 63],  //1
 [127, 127, 127],  //2
 [255, 255, 255],  //3

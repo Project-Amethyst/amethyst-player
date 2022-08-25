@@ -27,7 +27,7 @@ export class Color
     else if(this.type === ColorType.Palette)
     {
       if(palettes[this.value[0]] === undefined)
-        return [NaN, NaN, NaN];
+        return [0, 0, 0];
       rgb = palettes[this.value[0]][this.value[1]];
     }
     else if(this.type === ColorType.RGB)

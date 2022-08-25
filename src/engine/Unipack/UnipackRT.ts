@@ -235,43 +235,60 @@ class UnipackRT implements ProjectRT {
 
     ClearProjectFile(): void { }
 
+    activeKeys:string[] = [];
+    loggableKeys:string[] = [];
+
     //Input
     KeyPress(device: DeviceInfoCanvas, keyID: KeyID): void {
         let chain = this.IndexOfKeyID(device.info.chain_key, keyID);
         if (chain != -1) {
-            this.ChainChange(chain)
-            return;
+            if(!this.api?.options.learningMode)
+            {
+                this.ChainChange(chain)
+            }
+            else
+            {
+                this.activeKeys.push(["c", chain].toString())
+            }
         }
-        // const currentKeyPressIndex = this.currentKeyPress.indexOf(keyID);
-        // if (currentKeyPressIndex == -1) {
-        //     this.currentKeyPress.push(keyID); // 2nd parameter means remove one item only
-        // }
+        else
+        {
+            let soundLoop = 1;
+            let [canvas_x, canvas_y] = keyID; //canvas_XY means the grid scope XY (Square), Raw XY will be the source XY (Including the chain keys)
 
-        let soundLoop = 1;
-        let [canvas_x, canvas_y] = keyID; //canvas_XY means the grid scope XY (Square), Raw XY will be the source XY (Including the chain keys)
+            //KeyLED
+            if (this.api!.options.lightAnimation && this.keyLED?.[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
+                let ledIndex = this.keypressHistory[canvas_x][canvas_y] % this.keyLED[this.currentChain][canvas_x][canvas_y].length;
+                this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex].play();
+            }
 
-        // console.log("Note On - " + x.toString() + " " + y.toString());
-        // // console.log([x, y, canvas_x, canvas_y])
+            //Sound
+            if (this.keySound?.[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
+                let soundIndex = this.keypressHistory[canvas_x][canvas_y] % this.keySound[this.currentChain][canvas_x][canvas_y].length;
+                this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].keyPress();
+            }
 
-        // if (this.props.projectFile !== undefined) {
-        //   if (canvas_x >= 0 && canvas_x < 8 && canvas_y >= 0 && canvas_y < 8) {
-        // //LED
-        // if (led && this.keyLED !== undefined && this.keyLED[this.currentChain] !== undefined && this.keyLED[this.currentChain][canvas_x] !== undefined && this.keyLED[this.currentChain][canvas_x][canvas_y] !== undefined && this.keyLED[this.currentChain][canvas_x][canvas_y].length > 0) {
-        //   let ledIndex = this.keypressHistory[canvas_x][canvas_y] % this.keyLED[this.currentChain][canvas_x][canvas_y].length;
-        //   this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex].stop();
-        //   this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex].play();
-        // }
-
-        //KeyLED
-        if (this.api!.options.lightAnimation && this.keyLED?.[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
-            let ledIndex = this.keypressHistory[canvas_x][canvas_y] % this.keyLED[this.currentChain][canvas_x][canvas_y].length;
-            this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex].play();
+            this.activeKeys.push(keyID.toString());
         }
 
-        //Sound
-        if (this.keySound?.[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
-            let soundIndex = this.keypressHistory[canvas_x][canvas_y] % this.keySound[this.currentChain][canvas_x][canvas_y].length;
-            this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].keyPress();
+        if(this.api?.options.learningMode && this.demoplay)
+        {
+            let requiredKeys = this.demoplay.getActionKeys();
+            let allPressed = true;
+            for(let key of requiredKeys)
+            {
+                if(!this.activeKeys.includes(key))
+                {
+                    allPressed = false;
+                    break;
+                }
+            }
+
+            if(allPressed)
+            {
+                this.loggableKeys = requiredKeys;
+                this.demoplay.Next(true);
+            }
         }
     }
 
@@ -288,14 +305,17 @@ class UnipackRT implements ProjectRT {
         if (this.keySound[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
             let soundIndex = this.keypressHistory[canvas_x][canvas_y] % this.keySound[this.currentChain][canvas_x][canvas_y].length;
             this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].keyRelease();
-            if(this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].wormhole != undefined)
+            if(!this.api?.options.learningMode && this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].wormhole != undefined)
             {
                 this.ChainChange(this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].wormhole);
             }
         }
 
         //Update History
-        this.logKeypressHistory(canvas_x, canvas_y);
+        if(!this.api?.options.learningMode)
+        {
+            this.logKeypressHistory(canvas_x, canvas_y);
+        }
 
     }
 

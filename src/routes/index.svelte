@@ -1,7 +1,7 @@
 <!-- Index file for the player route -->
 <script lang="ts">
     import type {KeyID} from "src/types/devices";
-    import type {Color} from "../types/color";
+    import {Color, ColorType} from "../types/color";
 
     import {virtualDeviceComponents} from "../components/devices/Devices";
 
@@ -220,12 +220,12 @@
         input.click();
     };
 
-    let overlay:string[] = [];
+    let overlays:any[] = [];
 
     var api: Canvas = {
         setColor: function (deviceID: number, keyID: KeyID, color: Color) {
-            var signature = [deviceID, keyID].toString();
-            if(!overlay.includes(signature))
+            var signature = [deviceID, keyID];
+            if(!overlays.map(String).includes(signature.toString()))
             {
                 virtualDevices[deviceID].setColor(keyID, color);
                 midiDevices[deviceID]?.setColor(keyID, color);
@@ -233,20 +233,39 @@
         },
 
         setOverlay: function (deviceID: number, keyID: KeyID, color: Color) {
-            var signature = [deviceID, keyID].toString();
+            var signature = [deviceID, keyID];
 
             if(!color.isBlack())
             {
-                if(!overlay.includes(signature)) {overlay.push(signature);}
+                if(!overlays.map(String).includes(signature.toString())) {overlays.push(signature);}
             }
             else
             {
-                let index = overlay.indexOf(signature);
-                if(index != -1) {overlay.splice(index, 1);}
+                let index = overlays.map(String).indexOf(signature.toString())
+                if(index != -1) {overlays.splice(index, 1);}
             }
 
             virtualDevices[deviceID].setColor(keyID, color);
             midiDevices[deviceID]?.setColor(keyID, color);
+        },
+
+        unsetOverlay(deviceID: number, keyID: KeyID)
+        {
+            var signature = [deviceID, keyID];
+            let index = overlays.map(String).indexOf(signature.toString());
+            if(index != -1) {overlays.splice(index, 1);}
+            virtualDevices[deviceID].setColor(keyID, new Color(ColorType.Palette, ["classic", 0]));
+            midiDevices[deviceID]?.setColor(keyID, new Color(ColorType.Palette, ["classic", 0]));
+        },
+
+        clearOverlay: function(){
+            for(let overlay of overlays)
+            {
+                let [deviceID, keyID] = overlay;
+                virtualDevices[deviceID].setColor(keyID, new Color(ColorType.Palette, ["classic", 0]));
+                midiDevices[deviceID]?.setColor(keyID, new Color(ColorType.Palette, ["classic", 0]));
+            }
+            overlays = [];
         },
 
         clear: function (deviceID: number) {
