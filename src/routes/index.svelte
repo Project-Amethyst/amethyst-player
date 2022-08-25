@@ -401,7 +401,7 @@
                 <span>{$t("setting.settings")}</span>
             </div>
 
-            <div class="setting {mobileView? 'setting-mobile' : ''}">
+            <div class="setting {mobileView? 'mobile' : ''}">
                 <div class="setting-name">
                     <span>{$t("setting.virtual_device") + ":"}</span>
                 </div>
@@ -414,7 +414,7 @@
                 </div>
             </div>
 
-            <div class="setting {mobileView? 'setting-mobile' : ''}">
+            <div class="setting {mobileView? 'mobile' : ''}">
                 <div class="setting-name">
                     <span>{$t("setting.virtual_device_Scale") + ":"}</span>
                 </div>
@@ -427,7 +427,7 @@
                 </div>
             </div>
 
-            <div class="setting {mobileView? 'setting-mobile' : ''}">
+            <div class="setting {mobileView? 'mobile' : ''}">
                 <div class="setting-name">
                     <span>{$t("setting.project_engine") + ":"}</span>
                 </div>
@@ -444,7 +444,7 @@
                 </div>
             </div>
 
-            <div class="setting {mobileView? 'setting-mobile' : ''}">
+            <div class="setting {mobileView? 'mobile' : ''}">
                 <div class="setting-name">
                     <span>{$t("setting.language") + ":"}</span>
                 </div>
@@ -472,7 +472,7 @@
             </div>
 
             {#if !settings.deviceSettingAdvanced}
-                <div class="setting {mobileView? 'setting-mobile' : ''}">
+                <div class="setting {mobileView? 'mobile' : ''}">
                     <div class="setting-name">
                         <span>{$t("device.midi_device") + ":"}</span>
                     </div>
@@ -502,7 +502,7 @@
                     </div>
                 </div>
             {:else}
-                <div class="setting {mobileView? 'setting-mobile' : ''}">
+                <div class="setting {mobileView? 'mobile' : ''}">
                     <div class="setting-name">
                         <span>{$t("device.midi_input_device") + ":"}</span>
                     </div>
@@ -529,7 +529,7 @@
                     </div>
                 </div>
 
-                <div class="setting {mobileView? 'setting-mobile' : ''}">
+                <div class="setting {mobileView? 'mobile' : ''}">
                     <div class="setting-name">
                         <span>{$t("device.midi_output_device") + ":"}</span>
                     </div>
@@ -557,7 +557,7 @@
                 </div>
             {/if}
 
-            <div class="setting {mobileView? 'setting-mobile' : ''}">
+            <div class="setting {mobileView? 'mobile' : ''}">
                 <div class="setting-name">
                     <span>{$t("device.midi_device_config") + ":"}</span>
                 </div>
@@ -584,7 +584,7 @@
                 </div>
             </div>
 
-            <div class="setting {mobileView? 'setting-mobile' : ''}">
+            <div class="setting {mobileView? 'mobile' : ''}">
                 <div class="setting-name">
                     <span>{$t("device.advanced_mode") + ":"}</span>
                 </div>
@@ -602,7 +602,7 @@
                 <span>{$t("demoplay.demoplay")}</span>
             </div>
 
-            <div class="setting {mobileView? 'setting-mobile' : ''}">
+            <div class="setting {mobileView? 'mobile' : ''}">
                 <div class="setting-name">
                     <span>{$t("demoplay.light_animation")}</span>
                 </div>
@@ -612,7 +612,7 @@
                 </div>
             </div>
 
-            <div class="setting {mobileView? 'setting-mobile' : ''}">
+            <div class="setting {mobileView? 'mobile' : ''}">
                 <div class="setting-name">
                     <span>{$t("demoplay.show_key_press")}</span>
                 </div>
@@ -622,7 +622,7 @@
                 </div>
             </div>
 
-            <div class="setting {mobileView? 'setting-mobile' : ''}">
+            <div class="setting {mobileView? 'mobile' : ''}">
                 <div
                         class="setting-name"
                         title={$t("demoplay.learning_mode_info")}
@@ -754,7 +754,7 @@
                 flex-direction: row-reverse;
             }
 
-            &.setting-mobile {
+            &.mobile {
                 flex-direction: column;
                 height: auto;
                 gap: 10px;
