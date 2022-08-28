@@ -31,9 +31,6 @@ class UnipackRT implements ProjectRT {
     //Meta
     LoadProjectFile(file: File): Promise<void> {
         console.log(`Loading Unipack ${file.name}`);
-        // console.log(file);
-        // this.api.setRGB(0, [1, 1], 255, 255, 255);
-
         this.currentChain = 0;
         return new Promise(async (resolve, reject) => {
             try {
@@ -169,12 +166,6 @@ class UnipackRT implements ProjectRT {
                 for (var [name, text] of Object.entries(keyLEDFiles)) {
                     let fileInfo = name.split("/").pop().split(" ");
                     try {
-                        // if (fileInfo.length === 5) {
-                        //   this.keyLED[parseInt(fileInfo[0]) - 1][parseInt(fileInfo[2]) - 1][parseInt(fileInfo[1]) - 1][fileInfo[4].charCodeAt(0) - 97] = new KeyLED(text, parseInt(fileInfo[3]), this.Canvas)
-                        //   // console.log(name)
-                        //   // console.log([parseInt(fileInfo[0]) - 1, parseInt(fileInfo[2]) - 1, parseInt(fileInfo[1]) - 1, fileInfo[4].charCodeAt(0) - 97])
-                        //   // console.log(this.keyLED[parseInt(fileInfo[0]) - 1][parseInt(fileInfo[2]) - 1][parseInt(fileInfo[1]) - 1][fileInfo[4].charCodeAt(0) - 97])
-                        // }
                         // else if (fileInfo.length === 4) {
                         let index = fileInfo[4] !== undefined ? fileInfo[4].charCodeAt(0) - 97 : 0; //97 is 'a'
                         // console.log([parseInt(fileInfo[0]) - 1, parseInt(fileInfo[2]) - 1, parseInt(fileInfo[1]) - 1, index])
@@ -226,7 +217,7 @@ class UnipackRT implements ProjectRT {
                     this.demoplay = new AutoPlay(autoplayFile, this.api, this);
                 ;
                 this.loaded = true;
-                resolve(this);
+                resolve();
             } catch (e) {
                 reject(e);
             }
@@ -242,25 +233,9 @@ class UnipackRT implements ProjectRT {
             this.ChainChange(chain)
             return;
         }
-        // const currentKeyPressIndex = this.currentKeyPress.indexOf(keyID);
-        // if (currentKeyPressIndex == -1) {
-        //     this.currentKeyPress.push(keyID); // 2nd parameter means remove one item only
-        // }
 
         let soundLoop = 1;
         let [canvas_x, canvas_y] = keyID; //canvas_XY means the grid scope XY (Square), Raw XY will be the source XY (Including the chain keys)
-
-        // console.log("Note On - " + x.toString() + " " + y.toString());
-        // // console.log([x, y, canvas_x, canvas_y])
-
-        // if (this.props.projectFile !== undefined) {
-        //   if (canvas_x >= 0 && canvas_x < 8 && canvas_y >= 0 && canvas_y < 8) {
-        // //LED
-        // if (led && this.keyLED !== undefined && this.keyLED[this.currentChain] !== undefined && this.keyLED[this.currentChain][canvas_x] !== undefined && this.keyLED[this.currentChain][canvas_x][canvas_y] !== undefined && this.keyLED[this.currentChain][canvas_x][canvas_y].length > 0) {
-        //   let ledIndex = this.keypressHistory[canvas_x][canvas_y] % this.keyLED[this.currentChain][canvas_x][canvas_y].length;
-        //   this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex].stop();
-        //   this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex].play();
-        // }
 
         //KeyLED
         if (this.keyLED?.[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {

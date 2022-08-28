@@ -4,8 +4,11 @@ import type { ColorType, Color } from "../../types/color";
 import * as cbor from "cbor-web"
 
 class ULP implements ProjectRT {
+    fileFormat = ".ulp";
+
     //Data
     api?: Canvas;
+    loaded:boolean = false;
     projectInfo: ProjectInfo = {};
     resources:any = {};
 
@@ -19,11 +22,9 @@ class ULP implements ProjectRT {
     //Meta
     LoadProjectFile(file: File): Promise<void> {
         console.log(`Loading ULP ${file.name}`);
-        // console.log(file);
-        // this.api.setRGB(0, [1, 1], 255, 255, 255);
 
         return new Promise(async (resolve, reject) => {
-            // try {
+            try {
                 // console.log(this.projectInfo)
                 let zip = new JSZip();
                 let files:any = await zip.loadAsync(file).then(
@@ -50,14 +51,18 @@ class ULP implements ProjectRT {
                     {
                         meta = cbor.decode(await file.async("arraybuffer"))
                         console.log(meta)
+
+                        this.projectInfo.name = meta["title"];
+                        this.projectInfo.author = meta["authors"][0];
+
+
                     }
                 }
-
-                console.log("Project Loaded");
+                this.loaded = true;
                 resolve();
-            // } catch (e) {
-            //     reject(e);
-            // }
+            } catch (e) {
+                reject(e);
+            }
         });
     }
 
