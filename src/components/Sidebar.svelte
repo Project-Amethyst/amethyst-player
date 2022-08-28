@@ -159,7 +159,7 @@
 
                     <div class="demoplay-control-block">
                         <div class="demoplay-button">
-                            <div on:click={() => project?.demoplay?.Previous()}>
+                            <div on:click={() => {project?.demoplay?.Pause(); project?.demoplay?.Previous()}}>
                                 <ChevronLeft size={26}></ChevronLeft>
                             </div>
                         </div>
@@ -173,7 +173,7 @@
                             </div>
                         </div>
                         <div class="demoplay-button">
-                            <div on:click={() => project?.demoplay?.Next()}>
+                            <div on:click={() => {project?.demoplay?.Pause(); project?.demoplay?.Next()}}>
                                 <ChevronRight size={26}></ChevronRight>
                             </div>
                         </div>

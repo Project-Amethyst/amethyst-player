@@ -2,7 +2,8 @@ export type KeyPadElement = HTMLButtonElement | HTMLDivElement;
 
 export type Dimension = [number, number] 
 export type Position = [number, number];
-export type KeyID = number|Position;
+export type ChainKey = ["c", number];
+export type KeyID = number|Position|ChainKey;
 
 export interface DeviceInfo{
   dimension: Dimension,

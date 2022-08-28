@@ -1,9 +1,11 @@
 <script>
+    import { createEventDispatcher } from 'svelte';
     export let checked = false;
+    let dispatch = createEventDispatcher();
     let switchBody;
 </script>
 
-<div bind:this={switchBody} class="switch-body {checked? 'toggled' : ''}" on:click={() => checked = !checked}>
+<div bind:this={switchBody} class="switch-body {checked? 'toggled' : ''}" on:click={() => {checked = !checked; dispatch("change", {checked:checked})}}>
     <div class="switch-thumb"></div>
 </div>
 
