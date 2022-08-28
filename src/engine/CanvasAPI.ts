@@ -14,11 +14,11 @@ export interface DeviceInfoCanvas
 
 export interface Canvas {
   setColor: (deviceID: number, keyID: KeyID, color: Color) => void;
-  clear: (deviceID: number) => void;
+  clear: (deviceID?: number) => void;
   
   setOverlay: (deviceID: number, keyID: KeyID, color: Color) => void;
   unsetOverlay: (deviceID: number, keyID: KeyID) => void,
-  clearOverlay: () => void,
+  clearOverlay: (deviceID?: number) => void,
 
   getDevices: () => DeviceInfoCanvas[];
   options: object;

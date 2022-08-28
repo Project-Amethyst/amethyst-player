@@ -29,7 +29,7 @@ class AutoPlay {
       this.autoplay = text;
       this.canvas = canvas;
       this.project = project;
-
+      
       this.total = text === undefined ? 0 : text.length;
 
       //generate split
@@ -198,7 +198,6 @@ class AutoPlay {
   
     Next(justChain:boolean = false)
     {
-      this.Pause();
       while(true)
       {
         let command = this.getCommand(this.progress++);
@@ -210,7 +209,7 @@ class AutoPlay {
         }
         else
         {
-          if(command[0] === "chain") this.project.ChainChange(parseInt(command[1]) - 1);;
+          if(command[0] === "chain") this.project.ChainChange(parseInt(command[1]) - 1);
         }
       }
       console.log(`Forward seek to ${this.progress}`)
@@ -249,7 +248,7 @@ class AutoPlay {
       }
     }
   
-    Seek(target: number)
+    Seek(target: number = this.progress)
     {
       this.Pause();
       console.log(`Seeking to ${target}`)
@@ -315,6 +314,15 @@ class AutoPlay {
       while(true)
       {
         let command = this.getCommand(start++);
+        // console.log(`Action Key (Pre) - Command ${start} ${command[0]}`)
+        if(command.length == 0) continue;
+        if(command[0] !== "delay" && command[0] !== "off") break;
+      }
+      start--;
+      while(true)
+      {
+        let command = this.getCommand(start++);
+        // console.log(`Action Key - Command ${start} ${command[0]}`)
         if(command.length == 0) continue;
         if(command[0] === "delay") break;
         if(command[0] === "on" || command[0] === "touch")
@@ -328,6 +336,7 @@ class AutoPlay {
           break;
         }
       }
+      // console.log(actionKeys)
       return actionKeys;
     }
   

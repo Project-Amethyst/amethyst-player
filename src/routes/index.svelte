@@ -51,6 +51,7 @@
         showKeyPress: false,
         learningMode: false
     }
+    
     var player_ready = false;
 
     $: if (browser && player_ready) {
@@ -258,19 +259,22 @@
             midiDevices[deviceID]?.setColor(keyID, new Color(ColorType.Palette, ["classic", 0]));
         },
 
-        clearOverlay: function(){
+        clearOverlay: function(targetDeviceID?: number){
             for(let overlay of overlays)
             {
                 let [deviceID, keyID] = overlay;
-                virtualDevices[deviceID].setColor(keyID, new Color(ColorType.Palette, ["classic", 0]));
-                midiDevices[deviceID]?.setColor(keyID, new Color(ColorType.Palette, ["classic", 0]));
+                if(targetDeviceID === undefined || deviceID == targetDeviceID)
+                {
+                    virtualDevices[deviceID].setColor(keyID, new Color(ColorType.Palette, ["classic", 0]));
+                    midiDevices[deviceID]?.setColor(keyID, new Color(ColorType.Palette, ["classic", 0]));
+                }
             }
             overlays = [];
         },
 
-        clear: function (deviceID: number) {
-            virtualDevices[deviceID].clear(); //TODO: Implentment this
-            midiDevices[deviceID].clear(); //TODO: Implentment this
+        clear: function (deviceID?: number) {
+            // virtualDevices[deviceID].clear(); //TODO: Implentment this
+            // midiDevices[deviceID].clear(); //TODO: Implentment this
         },
 
         getDevices: function () {
@@ -639,7 +643,8 @@
                 <div class="setting-option">
                     <Switch bind:checked={options.showKeyPress}
                     on:change={(e) => {
-                        if(!e.detail.checked) options.learningMode = false;
+                        if(!e.detail.checked){options.learningMode = false; api.clearOverlay();}
+                        else { engine.demoplay?.showActionKeys();} //NOTE THIS IS NOT A STANDARD PROJECTRT API}
                     }} 
                     />
                 </div>
@@ -660,7 +665,10 @@
                 <div class="setting-option">
                     <Switch bind:checked={options.learningMode}
                         on:change={(e) => {
-                            if(e.detail.checked) options.showKeyPress = true;
+                            if(e.detail.checked){
+                                options.showKeyPress = true;
+                                engine.demoplay?.showActionKeys() //NOTE THIS IS NOT A STANDARD PROJECTRT API
+                            }
                         }} 
                     />
                 </div>

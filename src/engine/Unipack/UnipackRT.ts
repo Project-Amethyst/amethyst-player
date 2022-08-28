@@ -33,6 +33,8 @@ class UnipackRT implements ProjectRT {
         console.log(`Loading Unipack ${file.name}`);
         // console.log(file);
         // this.api.setRGB(0, [1, 1], 255, 255, 255);
+        this.api?.clear();
+        this.api?.clearOverlay();
 
         this.currentChain = 0;
         return new Promise(async (resolve, reject) => {
@@ -97,6 +99,7 @@ class UnipackRT implements ProjectRT {
                     }
 
                     let text: string[] = await file.async("text").then((text: string) => {
+                        if (text.charCodeAt(0) === 0xFEFF) {text = text.substr(1);} //Remove utf8 bom
                         return (text.split(/\r?\n/));
                     });
 
@@ -275,15 +278,18 @@ class UnipackRT implements ProjectRT {
         {
             let requiredKeys = this.demoplay.getActionKeys();
             let allPressed = true;
+            console.log(this.activeKeys)
+            console.log(requiredKeys)
             for(let key of requiredKeys)
             {
-                if(!this.activeKeys.includes(key))
+                if(!this.activeKeys.includes(key.toString()))
                 {
                     allPressed = false;
                     break;
                 }
             }
 
+            console.log(`Required Key Statified = ${allPressed}`)
             if(allPressed)
             {
                 this.loggableKeys = requiredKeys;
@@ -309,6 +315,12 @@ class UnipackRT implements ProjectRT {
             {
                 this.ChainChange(this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].wormhole);
             }
+        }
+
+        let index = this.activeKeys.indexOf(keyID.toString());
+        if(index !== -1)
+        {
+            this.activeKeys.splice(index, 1);
         }
 
         //Update History
