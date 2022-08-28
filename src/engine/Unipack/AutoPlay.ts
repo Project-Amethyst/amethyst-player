@@ -3,6 +3,7 @@ import KeyLED from "./KeyLED";
 import { KeySound } from "./KeySound";
 import type UnipackRT from "./UnipackRT";
 import { ColorType, Color } from "../../types/color";
+import { Api } from "carbon-icons-svelte";
 
 
 class AutoPlay {
@@ -177,9 +178,13 @@ class AutoPlay {
         KeyLED.stopAll();
         KeySound.stopAll();
       }
+      if(this.canvas.options.showKeyPress)
+      {
+        this.showActionKeys();
+      }
     }
   
-    stop(fullStop = true) {
+    Stop(fullStop = true) {
       this.playing = false;
       this.status = "STOPPED"
       this.progress = 0;

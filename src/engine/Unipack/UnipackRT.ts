@@ -245,7 +245,7 @@ class UnipackRT implements ProjectRT {
     KeyPress(device: DeviceInfoCanvas, keyID: KeyID): void {
         let chain = this.IndexOfKeyID(device.info.chain_key, keyID);
         if (chain != -1) {
-            if(!this.api?.options.learningMode)
+            if(!this.api?.options.learningMode || this.demoplay.status == "PLAYING")
             {
                 this.ChainChange(chain)
             }
@@ -274,7 +274,7 @@ class UnipackRT implements ProjectRT {
             this.activeKeys.push(keyID.toString());
         }
 
-        if(this.api?.options.learningMode && this.demoplay)
+        if(this.api?.options.learningMode && this.demoplay && this.demoplay.status != "PLAYING")
         {
             let requiredKeys = this.demoplay.getActionKeys();
             let allPressed = true;
@@ -292,7 +292,7 @@ class UnipackRT implements ProjectRT {
             console.log(`Required Key Statified = ${allPressed}`)
             if(allPressed)
             {
-                this.loggableKeys = requiredKeys;
+                this.loggableKeys = this.loggableKeys.concat(requiredKeys.map(String));
                 this.demoplay.Next(true);
             }
         }
@@ -300,22 +300,30 @@ class UnipackRT implements ProjectRT {
 
     KeyRelease(device: DeviceInfoCanvas, keyID: KeyID): void {
         let [canvas_x, canvas_y] = keyID;
-
-        //KeyLED
-        if (this.api!.options.lightAnimation && this.keyLED?.[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
-            let ledIndex = this.keypressHistory[canvas_x][canvas_y] % this.keyLED[this.currentChain][canvas_x][canvas_y].length;
-            this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex].endLoop();
+        
+        let chain = this.IndexOfKeyID(device.info.chain_key, keyID);
+        if (chain != -1) {
+            keyID = ["c", chain]
         }
+        else
+        {
+            //KeyLED
+            if (this.api!.options.lightAnimation && this.keyLED?.[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
+                let ledIndex = this.keypressHistory[canvas_x][canvas_y] % this.keyLED[this.currentChain][canvas_x][canvas_y].length;
+                this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex].endLoop();
+            }
 
-        //Sound (and wormhole)
-        if (this.keySound[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
-            let soundIndex = this.keypressHistory[canvas_x][canvas_y] % this.keySound[this.currentChain][canvas_x][canvas_y].length;
-            this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].keyRelease();
-            if(!this.api?.options.learningMode && this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].wormhole != undefined)
-            {
-                this.ChainChange(this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].wormhole);
+            //Sound (and wormhole)
+            if (this.keySound[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
+                let soundIndex = this.keypressHistory[canvas_x][canvas_y] % this.keySound[this.currentChain][canvas_x][canvas_y].length;
+                this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].keyRelease();
+                if((!this.api?.options.learningMode || this.demoplay.status == "PLAYING") && this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].wormhole != undefined)
+                {
+                    this.ChainChange(this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].wormhole);
+                }
             }
         }
+
 
         let index = this.activeKeys.indexOf(keyID.toString());
         if(index !== -1)
@@ -324,11 +332,25 @@ class UnipackRT implements ProjectRT {
         }
 
         //Update History
-        if(!this.api?.options.learningMode)
+        if(!this.api?.options.learningMode || this.demoplay.status == "PLAYING")
         {
             this.logKeypressHistory(canvas_x, canvas_y);
         }
-
+        else
+        {
+            // console.log(this.loggableKeys)
+            // console.log(keyID.toString())
+            if(this.loggableKeys.includes(keyID.toString()))
+            {
+                let loggableKeysIndex = this.loggableKeys.indexOf(keyID.toString());
+                if(loggableKeysIndex !== -1)
+                {
+                    this.loggableKeys.splice(loggableKeysIndex, 1);
+                }
+                this.logKeypressHistory(canvas_x, canvas_y);
+                // console.log("Logged")
+            }
+        }
     }
 
     ChainChange(chain: number): void { 
