@@ -278,8 +278,6 @@ class UnipackRT implements ProjectRT {
         {
             let requiredKeys = this.demoplay.getActionKeys();
             let allPressed = true;
-            console.log(this.activeKeys)
-            console.log(requiredKeys)
             for(let key of requiredKeys)
             {
                 if(!this.activeKeys.includes(key.toString()))
@@ -289,7 +287,7 @@ class UnipackRT implements ProjectRT {
                 }
             }
 
-            console.log(`Required Key Statified = ${allPressed}`)
+            // console.log(`Required Key Statified = ${allPressed}`)
             if(allPressed)
             {
                 this.loggableKeys = this.loggableKeys.concat(requiredKeys.map(String));
