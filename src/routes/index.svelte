@@ -1,7 +1,7 @@
 <!-- Index file for the player route -->
 <script lang="ts">
     import type {KeyID} from "src/types/devices";
-    import type {Color} from "../types/color";
+    import {Color, ColorType} from "../types/color";
 
     import {virtualDeviceComponents} from "../components/devices/Devices";
 
@@ -51,6 +51,7 @@
         showKeyPress: false,
         learningMode: false
     }
+    
     var player_ready = false;
 
     $: if (browser && player_ready) {
@@ -220,12 +221,12 @@
         input.click();
     };
 
-    let overlay:string[] = [];
+    let overlays:any[] = [];
 
     var api: Canvas = {
         setColor: function (deviceID: number, keyID: KeyID, color: Color) {
-            var signature = [deviceID, keyID].toString();
-            if(!overlay.includes(signature))
+            var signature = [deviceID, keyID];
+            if(!overlays.map(String).includes(signature.toString()))
             {
                 virtualDevices[deviceID].setColor(keyID, color);
                 midiDevices[deviceID]?.setColor(keyID, color);
@@ -233,25 +234,47 @@
         },
 
         setOverlay: function (deviceID: number, keyID: KeyID, color: Color) {
-            var signature = [deviceID, keyID].toString();
+            var signature = [deviceID, keyID];
 
             if(!color.isBlack())
             {
-                if(!overlay.includes(signature)) {overlay.push(signature);}
+                if(!overlays.map(String).includes(signature.toString())) {overlays.push(signature);}
             }
             else
             {
-                let index = overlay.indexOf(signature);
-                if(index != -1) {overlay.splice(index, 1);}
+                let index = overlays.map(String).indexOf(signature.toString())
+                if(index != -1) {overlays.splice(index, 1);}
             }
 
             virtualDevices[deviceID].setColor(keyID, color);
             midiDevices[deviceID]?.setColor(keyID, color);
         },
 
-        clear: function (deviceID: number) {
-            virtualDevices[deviceID].clear(); //TODO: Implentment this
-            midiDevices[deviceID].clear(); //TODO: Implentment this
+        unsetOverlay(deviceID: number, keyID: KeyID)
+        {
+            var signature = [deviceID, keyID];
+            let index = overlays.map(String).indexOf(signature.toString());
+            if(index != -1) {overlays.splice(index, 1);}
+            virtualDevices[deviceID].setColor(keyID, new Color(ColorType.Palette, ["classic", 0]));
+            midiDevices[deviceID]?.setColor(keyID, new Color(ColorType.Palette, ["classic", 0]));
+        },
+
+        clearOverlay: function(targetDeviceID?: number){
+            for(let overlay of overlays)
+            {
+                let [deviceID, keyID] = overlay;
+                if(targetDeviceID === undefined || deviceID == targetDeviceID)
+                {
+                    virtualDevices[deviceID].setColor(keyID, new Color(ColorType.Palette, ["classic", 0]));
+                    midiDevices[deviceID]?.setColor(keyID, new Color(ColorType.Palette, ["classic", 0]));
+                }
+            }
+            overlays = [];
+        },
+
+        clear: function (deviceID?: number) {
+            // virtualDevices[deviceID].clear(); //TODO: Implentment this
+            // midiDevices[deviceID].clear(); //TODO: Implentment this
         },
 
         getDevices: function () {
@@ -434,11 +457,11 @@
 
                 <div class="setting-option">
                     <Dropdown
-                            bind:value={settings.projectEngine}
-                            options={Object.keys(projectEngines)}
-                            on:change={() => {
-                            engine =
-                                projectEngines[settings.projectEngine](api);
+                        bind:value={settings.projectEngine}
+                        options={Object.keys(projectEngines)}
+                        on:change={() => {
+                        engine =
+                            projectEngines[settings.projectEngine](api);
                         }}
                     />
                 </div>
@@ -451,13 +474,13 @@
 
                 <div class="setting-option">
                     <Dropdown
-                            value={$t(`lang.${locale.get()}`)}
-                            options={$locales.map((x) =>
+                        value={$t(`lang.${locale.get()}`)}
+                        options={$locales.map((x) =>
                             $t(`lang.${x}`)
                         )}
-                            on:change={(e) => {
-                            $locale = $locales[e.detail.index];
-                            settings.language = $locales[e.detail.index];
+                        on:change={(e) => {
+                        $locale = $locales[e.detail.index];
+                        settings.language = $locales[e.detail.index];
                         }}
                     />
                 </div>
@@ -618,7 +641,12 @@
                 </div>
 
                 <div class="setting-option">
-                    <Switch bind:checked={options.showKeyPress}/>
+                    <Switch bind:checked={options.showKeyPress}
+                    on:change={(e) => {
+                        if(!e.detail.checked){options.learningMode = false; api.clearOverlay();}
+                        else { engine.demoplay?.showActionKeys();} //NOTE THIS IS NOT A STANDARD PROJECTRT API}
+                    }} 
+                    />
                 </div>
             </div>
 
@@ -635,7 +663,14 @@
                 </div>
 
                 <div class="setting-option">
-                    <Switch bind:checked={options.learningMode}/>
+                    <Switch bind:checked={options.learningMode}
+                        on:change={(e) => {
+                            if(e.detail.checked){
+                                options.showKeyPress = true;
+                                engine.demoplay?.showActionKeys() //NOTE THIS IS NOT A STANDARD PROJECTRT API
+                            }
+                        }} 
+                    />
                 </div>
             </div>
         </div>
