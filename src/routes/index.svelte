@@ -453,11 +453,11 @@
 
                 <div class="setting-option">
                     <Dropdown
-                            bind:value={settings.projectEngine}
-                            options={Object.keys(projectEngines)}
-                            on:change={() => {
-                            engine =
-                                projectEngines[settings.projectEngine](api);
+                        bind:value={settings.projectEngine}
+                        options={Object.keys(projectEngines)}
+                        on:change={() => {
+                        engine =
+                            projectEngines[settings.projectEngine](api);
                         }}
                     />
                 </div>
@@ -470,13 +470,13 @@
 
                 <div class="setting-option">
                     <Dropdown
-                            value={$t(`lang.${locale.get()}`)}
-                            options={$locales.map((x) =>
+                        value={$t(`lang.${locale.get()}`)}
+                        options={$locales.map((x) =>
                             $t(`lang.${x}`)
                         )}
-                            on:change={(e) => {
-                            $locale = $locales[e.detail.index];
-                            settings.language = $locales[e.detail.index];
+                        on:change={(e) => {
+                        $locale = $locales[e.detail.index];
+                        settings.language = $locales[e.detail.index];
                         }}
                     />
                 </div>
@@ -637,7 +637,11 @@
                 </div>
 
                 <div class="setting-option">
-                    <Switch bind:checked={options.showKeyPress}/>
+                    <Switch bind:checked={options.showKeyPress}
+                    on:change={(e) => {
+                        if(!e.detail.checked) options.learningMode = false;
+                    }} 
+                    />
                 </div>
             </div>
 
@@ -654,7 +658,11 @@
                 </div>
 
                 <div class="setting-option">
-                    <Switch bind:checked={options.learningMode}/>
+                    <Switch bind:checked={options.learningMode}
+                        on:change={(e) => {
+                            if(e.detail.checked) options.showKeyPress = true;
+                        }} 
+                    />
                 </div>
             </div>
         </div>
