@@ -412,7 +412,11 @@
                 </div>
 
                 <div class="amethyst-player-footer center-class">
-                    <span>Amethyst Player (Alpha)</span>
+                    <span 
+                        title= {__BUILD_STRING__}
+                    >
+                        Amethyst Player (Beta)
+                    </span>
                 </div>
             </div>
         </div>
