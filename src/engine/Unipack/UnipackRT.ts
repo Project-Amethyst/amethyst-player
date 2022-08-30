@@ -229,7 +229,7 @@ class UnipackRT implements ProjectRT {
                     this.demoplay = new AutoPlay(autoplayFile, this.api, this);
                 ;
                 this.loaded = true;
-                resolve(this);
+                resolve();
             } catch (e) {
                 reject(e);
             }
