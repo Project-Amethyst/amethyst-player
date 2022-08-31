@@ -27,24 +27,24 @@ class Animation
 
   play = async() =>
   {
-    this.local_id = Animation.id++;
-    this.end = false;
+    var local_id = ++Animation.id;
     console.log(Animation.active);
     Animation.active?.stop();
+    this.end = false;
     Animation.active = this;
     console.log(Animation.active);
     this.lastEventTime = Date.now()
-    console.log(`Animation Playing - ${this.local_id}`)
+    // console.log(`Animation Playing - ${this.local_id}`)
     // console.timeLog("KeyOn")
     for(var frame = 0; frame < this.length; frame++)
     {
-        if(this.end)
+        if(Animation.id != local_id)
         {
-          console.log(`Stopped - ${this.local_id}`)
+        //   console.log(`Stopped - ${this.local_id}`)
           return;
         }
 
-        console.log(`Frame ${frame}`)
+        // console.log(`Frame ${frame} - ${this.local_id}`)
         for(var index = 0; index < this.data["LED"]["anim"].length; index++)
         {
             let keyID: KeyID = [(this.data["LED"]["anim"][frame][index] - 1) % 8, Math.floor((this.data["LED"]["anim"][frame][index] - 1) / 8)]
@@ -89,7 +89,7 @@ class Animation
 
   stop(clearLight = true)
   { 
-    console.log(`Stop! - ${this.local_id}`)
+    // console.log(`Stop! - ${this.local_id}`)
     this.end = true;
     if(Animation.active === this)
     {
