@@ -331,6 +331,10 @@
         }
 
         player_ready = true;
+        if(projectEngines[settings.projectEngine] === undefined)
+        {
+            settings.projectEngine = Object.keys(projectEngines)[0]; //Revert to the first one
+        }
         engine = projectEngines[settings.projectEngine](api);
     }
 
