@@ -327,7 +327,7 @@
                 }
             })
 
-            console.log(settings);
+            // console.log(settings);
         }
 
         player_ready = true;

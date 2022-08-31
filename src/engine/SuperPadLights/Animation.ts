@@ -28,15 +28,12 @@ class Animation
   play = async() =>
   {
     var local_id = ++Animation.id;
-    console.log(Animation.active);
     Animation.active?.stop();
     this.end = false;
     Animation.active = this;
-    console.log(Animation.active);
     this.lastEventTime = Date.now()
     // console.log(`Animation Playing - ${this.local_id}`)
     // console.timeLog("KeyOn")
-    console.log(this.data["LED"]["anim"])
     for(var frame = 0; frame < this.length; frame++)
     {
         if(Animation.id != local_id)

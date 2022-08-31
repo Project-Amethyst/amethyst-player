@@ -26,12 +26,12 @@ export class Pad {
         this.color = color;
         this.group = group;
         this.sound = sound;
-        this.animation = new Animation(lights, this.sound.howl.duration(), canvas);
+        this.animation = lights ? new Animation(lights, this.sound.howl.duration(), canvas) : undefined;
     }
 
     KeyPress() 
     {
-        console.log("Pad Pressed");
+        // console.log("Pad Pressed");
         if(this.sound)
         {
             if(this.sound.howl._loop && this.sound.howl.playing())
@@ -52,7 +52,7 @@ export class Pad {
 
     KeyRelease()
     {
-        console.log("Pad Released");
+        // console.log("Pad Released");
     }
 }
 

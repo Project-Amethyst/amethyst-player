@@ -32,7 +32,7 @@ class SuperPadLights implements ProjectRT {
 
         this.currentChain = 0;
         return new Promise(async (resolve, reject) => {
-            try {
+            // try {
                 let zip = new JSZip();
                 let files = await zip.loadAsync(file).then(
                     function (zip) {
@@ -53,7 +53,7 @@ class SuperPadLights implements ProjectRT {
                 //Load projectInfo and categorize files
                 for (let file of files) {
                     let filename = file.name.toLowerCase();
-                    console.log(filename);
+                    // console.log(filename);
 
                     //folder
                     if (filename.endsWith("/")) {
@@ -76,12 +76,12 @@ class SuperPadLights implements ProjectRT {
                         let data = await file.async("text").then((data: string) => {return JSON.parse(data)});
                         if(filename.endsWith("meta.json")) //Custom json placed by the downloader
                         {
-                            console.log("Meta loaded")
+                            // console.log("Meta loaded")
                             meta = data;
                         }
                         else if(filename.includes("sounds/") && filename.endsWith("info.json"))
                         {
-                            console.log("Info loaded")
+                            // console.log("Info loaded")
                             info = data;
                         }
                         else if(filename.includes("animations/"))
@@ -91,10 +91,10 @@ class SuperPadLights implements ProjectRT {
                     }
                 }
 
-                    console.log(meta);
-                    console.log(info!);
-                    console.log(animations!);
-                    console.log(this.soundFiles);
+                    // console.log(meta);
+                    // console.log(info!);
+                    // console.log(animations!);
+                    // console.log(this.soundFiles);
 
                 if(meta)
                 {
@@ -117,9 +117,9 @@ class SuperPadLights implements ProjectRT {
 
                 this.loaded = true;
                 resolve();
-            } catch (e) {
-                reject(e);
-            }
+            // } catch (e) {
+            //     reject(e);
+            // }
         });
     }
 
