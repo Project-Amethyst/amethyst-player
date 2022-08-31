@@ -36,6 +36,7 @@ class Animation
     this.lastEventTime = Date.now()
     // console.log(`Animation Playing - ${this.local_id}`)
     // console.timeLog("KeyOn")
+    console.log(this.data["LED"]["anim"])
     for(var frame = 0; frame < this.length; frame++)
     {
         if(Animation.id != local_id)
@@ -44,8 +45,8 @@ class Animation
           return;
         }
 
-        // console.log(`Frame ${frame} - ${this.local_id}`)
-        for(var index = 0; index < this.data["LED"]["anim"].length; index++)
+        // console.log(`Frame ${frame}`)
+        for(var index = 0; index < this.data["LED"]["anim"][frame].length; index++)
         {
             let keyID: KeyID = [(this.data["LED"]["anim"][frame][index] - 1) % 8, Math.floor((this.data["LED"]["anim"][frame][index] - 1) / 8)]
             let colorInt: number = this.data["LED"]["color"][frame][index];
@@ -55,7 +56,7 @@ class Animation
                 (colorInt & 0xFF00) >> 8,
                 colorInt & 0xFF
             ];
-            // console.log(`Set Color ${keyID[0]}-${keyID[1]} : ${[r, g, b]}}`)
+            // console.log(`Set Color ${keyID[0]}-${keyID[1]} : ${[r, g, b]}`)
             this.canvas.setColor(0, keyID, new Color(ColorType.RGB, [r, g, b]));
 
             let id_str = keyID.toString();
