@@ -14,6 +14,7 @@
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
+		"@types/howler": "^2.2.7",
 		"@zerodevx/svelte-toast": "^0.7.2",
 		"svelte": "^3.44.0",
 		"svelte-check": "^2.7.1",

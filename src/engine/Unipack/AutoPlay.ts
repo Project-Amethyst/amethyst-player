@@ -3,6 +3,7 @@ import KeyLED from "./KeyLED";
 import { KeySound } from "./KeySound";
 import type UnipackRT from "./UnipackRT";
 import { ColorType, Color } from "../../types/color";
+import { Api } from "carbon-icons-svelte";
 
 
 class AutoPlay {
@@ -29,7 +30,7 @@ class AutoPlay {
       this.autoplay = text;
       this.canvas = canvas;
       this.project = project;
-
+      
       this.total = text === undefined ? 0 : text.length;
 
       //generate split
@@ -119,7 +120,7 @@ class AutoPlay {
           {
             const keyID:KeyID =  [parseInt(command[2]) - 1, parseInt(command[1]) - 1];
             this.project.KeyPress(deviceInfo, keyID)
-            if(this.canvas.options.showKeyPress) {this.canvas.setOverlay(0, keyID, new Color(ColorType.RGB, [255, 255, 255]))}
+            if(this.canvas.options.showKeyPress) {this.canvas.setOverlay(0, keyID, new Color(ColorType.Palette, ["classic", 3]))}
             break;
           }
         case 'f':
@@ -127,7 +128,7 @@ class AutoPlay {
           {
             const keyID:KeyID =  [parseInt(command[2]) - 1, parseInt(command[1]) - 1];
             this.project.KeyRelease(deviceInfo, keyID)
-            if(this.canvas.options.showKeyPress) {this.canvas.setOverlay(0, keyID, new Color(ColorType.RGB, [0, 0, 0]))}
+            if(this.canvas.options.showKeyPress) {this.canvas.unsetOverlay(0, keyID)}
             break;
           }
         case 't':
@@ -138,9 +139,9 @@ class AutoPlay {
               this.project.KeyRelease(deviceInfo, keyID)
               if(this.canvas.options.showKeyPress)
               {   
-                  this.canvas.setOverlay(0, keyID, new Color(ColorType.RGB, [255, 255, 255]));
+                  this.canvas.setOverlay(0, keyID, new Color(ColorType.Palette, ["classic", 3]));
                   this.wait(200)!.then(() => {
-                  this.canvas.setOverlay(0, keyID, new Color(ColorType.RGB, [0, 0, 0]))});
+                  this.canvas.unsetOverlay(0, keyID)});
               }
               break;
             }
@@ -159,9 +160,9 @@ class AutoPlay {
           if(this.canvas.options.showKeyPress)
           {
               const keyID:KeyID = deviceInfo.info.chain_key[parseInt(command[1]) - 1];
-              this.canvas.setOverlay(0, keyID, new Color(ColorType.RGB, [255, 255, 255]));
+              this.canvas.setOverlay(0, keyID, new Color(ColorType.Palette, ["classic", 3]));
               this.wait(200)!.then(() =>{
-              this.canvas.setOverlay(0, keyID, new Color(ColorType.RGB, [0, 0, 0]));
+              this.canvas.unsetOverlay(0, keyID);
             });
           }
           break;
@@ -177,9 +178,13 @@ class AutoPlay {
         KeyLED.stopAll();
         KeySound.stopAll();
       }
+      if(this.canvas.options.showKeyPress)
+      {
+        this.showActionKeys();
+      }
     }
   
-    stop(fullStop = true) {
+    Stop(fullStop = true) {
       this.playing = false;
       this.status = "STOPPED"
       this.progress = 0;
@@ -190,19 +195,34 @@ class AutoPlay {
         KeyLED.stopAll();
         KeySound.stopAll();
       }
+      if(this.canvas.options.showKeyPress)
+      {
+        this.showActionKeys();
+      }
     }
   
-    Next()
+    Next(justChain:boolean = false)
     {
-      this.Pause();
       while(true)
       {
         let command = this.getCommand(this.progress++);
         if(command.length == 0) continue;
         if(command[0] === "delay") break;
-        this.executeCommand(command);
+        if(!justChain)
+        {
+          this.executeCommand(command);
+        }
+        else
+        {
+          if(command[0] === "chain") this.project.ChainChange(parseInt(command[1]) - 1);
+        }
       }
       console.log(`Forward seek to ${this.progress}`)
+
+      if(this.canvas.options.showKeyPress)
+      {
+        this.showActionKeys();
+      }
     }
 
     Previous()
@@ -226,9 +246,14 @@ class AutoPlay {
           break;
         }
       }
+
+      if(this.canvas.options.showKeyPress)
+      {
+        this.showActionKeys();
+      }
     }
   
-    Seek(target: number)
+    Seek(target: number = this.progress)
     {
       this.Pause();
       console.log(`Seeking to ${target}`)
@@ -272,6 +297,52 @@ class AutoPlay {
       }
       this.progress = progress;
       console.log(`Seeked to ${progress}`)
+
+      if(this.canvas.options.showKeyPress)
+      {
+        this.showActionKeys();
+      }
+    }
+
+    showActionKeys()
+    {
+      this.canvas.clearOverlay();
+      for(let key of this.getActionKeys())
+      {
+        this.canvas.setOverlay(0, key, new Color(ColorType.Palette, ["classic", 3]));
+      }
+    }
+
+    getActionKeys(start:number = this.progress): KeyID[]
+    {
+      let actionKeys:KeyID[] = [];
+      while(true)
+      {
+        let command = this.getCommand(start++);
+        // console.log(`Action Key (Pre) - Command ${start} ${command[0]}`)
+        if(command.length == 0) continue;
+        if(command[0] !== "delay" && command[0] !== "off") break;
+      }
+      start--;
+      while(true)
+      {
+        let command = this.getCommand(start++);
+        // console.log(`Action Key - Command ${start} ${command[0]}`)
+        if(command.length == 0) continue;
+        if(command[0] === "delay") break;
+        if(command[0] === "on" || command[0] === "touch")
+        {
+          actionKeys.push( [parseInt(command[2]) - 1, parseInt(command[1]) - 1]);
+          break;
+        }
+        if(command[0] === "chain") 
+        {
+          actionKeys.push(['c', parseInt(command[1]) - 1]);
+          break;
+        }
+      }
+      // console.log(actionKeys)
+      return actionKeys;
     }
   
     wait(ms: number) 

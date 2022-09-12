@@ -44,6 +44,7 @@
     function getKeypadIndex(keyID: KeyID): number {
         if(Array.isArray(keyID))
         {
+            if(keyID[0] == 'c') keyID = deviceInfo.chain_key[keyID[1]]
             return keyID[1] * 10 + keyID[0];
         }
         else
@@ -55,6 +56,7 @@
 export function setColor(keyID: KeyID, color: Color) {
         if(Array.isArray(keyID))
         {
+            if(keyID[0] === 'c') keyID = deviceInfo.chain_key[keyID[1]];
             keyID = [
                 keyID[0] + deviceInfo.grid_offset[0],
                 keyID[1] + deviceInfo.grid_offset[1]

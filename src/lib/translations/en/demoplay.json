@@ -2,6 +2,6 @@
     "demoplay": "Demoplay",
     "light_animation": "Light Animation",
     "show_key_press": "Show Key Press",
-    "learning_mode": "Learning Mode",
+    "learning_mode": "Learning Mode (Beta)",
     "learning_mode_info": "This mode will make the performance strictly follows demoplay, multi sample will not change if incorrect key is pressed. If correct key is pressed, demoplay will also move forward automatically."
 }
