@@ -6,7 +6,7 @@ const config: GridDeviceConfig = {
     midiNameRegex: "Launchpad Open",
 
     paletteChannel: {
-      "classic": 1
+      "classic": 16
     },
 
     keymap: [
