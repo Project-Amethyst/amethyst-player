@@ -199,7 +199,7 @@
         </div>
 
         <div class="icon-button">
-            <div on:click={() => goto("https://github.com/anthonyhfm/amethyst-player")}>
+            <div on:click={() => goto("https://github.com/Project-Amethyst/amethyst-player")}>
                 <LogoGithub size={32}></LogoGithub>
             </div>
         </div>
