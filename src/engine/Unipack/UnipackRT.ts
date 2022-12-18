@@ -262,13 +262,13 @@ class UnipackRT implements ProjectRT {
             //KeyLED
             if (this.api!.options.lightAnimation && this.keyLED?.[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
                 let ledIndex = this.keypressHistory[canvas_x][canvas_y] % this.keyLED[this.currentChain][canvas_x][canvas_y].length;
-                this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex].play();
+                this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex]?.play();
             }
 
             //Sound
             if (this.keySound?.[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
                 let soundIndex = this.keypressHistory[canvas_x][canvas_y] % this.keySound[this.currentChain][canvas_x][canvas_y].length;
-                this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].keyPress();
+                this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex]?.keyPress();
             }
 
             this.activeKeys.push(keyID.toString());
@@ -308,7 +308,7 @@ class UnipackRT implements ProjectRT {
             //KeyLED
             if (this.api!.options.lightAnimation && this.keyLED?.[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
                 let ledIndex = this.keypressHistory[canvas_x][canvas_y] % this.keyLED[this.currentChain][canvas_x][canvas_y].length;
-                this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex].endLoop();
+                this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex]?.endLoop();
             }
 
             //Sound (and wormhole)
@@ -317,7 +317,7 @@ class UnipackRT implements ProjectRT {
                 this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].keyRelease();
                 if((!this.api?.options.learningMode || this.demoplay.status == "PLAYING") && this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].wormhole != undefined)
                 {
-                    this.ChainChange(this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].wormhole);
+                    this.ChainChange(this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex]?.wormhole);
                 }
             }
         }
