@@ -30,6 +30,10 @@ class UnipackRT implements ProjectRT {
 
     //Meta
     LoadProjectFile(file: File): Promise<void> {
+        if(this.loaded)
+        {
+            this.demoplay?.Stop();
+        }
         console.log(`Loading Unipack ${file.name}`);
         // console.log(file);
         // this.api.setRGB(0, [1, 1], 255, 255, 255);
@@ -172,21 +176,17 @@ class UnipackRT implements ProjectRT {
                 for (var [name, text] of Object.entries(keyLEDFiles)) {
                     let fileInfo = name.split("/").pop().split(" ");
                     try {
-                        // if (fileInfo.length === 5) {
-                        //   this.keyLED[parseInt(fileInfo[0]) - 1][parseInt(fileInfo[2]) - 1][parseInt(fileInfo[1]) - 1][fileInfo[4].charCodeAt(0) - 97] = new KeyLED(text, parseInt(fileInfo[3]), this.Canvas)
-                        //   // console.log(name)
-                        //   // console.log([parseInt(fileInfo[0]) - 1, parseInt(fileInfo[2]) - 1, parseInt(fileInfo[1]) - 1, fileInfo[4].charCodeAt(0) - 97])
-                        //   // console.log(this.keyLED[parseInt(fileInfo[0]) - 1][parseInt(fileInfo[2]) - 1][parseInt(fileInfo[1]) - 1][fileInfo[4].charCodeAt(0) - 97])
-                        // }
-                        // else if (fileInfo.length === 4) {
-                        let index = fileInfo[4] !== undefined ? fileInfo[4].charCodeAt(0) - 97 : 0; //97 is 'a'
-                        // console.log([parseInt(fileInfo[0]) - 1, parseInt(fileInfo[2]) - 1, parseInt(fileInfo[1]) - 1, index])
+                        let index = fileInfo[4]?.charCodeAt(0) - 97; //97 is 'a'
+                        index = isNaN(index) ? 0 : index;
                         let [chain, x, y, repeat] = [
                             parseInt(fileInfo[0]) - 1,
                             parseInt(fileInfo[2]) - 1,
                             parseInt(fileInfo[1]) - 1,
                             parseInt(fileInfo[3]),
                         ];
+                        // console.log(fileInfo);
+                        // console.log([chain, x, y, repeat, index]);
+                        // console.log();
                         this.keyLED[chain][x][y][index] = new KeyLED(
                             text,
                             repeat,
@@ -262,13 +262,13 @@ class UnipackRT implements ProjectRT {
             //KeyLED
             if (this.api!.options.lightAnimation && this.keyLED?.[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
                 let ledIndex = this.keypressHistory[canvas_x][canvas_y] % this.keyLED[this.currentChain][canvas_x][canvas_y].length;
-                this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex].play();
+                this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex]?.play();
             }
 
             //Sound
             if (this.keySound?.[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
                 let soundIndex = this.keypressHistory[canvas_x][canvas_y] % this.keySound[this.currentChain][canvas_x][canvas_y].length;
-                this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].keyPress();
+                this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex]?.keyPress();
             }
 
             this.activeKeys.push(keyID.toString());
@@ -308,7 +308,7 @@ class UnipackRT implements ProjectRT {
             //KeyLED
             if (this.api!.options.lightAnimation && this.keyLED?.[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
                 let ledIndex = this.keypressHistory[canvas_x][canvas_y] % this.keyLED[this.currentChain][canvas_x][canvas_y].length;
-                this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex].endLoop();
+                this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex]?.endLoop();
             }
 
             //Sound (and wormhole)
@@ -317,7 +317,7 @@ class UnipackRT implements ProjectRT {
                 this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].keyRelease();
                 if((!this.api?.options.learningMode || this.demoplay.status == "PLAYING") && this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].wormhole != undefined)
                 {
-                    this.ChainChange(this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].wormhole);
+                    this.ChainChange(this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex]?.wormhole);
                 }
             }
         }
