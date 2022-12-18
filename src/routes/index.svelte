@@ -212,7 +212,18 @@
                     project_status = "loaded";
                 },
                 (error) => {
-                    alert(`Project failed to load: ${error}`);
+                    toast.push(
+                        $t("toast.project_failed_to_load", {project_loading_error: error.toString()}
+                        ),
+                        {
+                            theme: {
+                                "--toastColor": "#FFFFFF;",
+                                "--toastBackground": "#F56565",
+                                "--toastBarBackground": "#C53030",
+                            },
+                            duration: 5000
+                        }
+                    );
                     project_status = "not loaded";
                 }
             );

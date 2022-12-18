@@ -193,7 +193,7 @@ class UnipackRT implements ProjectRT {
                             this.api
                         );
                     } catch (err) {
-                        throw "Unable to parse KeyLED - " + name.split("/").pop() + ": " + err;
+                        throw "Unable to parse KeyLED file name - " + name.split("/").pop() + ": " + err;
                     }
                 }
 
@@ -220,7 +220,7 @@ class UnipackRT implements ProjectRT {
 
                         this.keySound[chain][x][y].push(new KeySound(this.soundFiles[filename], loop, wormhole));
                     } catch {
-                        throw "Unable to parse line - " + line;
+                        throw "Unable to parse KeySound entry - " + line;
                     }
                 }
 

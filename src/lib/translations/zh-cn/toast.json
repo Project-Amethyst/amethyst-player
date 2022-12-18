@@ -5,5 +5,6 @@
     "disconnected": "{{device_name}} 已断开",
     "detected": "{{device_name}} 已发现",
     "is_now_the_active_device": "{{device_name}} 现在是输出设备了",
-    "no_longer_active":"{{device_name}} 不再是输出设备了"
+    "no_longer_active":"{{device_name}} 不再是输出设备了",
+    "project_failed_to_load":"工程加载失败: {{project_loading_error}}" 
 }
