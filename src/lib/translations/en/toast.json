@@ -5,5 +5,6 @@
     "disconnected": "{{device_name}} disconnected",
     "detected": "{{device_name}} detected",
     "is_now_the_active_device": "{{device_name}} is now the active device",
-    "no_longer_active":"{{name}} is not longer the active device"
+    "no_longer_active":"{{name}} is not longer the active device",
+    "project_failed_to_load":"Project failed to load: {{project_loading_error}}" 
 }

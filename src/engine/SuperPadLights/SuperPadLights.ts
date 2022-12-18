@@ -32,7 +32,7 @@ class SuperPadLights implements ProjectRT {
 
         this.currentChain = 0;
         return new Promise(async (resolve, reject) => {
-            // try {
+            try {
                 let zip = new JSZip();
                 let files = await zip.loadAsync(file).then(
                     function (zip) {
@@ -112,14 +112,14 @@ class SuperPadLights implements ProjectRT {
                 }
                 else
                 {
-                    throw 'No info.json found';
+                    throw "This file is not a usable SuperPad Light pack (Missing info.json)";
                 }
 
                 this.loaded = true;
                 resolve();
-            // } catch (e) {
-            //     reject(e);
-            // }
+            } catch (e) {
+                reject(e);
+            }
         });
     }
 
