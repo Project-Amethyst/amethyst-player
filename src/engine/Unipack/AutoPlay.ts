@@ -159,7 +159,7 @@ class AutoPlay {
           this.project.ChainChange(parseInt(command[1]) - 1);
           if(this.canvas.options.showKeyPress)
           {
-              const keyID:KeyID = deviceInfo.info.chain_key[parseInt(command[1]) - 1];
+              const keyID:KeyID = ['c', parseInt(command[1]) - 1];
               this.canvas.setOverlay(0, keyID, new Color(ColorType.Palette, ["classic", 3]));
               this.wait(200)!.then(() =>{
               this.canvas.unsetOverlay(0, keyID);
