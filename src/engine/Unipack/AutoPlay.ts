@@ -25,6 +25,8 @@ class AutoPlay {
     sections = [[0, 0]];
 
     thread_id = 0;
+
+    chain = 0;
   
     constructor(text:string[], canvas:Canvas, project:UnipackRT) {
       this.autoplay = text;
@@ -96,14 +98,15 @@ class AutoPlay {
       this.status = "PLAYING"
       this.lastEventTime = Date.now()
       for (this.progress; this.progress < this.total; this.progress++) {
-        // console.timeEnd("Autoplay");
-        // console.time("Autoplay")
-  
         if (this.status != "PLAYING" || this.thread_id != local_id) {
           return;
         }
   
         // console.log(this.autoplay[this.progress])
+
+        if(this.project.currentChain != this.chain) {
+          this.project.ChainChange(this.chain);
+        }
   
         var command = this.getCommand(this.progress);
         if(command.length > 0) await this.executeCommand(command);
@@ -156,7 +159,9 @@ class AutoPlay {
           break;
         case 'c':
         case 'chain':
-          this.project.ChainChange(parseInt(command[1]) - 1);
+          var new_chain = parseInt(command[1]) - 1;
+          this.chain = new_chain;
+          this.project.ChainChange(new_chain);
           if(this.canvas.options.showKeyPress)
           {
               const keyID:KeyID = ['c', parseInt(command[1]) - 1];
