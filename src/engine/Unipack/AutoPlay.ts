@@ -108,7 +108,7 @@ class AutoPlay {
         var command = this.getCommand(this.progress);
         if(command.length > 0) await this.executeCommand(command);
       }
-      this.stop(false);
+      this.Stop(false);
     }
 
     async executeCommand(command: any[])
@@ -232,7 +232,6 @@ class AutoPlay {
       let command = this.getCommand(this.progress);
       while(true)
       {
-        console.log(this.progress);
         if(this.progress <= 1) {this.progress = 0; break;}
         
         var prev_command = this.getCommand(--this.progress);
