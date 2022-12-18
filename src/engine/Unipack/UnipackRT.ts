@@ -172,21 +172,17 @@ class UnipackRT implements ProjectRT {
                 for (var [name, text] of Object.entries(keyLEDFiles)) {
                     let fileInfo = name.split("/").pop().split(" ");
                     try {
-                        // if (fileInfo.length === 5) {
-                        //   this.keyLED[parseInt(fileInfo[0]) - 1][parseInt(fileInfo[2]) - 1][parseInt(fileInfo[1]) - 1][fileInfo[4].charCodeAt(0) - 97] = new KeyLED(text, parseInt(fileInfo[3]), this.Canvas)
-                        //   // console.log(name)
-                        //   // console.log([parseInt(fileInfo[0]) - 1, parseInt(fileInfo[2]) - 1, parseInt(fileInfo[1]) - 1, fileInfo[4].charCodeAt(0) - 97])
-                        //   // console.log(this.keyLED[parseInt(fileInfo[0]) - 1][parseInt(fileInfo[2]) - 1][parseInt(fileInfo[1]) - 1][fileInfo[4].charCodeAt(0) - 97])
-                        // }
-                        // else if (fileInfo.length === 4) {
-                        let index = fileInfo[4] !== undefined ? fileInfo[4].charCodeAt(0) - 97 : 0; //97 is 'a'
-                        // console.log([parseInt(fileInfo[0]) - 1, parseInt(fileInfo[2]) - 1, parseInt(fileInfo[1]) - 1, index])
+                        let index = fileInfo[4]?.charCodeAt(0) - 97; //97 is 'a'
+                        index = isNaN(index) ? 0 : index;
                         let [chain, x, y, repeat] = [
                             parseInt(fileInfo[0]) - 1,
                             parseInt(fileInfo[2]) - 1,
                             parseInt(fileInfo[1]) - 1,
                             parseInt(fileInfo[3]),
                         ];
+                        // console.log(fileInfo);
+                        // console.log([chain, x, y, repeat, index]);
+                        // console.log();
                         this.keyLED[chain][x][y][index] = new KeyLED(
                             text,
                             repeat,
