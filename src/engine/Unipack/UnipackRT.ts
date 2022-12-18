@@ -30,6 +30,10 @@ class UnipackRT implements ProjectRT {
 
     //Meta
     LoadProjectFile(file: File): Promise<void> {
+        if(this.loaded)
+        {
+            this.demoplay?.Stop();
+        }
         console.log(`Loading Unipack ${file.name}`);
         // console.log(file);
         // this.api.setRGB(0, [1, 1], 255, 255, 255);
