@@ -7,7 +7,6 @@ class KeyLED
   id:number;
   keyLED:string[];
   repeat:number;
-  end:boolean = false;
   canvas:Canvas;
   currentOn:{[signature: string]: KeyID} = {};
 
@@ -38,7 +37,6 @@ class KeyLED
     var threadID = ++this.latestThread;
     this.activeThread = threadID;
     var currentLoop = 0
-    this.end = false;
     this.lastEventTime = Date.now()
     // console.log("KeyLED")
     // console.timeLog("KeyOn")
@@ -139,11 +137,6 @@ class KeyLED
           default:
         }
       }
-      if(this.end)
-      {
-        this.stop(false);
-        break;
-      }
     }
     if(this.activeThread == threadID) //Added due to current thread on the last wait then the next thread started. This will result in the next thread to be stuck
     {
@@ -169,8 +162,8 @@ class KeyLED
   stop(clearLight = true)
   { 
     //Threading System (Light 1 in delay then we set it to stop and create a Light 2 so it can start right away, set )
-    if(this.activeThread === -1)
-      return
+    // if(this.activeThread === -1)
+    //   return
     this.activeThread = -1
     if(clearLight)
     {
@@ -184,9 +177,12 @@ class KeyLED
     this.removeFromActiveList()
   }
 
-  endLoop()
+  keyRelease()
   {
-    this.end = true
+    if(this.repeat === 0)
+    {
+      this.stop();
+    }
   }
 
   addToActiveList()

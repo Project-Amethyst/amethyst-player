@@ -308,7 +308,7 @@ class UnipackRT implements ProjectRT {
             //KeyLED
             if (this.api!.options.lightAnimation && this.keyLED?.[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
                 let ledIndex = this.keypressHistory[canvas_x][canvas_y] % this.keyLED[this.currentChain][canvas_x][canvas_y].length;
-                this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex]?.endLoop();
+                this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex]?.keyRelease();
             }
 
             //Sound (and wormhole)
