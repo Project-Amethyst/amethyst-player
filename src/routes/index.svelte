@@ -430,7 +430,7 @@
                     <span 
                         title= {__BUILD_STRING__}
                     >
-                        Amethyst Player (Beta)
+                        Amethyst Player
                     </span>
                 </div>
             </div>
