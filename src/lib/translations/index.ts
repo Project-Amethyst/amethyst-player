@@ -34,6 +34,11 @@ export const config = {
             key: 'toast',
             loader: async () => (await import('./en/toast.json')).default,
         },
+        {
+            locale: 'en',
+            key: 'color',
+            loader: async () => (await import('./en/color.json')).default,
+        },
         //ZH-CN
         {
             locale: 'zh-CN',
@@ -59,6 +64,11 @@ export const config = {
             locale: 'zh-CN',
             key: 'toast',
             loader: async () => (await import('./zh-cn/toast.json')).default,
+        },
+        {
+            locale: 'zh-CN',
+            key: 'color',
+            loader: async () => (await import('./zh-cn/color.json')).default,
         },
     ],
 };

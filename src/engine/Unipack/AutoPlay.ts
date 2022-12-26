@@ -123,7 +123,7 @@ class AutoPlay {
           {
             const keyID:KeyID =  [parseInt(command[2]) - 1, parseInt(command[1]) - 1];
             this.project.KeyPress(deviceInfo, keyID)
-            if(this.canvas.options.showKeyPress) {this.canvas.setOverlay(0, keyID, new Color(ColorType.Palette, ["classic", 3]))}
+            if(this.canvas.options.showKeyPress) {this.canvas.setOverlay(0, keyID)}
             break;
           }
         case 'f':
@@ -142,7 +142,7 @@ class AutoPlay {
               this.project.KeyRelease(deviceInfo, keyID)
               if(this.canvas.options.showKeyPress)
               {   
-                  this.canvas.setOverlay(0, keyID, new Color(ColorType.Palette, ["classic", 3]));
+                  this.canvas.setOverlay(0, keyID);
                   this.wait(200)!.then(() => {
                   this.canvas.unsetOverlay(0, keyID)});
               }
@@ -165,7 +165,7 @@ class AutoPlay {
           if(this.canvas.options.showKeyPress)
           {
               const keyID:KeyID = ['c', parseInt(command[1]) - 1];
-              this.canvas.setOverlay(0, keyID, new Color(ColorType.Palette, ["classic", 3]));
+              this.canvas.setOverlay(0, keyID);
               this.wait(200)!.then(() =>{
               this.canvas.unsetOverlay(0, keyID);
             });
@@ -313,7 +313,7 @@ class AutoPlay {
       this.canvas.clearOverlay();
       for(let key of this.getActionKeys())
       {
-        this.canvas.setOverlay(0, key, new Color(ColorType.Palette, ["classic", 3]));
+        this.canvas.setOverlay(0, key);
       }
     }
 
