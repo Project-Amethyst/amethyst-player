@@ -34,6 +34,18 @@
     const mobileViewWidthThreshold = 800;
     const mobileViewAspectThreshold = 3/5;
 
+    const keyPressColors: { [key: string]: Color } = 
+    {
+        "color.green": new Color(ColorType.Palette, ["classic", 21]),
+        "color.red": new Color(ColorType.Palette, ["classic", 5]),
+        "color.blue": new Color(ColorType.Palette, ["classic", 45]),
+        "color.cyan": new Color(ColorType.Palette, ["classic", 37]),
+        "color.purple": new Color(ColorType.Palette, ["classic", 53]),
+        "color.yellow": new Color(ColorType.Palette, ["classic", 13]),
+        "color.white": new Color(ColorType.Palette, ["classic", 3])
+    }
+
+    // Settings are values that saves
     let settings = {
         virtualDevice: Object.keys(virtualDeviceComponents)[0],
         virtualDeviceScale: "100%",
@@ -43,8 +55,10 @@
         deviceConfig: undefined,
         deviceSettingAdvanced: false,
         language: undefined,
+        keypressColor: Object.keys(keyPressColors)[0],
     };
 
+    // Options are not somethings being saved
     let options = 
     {
         lightAnimation: true,
@@ -244,8 +258,13 @@
             }
         },
 
-        setOverlay: function (deviceID: number, keyID: KeyID, color: Color) {
+        setOverlay: function (deviceID: number, keyID: KeyID, color?: Color) {
             var signature = [deviceID, keyID];
+
+            if(color === undefined)
+            {
+                color = keyPressColors[settings.keypressColor];
+            }
 
             if(!color.isBlack())
             {
@@ -668,6 +687,20 @@
                     />
                 </div>
             </div>
+
+            <div class="setting {mobileView? 'mobile' : ''}">
+                <div class="setting-name">
+                    <span>{$t("demoplay.key_press_color")}</span>
+                </div>
+
+                <div class="setting-option">
+                    <Dropdown
+                        bind:value={settings.keypressColor}
+                        options={Object.keys(keyPressColors)}
+                    />
+                </div>
+            </div>
+
 
             <div class="setting {mobileView? 'mobile' : ''}">
                 <div
