@@ -5,6 +5,9 @@
     export let options: string[];
     export let value: string | undefined;
     export let placeholder: string|undefined;
+
+    import {t, locale, locales} from "$lib/translations";
+
     let index:number;
 
     let showOptions: boolean;
@@ -39,7 +42,7 @@
 <div style="display: flex; flex-direction: column;">
     <div class="dropdown-select-body" bind:this={dropdownButton} on:click={() => showOptions = !showOptions}>
         <div class="left-portion">
-            <span>{value !== undefined ? value : placeholder}</span>
+            <span>{$t(value !== undefined ? value : placeholder)}</span>
         </div>
 
         <div class="right-portion">
@@ -56,7 +59,7 @@
                 index = NaN;
                 dispatch("change", {value:value, index:index});
             }}>
-                {placeholder}
+                {$t(placeholder)}
             </div>
             {/if}
             {#each options as option}
@@ -66,7 +69,7 @@
                     index = options.indexOf(option);
                     dispatch("change", {value:value, index:index});
                 }}>
-                    {option}
+                    {$t(option)}
                 </div>
             {/each}
         </div>
