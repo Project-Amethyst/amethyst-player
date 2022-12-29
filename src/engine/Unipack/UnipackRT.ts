@@ -226,8 +226,16 @@ class UnipackRT implements ProjectRT {
 
                 // Load AutoPlay
                 if (autoplayFile !== undefined)
+                {
                     this.demoplay = new AutoPlay(autoplayFile, this.api, this);
-                ;
+                    this.demoplay.Seek(0);
+                }
+
+                if(this.api?.options.showKeyPress)
+                {
+                    this.demoplay?.showActionKeys();
+                }
+
                 this.loaded = true;
                 resolve();
             } catch (e) {

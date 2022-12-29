@@ -15,8 +15,6 @@ class AutoPlay {
     total:number;
     progress = 0;
     lastEventTime = 0;
-
-    activeKeys = [];
   
     led = true;
     highlight = false;
@@ -116,6 +114,7 @@ class AutoPlay {
 
     async executeCommand(command: any[])
     {
+      console.log(command)
       let deviceInfo = this.canvas.getDevices()[0];
       switch (command[0]) {
         case 'o':deviceInfo
@@ -210,9 +209,9 @@ class AutoPlay {
     {
       while(true)
       {
-        let command = this.getCommand(this.progress++);
+        let command = this.getCommand(++this.progress);
         if(command.length == 0) continue;
-        if(command[0] === "delay") break;
+        if(command[0] === "o" || command[0] === "on" || command[0] === "t" || command[0] === "touch") break;
         if(!justChain)
         {
           this.executeCommand(command);
