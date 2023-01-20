@@ -449,7 +449,7 @@
                     <span 
                         title= {__BUILD_STRING__}
                     >
-                        Amethyst Player
+                        {`Amethyst Player`}
                     </span>
                 </div>
             </div>

@@ -5,6 +5,7 @@
     import { ColorType, Color } from "../../types/color"
     
     import Keypad from "../keypad.svelte";
+    import Light from "../light.svelte";
 
     let keyPads: any[] = [];
     export let keyPress: KeyPress;
@@ -59,6 +60,7 @@ export function setColor(keyID: KeyID, color: Color) {
         if(Array.isArray(keyID))
         {
             if(keyID[0] === 'c') keyID = deviceInfo.chain_key[keyID[1]];
+            else if(keyID[0] === 's' && keyID[1] === 0) keyID = deviceInfo.special_led;
             keyID = [
                 keyID[0] + deviceInfo.grid_offset[0],
                 keyID[1] + deviceInfo.grid_offset[1]
@@ -91,10 +93,8 @@ export function setColor(keyID: KeyID, color: Color) {
             </div>
         {/each}
     </div>
-
-    <div class="lp-mode-light" bind:this={keyPads[99]}>
-
-    </div>
+    <Light class="lp-mode-light" bind:this={keyPads[99]}>
+    </Light>
 </div>
 
 <style lang="scss">
@@ -133,7 +133,7 @@ export function setColor(keyID: KeyID, color: Color) {
             justify-content: center;
             align-items: center;
 
-            :global(.lp-round-corner-btn) {
+            :global(.lp-side-btn) {
                 padding: 0;
                 border: none;
 
@@ -150,7 +150,7 @@ export function setColor(keyID: KeyID, color: Color) {
                   height: 100%;
                   width: 100%;
                   
-                  padding: 3px;
+                  padding: 6%;
                   background-clip: content-box;
                   background-color: rgb(10, 10, 10);
                   border-radius: 50%;
@@ -179,7 +179,7 @@ export function setColor(keyID: KeyID, color: Color) {
         }
     }
 
-    .lp-mode-light {
+    :global(.lp-mode-light) {
         width: 3%;
         height: 3%;
         border-radius: 30% 30% 0 0;
