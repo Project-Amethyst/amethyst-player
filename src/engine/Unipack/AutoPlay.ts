@@ -114,7 +114,7 @@ class AutoPlay {
 
     async executeCommand(command: any[])
     {
-      console.log(command)
+      // console.log(command)
       let deviceInfo = this.canvas.getDevices()[0];
       switch (command[0]) {
         case 'o':deviceInfo
