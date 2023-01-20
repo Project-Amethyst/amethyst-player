@@ -65,8 +65,7 @@ class KeyLED
               }
               else if(command[1] === "l")
               {
-                continue;
-                // keyID = 0;
+                keyID = ['s', 0];
               }
               else if(!isNaN(parseInt(command[1])))
               {

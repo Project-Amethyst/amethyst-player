@@ -8,7 +8,6 @@
     let active:boolean = false;
     export let keyPress: KeyPress;
     export let keyRelease: KeyRelease;
-    let color = 'rgb(0, 0, 0)';
     var button: HTMLButtonElement;
     export function set_color(color: Color)
     {

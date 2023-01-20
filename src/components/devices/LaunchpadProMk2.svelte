@@ -5,6 +5,7 @@
     import { ColorType, Color } from "../../types/color"
     
     import Keypad from "../keypad.svelte";
+    import Light from "../light.svelte";
 
     let keyPads: any[] = [];
     export let keyPress: KeyPress;
@@ -92,8 +93,8 @@ export function setColor(keyID: KeyID, color: Color) {
             </div>
         {/each}
     </div>
-    <div class="lp-mode-light" bind:this={keyPads[99]}>
-    </div>
+    <Light class="lp-mode-light" bind:this={keyPads[99]}>
+    </Light>
 </div>
 
 <style lang="scss">
@@ -178,7 +179,7 @@ export function setColor(keyID: KeyID, color: Color) {
         }
     }
 
-    .lp-mode-light {
+    :global(.lp-mode-light) {
         width: 3%;
         height: 3%;
         border-radius: 30% 30% 0 0;

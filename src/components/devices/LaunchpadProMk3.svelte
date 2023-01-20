@@ -5,6 +5,7 @@
     import { ColorType, Color } from "../../types/color"
     
     import Keypad from "../keypad.svelte";
+    import Light from "../light.svelte";
 
     let keyPads: any[] = [];
     export let keyPress: KeyPress;
@@ -86,19 +87,19 @@ export function setColor(keyID: KeyID, color: Color) {
                         {#if x === 0 && y === 0}
                         <Keypad class="lp-shift-btn" style="clip-path: {getCornerRadius(x, y)};" deviceID={id} id={[x - deviceInfo.grid_offset[0], y - deviceInfo.grid_offset[0]]} bind:this={keyPads[getKeypadIndex([x,y])]} keyPress={keyPress} keyRelease={keyRelease}/> 
                         {:else if (x === 9 && y === 0)}
-                            <div class="lp-logo">
-                                <div class="logo-inner" bind:this={keyPads[getKeypadIndex([x,y])]}>
-                                    <div class="logo-holder">
-                                        <div class="logo-split">
-                                            <div class="top-part"></div>
-                                        </div>
+                        <div class="lp-logo">
+                            <Light class="logo-inner" bind:this={keyPads[getKeypadIndex([x,y])]}>
+                                <div class="logo-holder">
+                                    <div class="logo-split">
+                                        <div class="top-part"></div>
+                                    </div>
 
-                                        <div class="logo-split">
-                                            <div class="bottom-part"></div>
-                                        </div>
+                                    <div class="logo-split">
+                                        <div class="bottom-part"></div>
                                     </div>
                                 </div>
-                            </div>
+                            </Light>
+                        </div>
                         {:else if (x > 0 && x < 9) && (y > 0 && y < 9)}
                         <Keypad class="lp-normal-btn" style="clip-path: {getCornerRadius(x, y)};" deviceID={id} id={[x - deviceInfo.grid_offset[0], y - deviceInfo.grid_offset[0]]} bind:this={keyPads[getKeypadIndex([x,y])]} keyPress={keyPress} keyRelease={keyRelease}/> 
                         {:else if (x > 0 && x < 9) || (y > 0 && y < 9)}
@@ -216,7 +217,7 @@ export function setColor(keyID: KeyID, color: Color) {
                 background-color: rgb(80, 80, 80);
             }
 
-            .lp-logo {
+            :global(.lp-logo) {
                 height: 90%;
                 width: 90%;
                 border-radius: 8%;
@@ -226,7 +227,7 @@ export function setColor(keyID: KeyID, color: Color) {
                 justify-content: center;
                 align-items: center;
 
-                .logo-inner {
+                :global(.logo-inner) {
                     width: 85%;
                     height: 85%;
 
@@ -234,12 +235,12 @@ export function setColor(keyID: KeyID, color: Color) {
                     border-radius: 16%;
                     overflow: hidden;
 
-                    .logo-holder {
+                    :global(.logo-holder) {
                         height: 100%;
                         width: 100%;
                         transform: rotateZ(-45deg) scale(0.9);
 
-                        .logo-split {
+                        :global(.logo-split) {
                             height: 50%;
                             width: 100%;
 
@@ -247,7 +248,7 @@ export function setColor(keyID: KeyID, color: Color) {
                             justify-content: center;
                             align-items: center;
 
-                            .top-part {
+                            :global(.top-part) {
                                 background-color: black;
                                 margin-top: 10%;
 
@@ -255,7 +256,7 @@ export function setColor(keyID: KeyID, color: Color) {
                                 width: 70%;
                             }
 
-                            .bottom-part {
+                            :global(.bottom-part) {
                                 background-color: black;
                                 margin-bottom: 10%;
 

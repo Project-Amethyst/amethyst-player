@@ -189,6 +189,7 @@ class AutoPlay {
     }
   
     Stop(fullStop = true) {
+      console.log("Autoplay Stopped")
       this.playing = false;
       this.status = "STOPPED"
       this.progress = 0;
@@ -211,14 +212,18 @@ class AutoPlay {
       {
         let command = this.getCommand(++this.progress);
         if(command.length == 0) continue;
-        if(command[0] === "o" || command[0] === "on" || command[0] === "t" || command[0] === "touch") break;
+        if(command[0] === "on" || command[0] === "touch") break;
         if(!justChain)
         {
           this.executeCommand(command);
         }
         else
         {
-          if(command[0] === "chain") this.project.ChainChange(parseInt(command[1]) - 1);
+          if(command[0] === "chain") 
+          { 
+            this.chain = parseInt(command[1]) - 1;
+            this.project.ChainChange(parseInt(command[1]) - 1);
+          }
         }
       }
       console.log(`Forward seek to ${this.progress}`)
@@ -258,7 +263,13 @@ class AutoPlay {
   
     Seek(target: number = this.progress)
     {
-      this.Pause();
+      var resumeAfterSeek = false;
+      if(this.status === "PLAYING")
+      {
+        resumeAfterSeek = true;
+      }
+
+      this.Stop();
       console.log(`Seeking to ${target}`)
       // console.log(this.sections)
       let targetChain = 0;
@@ -270,7 +281,9 @@ class AutoPlay {
         progress = section[1];
       }
 
+      console.log(`Seeking from chain ${targetChain} at target ${progress}`)
       this.project.ChainChange(targetChain);
+      this.chain = targetChain;
       this.project.clearKeypressHistory();
 
       let command = this.getCommand(progress);
@@ -297,6 +310,7 @@ class AutoPlay {
         {
           this.project.logKeypressHistory(parseInt(command[2]) - 1, parseInt(command[1]) - 1)
         }
+
       }
       this.progress = progress;
       console.log(`Seeked to ${progress}`)
@@ -304,6 +318,11 @@ class AutoPlay {
       if(this.canvas.options.showKeyPress)
       {
         this.showActionKeys();
+      }
+
+      if(resumeAfterSeek)
+      {
+        this.Start();
       }
     }
 

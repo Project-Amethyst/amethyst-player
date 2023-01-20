@@ -5,6 +5,7 @@
     import { Color, ColorType } from "../../types/color";
     
     import Keypad from "../keypad.svelte";
+    import Light from "../light.svelte";
 
     let keyPads: any[] = [];
     export let keyPress: KeyPress;
@@ -84,7 +85,7 @@
                             <Keypad class="lp-round-corner-btn" deviceID={id} id={[x - deviceInfo.grid_offset[0], y - deviceInfo.grid_offset[1]]} bind:this={keyPads[getKeypadIndex([x,y])]} keyPress={keyPress} keyRelease={keyRelease}/> 
                             {:else if (x === 8 && y === 0)}
                                 <div class="lp-logo">
-                                    <div class="logo-inner" bind:this={keyPads[getKeypadIndex([x,y])]}>
+                                    <Light class="logo-inner" bind:this={keyPads[getKeypadIndex([x,y])]}>
                                         <div class="logo-holder">
                                             <div class="logo-split">
                                                 <div class="top-part"></div>
@@ -94,7 +95,7 @@
                                                 <div class="bottom-part"></div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </Light>
 
                                 </div>
                             {/if}
@@ -163,7 +164,7 @@
                 }
             }
 
-            .lp-logo {
+            :global(.lp-logo) {
                 padding: 0;
                 border: none;
 
@@ -176,7 +177,7 @@
                 justify-content: center;
                 align-items: center;
 
-                .logo-inner {
+                :global(.logo-inner) {
                     width: 85%;
                     height: 85%;
 
@@ -184,12 +185,12 @@
                     border-radius: 16%;
                     overflow: hidden;
 
-                    .logo-holder {
+                    :global(.logo-holder) {
                         height: 100%;
                         width: 100%;
                         transform: rotateZ(-45deg) scale(0.9);
 
-                        .logo-split {
+                        :global(.logo-split) {
                             height: 50%;
                             width: 100%;
 
@@ -197,7 +198,7 @@
                             justify-content: center;
                             align-items: center;
 
-                            .top-part {
+                            :global(.top-part) {
                                 background-color: black;
                                 margin-top: 10%;
 
@@ -205,7 +206,7 @@
                                 width: 70%;
                             }
 
-                            .bottom-part {
+                            :global(.bottom-part) {
                                 background-color: black;
                                 margin-bottom: 10%;
 
