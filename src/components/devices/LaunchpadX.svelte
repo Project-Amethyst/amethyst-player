@@ -143,7 +143,7 @@
             justify-content: center;
             align-items: center;
 
-            :global(.lp-round-corner-btn) {
+            :global(.lp-side-btn) {
                 height: 90%;
                 width: 90%;
                 border-radius: 8%;
@@ -182,7 +182,7 @@
                     height: 85%;
 
                     background-color: rgb(80, 80, 80);
-                    border-radius: 16%;
+                    border-radius: 5%;
                     overflow: hidden;
 
                     :global(.logo-holder) {

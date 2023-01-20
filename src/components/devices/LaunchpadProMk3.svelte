@@ -104,12 +104,13 @@ export function setColor(keyID: KeyID, color: Color) {
                         <Keypad class="lp-normal-btn" style="clip-path: {getCornerRadius(x, y)};" deviceID={id} id={[x - deviceInfo.grid_offset[0], y - deviceInfo.grid_offset[0]]} bind:this={keyPads[getKeypadIndex([x,y])]} keyPress={keyPress} keyRelease={keyRelease}/> 
                         {:else if (x > 0 && x < 9) || (y > 0 && y < 9)}
                             {#if y === 9}
-                                <div class="lp-round-corner-btn-column">
-                                    <Keypad class="lp-round-corner-btn-half" deviceID={id} id={[x - deviceInfo.grid_offset[0], y - deviceInfo.grid_offset[0]]} bind:this={keyPads[getKeypadIndex([x,y])]} keyPress={keyPress} keyRelease={keyRelease}/> 
-                                    <Keypad class="lp-round-corner-btn-half" deviceID={id} id={[x - deviceInfo.grid_offset[0], y - deviceInfo.grid_offset[0]]} bind:this={keyPads[getKeypadIndex([x,y + 1])]} keyPress={keyPress} keyRelease={keyRelease}/> 
+                                <div></div>
+                                <div class="lp-side-btn-column">
+                                    <Keypad class="lp-side-btn-half" deviceID={id} id={[x - deviceInfo.grid_offset[0], y - deviceInfo.grid_offset[0]]} bind:this={keyPads[getKeypadIndex([x,y])]} keyPress={keyPress} keyRelease={keyRelease}/> 
+                                    <Keypad class="lp-side-btn-half" deviceID={id} id={[x - deviceInfo.grid_offset[0], y - deviceInfo.grid_offset[0]]} bind:this={keyPads[getKeypadIndex([x,y + 1])]} keyPress={keyPress} keyRelease={keyRelease}/> 
                                 </div>
                             {:else}
-                            <Keypad class="lp-round-corner-btn" deviceID={id} id={[x - deviceInfo.grid_offset[0], y - deviceInfo.grid_offset[0]]} bind:this={keyPads[getKeypadIndex([x,y])]} keyPress={keyPress} keyRelease={keyRelease}/> 
+                            <Keypad class="lp-side-btn" deviceID={id} id={[x - deviceInfo.grid_offset[0], y - deviceInfo.grid_offset[0]]} bind:this={keyPads[getKeypadIndex([x,y])]} keyPress={keyPress} keyRelease={keyRelease}/> 
                             {/if}
                         {/if}
 
@@ -156,7 +157,7 @@ export function setColor(keyID: KeyID, color: Color) {
             justify-content: center;
             align-items: center;
 
-            :global(.lp-round-corner-btn) {
+            :global(.lp-side-btn) {
                 height: 90%;
                 width: 90%;
                 border-radius: 5%;
@@ -170,14 +171,14 @@ export function setColor(keyID: KeyID, color: Color) {
                     height: 100%;
                     width: 100%;
                     
-                    padding: 2px;
+                    padding: 6%;
                     background-clip: content-box;
                     background-color: rgb(10, 10, 10);
                     border-radius: 5%;
                 }
             }
 
-            .lp-round-corner-btn-column {
+            .lp-side-btn-column {
                 height: 100%;
                 width: 100%;
 
@@ -188,7 +189,7 @@ export function setColor(keyID: KeyID, color: Color) {
 
                 gap: 12.5%;
 
-                :global(.lp-round-corner-btn-half) {
+                :global(.lp-side-btn-half) {
                     height: 100%;
                     width: 92%;
                     border-radius: 5%;
@@ -202,7 +203,7 @@ export function setColor(keyID: KeyID, color: Color) {
                         height: 100%;
                         width: 100%;
                         
-                        padding: 1.5px;
+                        padding: 6%;
                         background-clip: content-box;
                         background-color: rgb(10, 10, 10);
                         border-radius: 5%;
@@ -232,7 +233,7 @@ export function setColor(keyID: KeyID, color: Color) {
                     height: 85%;
 
                     background-color: rgb(80, 80, 80);
-                    border-radius: 16%;
+                    border-radius: 5%;
                     overflow: hidden;
 
                     :global(.logo-holder) {
@@ -284,7 +285,7 @@ export function setColor(keyID: KeyID, color: Color) {
                     height: 100%;
                     width: 100%;
                     
-                    padding: 2px;
+                    padding: 8%;
                     background-clip: content-box;
                     background-color: rgb(10, 10, 10);
                     border-radius: 5%;

@@ -133,7 +133,7 @@ export function setColor(keyID: KeyID, color: Color) {
             justify-content: center;
             align-items: center;
 
-            :global(.lp-round-corner-btn) {
+            :global(.lp-side-btn) {
                 padding: 0;
                 border: none;
 
@@ -150,7 +150,7 @@ export function setColor(keyID: KeyID, color: Color) {
                   height: 100%;
                   width: 100%;
                   
-                  padding: 3px;
+                  padding: 6%;
                   background-clip: content-box;
                   background-color: rgb(10, 10, 10);
                   border-radius: 50%;
