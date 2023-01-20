@@ -59,6 +59,7 @@ export function setColor(keyID: KeyID, color: Color) {
         if(Array.isArray(keyID))
         {
             if(keyID[0] === 'c') keyID = deviceInfo.chain_key[keyID[1]];
+            else if(keyID[0] === 's' && keyID[1] === 0) keyID = deviceInfo.special_led;
             keyID = [
                 keyID[0] + deviceInfo.grid_offset[0],
                 keyID[1] + deviceInfo.grid_offset[1]
@@ -91,9 +92,7 @@ export function setColor(keyID: KeyID, color: Color) {
             </div>
         {/each}
     </div>
-
     <div class="lp-mode-light" bind:this={keyPads[99]}>
-
     </div>
 </div>
 

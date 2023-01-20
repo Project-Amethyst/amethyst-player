@@ -57,6 +57,7 @@
         if(Array.isArray(keyID))
         {
             if(keyID[0] === 'c') keyID = deviceInfo.chain_key[keyID[1]];
+            else if(keyID[0] === 's' && keyID[1] === 0) keyID = deviceInfo.special_led;
             keyID = [
                 keyID[0] + deviceInfo.grid_offset[0],
                 keyID[1] + deviceInfo.grid_offset[1]

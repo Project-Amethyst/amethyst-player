@@ -345,16 +345,23 @@ export class GridController {
         if(this.activeConfig === undefined)
             return;
         if(Array.isArray(keyID))
-        {
-            keyID = [
-                keyID[0] + this.activeConfig.gridOffset[0],
-                keyID[1] + this.activeConfig.gridOffset[1]
-            ];
-        }
-        let deviceKeyID = this.activeConfig.keymap?.[keyID[1]]?.[keyID[0]];
-        // console.log(`${keyID[0]} ${keyID[1]} ${note}`)
-        if(deviceKeyID) {
-            this.setColorOnDevice(deviceKeyID, color);    
+        {  
+            if(keyID[0] === 's' && keyID[1] === 0 && this.activeConfig.specialLED) 
+            {
+                keyID = this.activeConfig.specialLED;
+            }
+            else
+            {
+                keyID = [
+                    keyID[0] + this.activeConfig.gridOffset[0],
+                    keyID[1] + this.activeConfig.gridOffset[1]
+                ];
+            }
+            let deviceKeyID = this.activeConfig.keymap?.[keyID[1]]?.[keyID[0]];
+            // console.log(`${keyID[0]} ${keyID[1]} ${note}`)
+            if(deviceKeyID) {
+                this.setColorOnDevice(deviceKeyID, color);    
+            }
         }
     }
 
