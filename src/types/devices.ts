@@ -3,7 +3,7 @@ export type KeyPadElement = HTMLButtonElement | HTMLDivElement;
 export type Dimension = [number, number] 
 export type Position = [number, number];
 export type ChainKey = ['c', number];
-export type SpecialLED = ['s', 'accent'|any];
+export type SpecialLED = ['s', number];
 export type KeyID = number|Position|ChainKey|SpecialLED;
 
 export interface DeviceInfo{
