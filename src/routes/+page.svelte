@@ -26,7 +26,7 @@
     import {SvelteToast, toast} from "@zerodevx/svelte-toast";
     import {t, locale, locales} from "$lib/translations";
 
-    import {browser} from "$app/env";
+    import {browser} from "$app/environment";
 
     import {afterUpdate, onMount} from "svelte";
     import "../shared.css";

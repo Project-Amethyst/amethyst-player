@@ -4,7 +4,7 @@ import howler from 'howler';
 const Howl = howler.Howl;
 const Howler = howler.Howler;
 
-import { browser } from '$app/env';
+import { browser } from '$app/environment';
 
 export class KeySound {
   sound: Sound;

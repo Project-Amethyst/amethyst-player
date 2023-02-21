@@ -8,7 +8,7 @@ import { ColorType, Color } from "../types/color"
 
 import { WebMidi } from "webmidi";
 import DeviceConfigs from "./devices";
-import { dev } from "$app/env";
+import { dev } from "$app/environment";
 
 export class GridController {
     id: number;

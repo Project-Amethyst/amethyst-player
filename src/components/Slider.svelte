@@ -1,5 +1,5 @@
 <script>
-    import {browser} from "$app/env";
+    import {browser} from "$app/environment";
     import { createEventDispatcher } from 'svelte';
 
     let sliderBody;
