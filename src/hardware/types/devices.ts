@@ -22,7 +22,7 @@ export interface GridDeviceConfig {
   gridDimension: Dimension;
   /** [X, Y] */
   gridOffset: Position;
-  chainKey: Position[];
+  layerKey: Position[];
   noteToXY: (note: number) => Position;
   specialLED?: DeviceKeyID[];
   rgbSysexGen?: (keyID: DeviceKeyID, color: [number, number, number]) => number[];

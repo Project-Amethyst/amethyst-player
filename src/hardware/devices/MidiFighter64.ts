@@ -22,7 +22,7 @@ const config: GridDeviceConfig = {
     dimension: [8, 8],
     gridDimension: [8, 8],
     gridOffset: [0, 0],
-    chainKey: [],
+    layerKey: [],
     
 
     noteToXY(note)

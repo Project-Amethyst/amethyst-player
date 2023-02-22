@@ -20,7 +20,7 @@ class UnipackRT implements ProjectRT {
 
     //Runtime
     activeKeyLED = {}; //List of active keyLEDs so we can stop them
-    currentChain: number = 0;
+    currentLayer: number = 0;
     currentKeyPress: KeyID[] = [];
     keypressHistory = undefined;
 
@@ -40,7 +40,7 @@ class UnipackRT implements ProjectRT {
         this.api?.clear();
         this.api?.clearOverlay();
 
-        this.currentChain = 0;
+        this.currentLayer = 0;
         return new Promise(async (resolve, reject) => {
             try {
                 // console.log(this.projectInfo)
@@ -127,7 +127,7 @@ class UnipackRT implements ProjectRT {
 
                         this.projectInfo.name = this.unipackInfo["title"];
                         this.projectInfo.author = this.unipackInfo["producerName"];
-                        this.projectInfo.chain = this.unipackInfo["chain"];
+                        this.projectInfo.layer = this.unipackInfo["chain"];
                         this.projectInfo.devices = {"main": [this.unipackInfo["buttonX"], this.unipackInfo["buttonY"]]};
 
                         this.keypressHistory = new Array(this.unipackInfo["buttonX"]).fill(null).map(() => new Array(this.unipackInfo["buttonY"]).fill(0));
@@ -152,7 +152,7 @@ class UnipackRT implements ProjectRT {
                 }
 
                 //Initialize 4D arraies
-                this.keySound = new Array(this.unipackInfo.chain)
+                this.keySound = new Array(this.unipackInfo["chain"])
                     .fill(null)
                     .map(() =>
                         new Array(this.unipackInfo.buttonX)
@@ -162,7 +162,7 @@ class UnipackRT implements ProjectRT {
                             )
                     );
 
-                this.keyLED = new Array(this.unipackInfo.chain)
+                this.keyLED = new Array(this.unipackInfo["chain"])
                     .fill(null)
                     .map(() =>
                         new Array(this.unipackInfo.buttonX)
@@ -178,16 +178,16 @@ class UnipackRT implements ProjectRT {
                     try {
                         let index = fileInfo[4]?.charCodeAt(0) - 97; //97 is 'a'
                         index = isNaN(index) ? 0 : index;
-                        let [chain, x, y, repeat] = [
+                        let [layer, x, y, repeat] = [
                             parseInt(fileInfo[0]) - 1,
                             parseInt(fileInfo[2]) - 1,
                             parseInt(fileInfo[1]) - 1,
                             parseInt(fileInfo[3]),
                         ];
                         // console.log(fileInfo);
-                        // console.log([chain, x, y, repeat, index]);
+                        // console.log([layer, x, y, repeat, index]);
                         // console.log();
-                        this.keyLED[chain][x][y][index] = new KeyLED(
+                        this.keyLED[layer][x][y][index] = new KeyLED(
                             text,
                             repeat,
                             this.api
@@ -206,7 +206,7 @@ class UnipackRT implements ProjectRT {
 
                         let command = line.split(" ");
 
-                        let [chain, x, y, filename, loop, wormhole] = [
+                        let [layer, x, y, filename, loop, wormhole] = [
                             parseInt(command[0]) - 1,
                             parseInt(command[2]) - 1,
                             parseInt(command[1]) - 1,
@@ -218,7 +218,7 @@ class UnipackRT implements ProjectRT {
                         if(isNaN(loop)) {loop = 1}
                         if(isNaN(wormhole)) {wormhole = undefined}
 
-                        this.keySound[chain][x][y].push(new KeySound(this.soundFiles[filename], loop, wormhole));
+                        this.keySound[layer][x][y].push(new KeySound(this.soundFiles[filename], loop, wormhole));
                     } catch {
                         throw "Unable to parse KeySound entry - " + line;
                     }
@@ -251,32 +251,32 @@ class UnipackRT implements ProjectRT {
 
     //Input
     KeyPress(device: DeviceInfoCanvas, keyID: KeyID): void {
-        let chain = this.IndexOfKeyID(device.info.chain_key, keyID);
-        if (chain != -1) {
+        let layer = this.IndexOfKeyID(device.info.layer_key, keyID);
+        if (layer != -1) {
             if(!this.api?.options.learningMode || this.demoplay.status == "PLAYING")
             {
-                this.ChainChange(chain)
+                this.LayerChange(layer)
             }
             else
             {
-                this.activeKeys.push(["c", chain].toString())
+                this.activeKeys.push(["c", layer].toString())
             }
         }
         else
         {
             let soundLoop = 1;
-            let [canvas_x, canvas_y] = keyID; //canvas_XY means the grid scope XY (Square), Raw XY will be the source XY (Including the chain keys)
+            let [canvas_x, canvas_y] = keyID; //canvas_XY means the grid scope XY (Square), Raw XY will be the source XY (Including the layer keys)
 
             //KeyLED
-            if (this.api!.options.lightAnimation && this.keyLED?.[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
-                let ledIndex = this.keypressHistory[canvas_x][canvas_y] % this.keyLED[this.currentChain][canvas_x][canvas_y].length;
-                this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex]?.play();
+            if (this.api!.options.lightAnimation && this.keyLED?.[this.currentLayer]?.[canvas_x]?.[canvas_y]?.length > 0) {
+                let ledIndex = this.keypressHistory[canvas_x][canvas_y] % this.keyLED[this.currentLayer][canvas_x][canvas_y].length;
+                this.keyLED[this.currentLayer][canvas_x][canvas_y][ledIndex]?.play();
             }
 
             //Sound
-            if (this.keySound?.[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
-                let soundIndex = this.keypressHistory[canvas_x][canvas_y] % this.keySound[this.currentChain][canvas_x][canvas_y].length;
-                this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex]?.keyPress();
+            if (this.keySound?.[this.currentLayer]?.[canvas_x]?.[canvas_y]?.length > 0) {
+                let soundIndex = this.keypressHistory[canvas_x][canvas_y] % this.keySound[this.currentLayer][canvas_x][canvas_y].length;
+                this.keySound[this.currentLayer][canvas_x][canvas_y][soundIndex]?.keyPress();
             }
 
             this.activeKeys.push(keyID.toString());
@@ -307,25 +307,25 @@ class UnipackRT implements ProjectRT {
     KeyRelease(device: DeviceInfoCanvas, keyID: KeyID): void {
         let [canvas_x, canvas_y] = keyID;
         
-        let chain = this.IndexOfKeyID(device.info.chain_key, keyID);
-        if (chain != -1) {
-            keyID = ["c", chain]
+        let layer = this.IndexOfKeyID(device.info.layer_key, keyID);
+        if (layer != -1) {
+            keyID = ["c", layer]
         }
         else
         {
             //KeyLED
-            if (this.api!.options.lightAnimation && this.keyLED?.[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
-                let ledIndex = this.keypressHistory[canvas_x][canvas_y] % this.keyLED[this.currentChain][canvas_x][canvas_y].length;
-                this.keyLED[this.currentChain][canvas_x][canvas_y][ledIndex]?.keyRelease();
+            if (this.api!.options.lightAnimation && this.keyLED?.[this.currentLayer]?.[canvas_x]?.[canvas_y]?.length > 0) {
+                let ledIndex = this.keypressHistory[canvas_x][canvas_y] % this.keyLED[this.currentLayer][canvas_x][canvas_y].length;
+                this.keyLED[this.currentLayer][canvas_x][canvas_y][ledIndex]?.keyRelease();
             }
 
             //Sound (and wormhole)
-            if (this.keySound[this.currentChain]?.[canvas_x]?.[canvas_y]?.length > 0) {
-                let soundIndex = this.keypressHistory[canvas_x][canvas_y] % this.keySound[this.currentChain][canvas_x][canvas_y].length;
-                this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].keyRelease();
-                if((!this.api?.options.learningMode || this.demoplay.status == "PLAYING") && this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex].wormhole != undefined)
+            if (this.keySound[this.currentLayer]?.[canvas_x]?.[canvas_y]?.length > 0) {
+                let soundIndex = this.keypressHistory[canvas_x][canvas_y] % this.keySound[this.currentLayer][canvas_x][canvas_y].length;
+                this.keySound[this.currentLayer][canvas_x][canvas_y][soundIndex].keyRelease();
+                if((!this.api?.options.learningMode || this.demoplay.status == "PLAYING") && this.keySound[this.currentLayer][canvas_x][canvas_y][soundIndex].wormhole != undefined)
                 {
-                    this.ChainChange(this.keySound[this.currentChain][canvas_x][canvas_y][soundIndex]?.wormhole);
+                    this.LayerChange(this.keySound[this.currentLayer][canvas_x][canvas_y][soundIndex]?.wormhole);
                 }
             }
         }
@@ -359,13 +359,17 @@ class UnipackRT implements ProjectRT {
         }
     }
 
-    ChainChange(chain: number): void { 
-        if(chain < this.unipackInfo["chain"])
+    LayerChange(layer: number): void { 
+        if(layer < this.unipackInfo["chain"])
         {
-            console.log(`Chain Change ${chain}`); 
-            if (chain !== this.currentChain) this.clearKeypressHistory();
-            this.currentChain = chain;
+            console.log(`Layer Change ${layer}`); 
+            if (layer !== this.currentLayer) this.clearKeypressHistory();
+            this.currentLayer = layer;
         }
+    }
+
+    GetLayerCount(): number {
+        return this.unipackInfo["chain"];
     }
 
     //Autoplay
@@ -378,12 +382,6 @@ class UnipackRT implements ProjectRT {
     //Info
     GetProjectInfo(): ProjectInfo {
         return this.projectInfo;
-    }
-    GetAutoplayProgress(): [number, number] {
-        return [0, 0];
-    }
-    GetChain(): number {
-        return 0;
     }
 
     logKeypressHistory(x: number, y:number)

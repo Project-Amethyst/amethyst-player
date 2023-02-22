@@ -11,14 +11,14 @@ class SuperPadLights implements ProjectRT {
     projectInfo: ProjectInfo = {
         name: "Unknown",
         author: "Unknown",
-        chain: 8,
+        layer: 8,
         devices: {"main": [8, 8]}
     };
 
     soundFiles: {[id: string] : Sound} = {};
 
     pads?: {[index: number]: Pad} = {};
-    currentChain: number = 0;
+    currentLayer: number = 0;
 
     constructor(api: Canvas) {
         this.api = api;
@@ -30,7 +30,7 @@ class SuperPadLights implements ProjectRT {
         this.api?.clear();
         this.api?.clearOverlay();
 
-        this.currentChain = 0;
+        this.currentLayer = 0;
         return new Promise(async (resolve, reject) => {
             try {
                 let zip = new JSZip();
@@ -127,33 +127,33 @@ class SuperPadLights implements ProjectRT {
 
     //Input
     KeyPress(device: DeviceInfoCanvas, keyID: KeyID): void {
-        let chain = this.IndexOfKeyID(device.info.chain_key, keyID);
-        let [canvas_x, canvas_y] = keyID; //canvas_XY means the grid scope XY (Square), Raw XY will be the source XY (Including the chain keys)
-        if (chain != -1) {
-            this.ChainChange(chain)
+        let layer = this.IndexOfKeyID(device.info.layer_key, keyID);
+        let [canvas_x, canvas_y] = keyID; //canvas_XY means the grid scope XY (Square), Raw XY will be the source XY (Including the layer keys)
+        if (layer != -1) {
+            this.LayerChange(layer)
         }
         else if (canvas_x >= 0 && canvas_x < 8 && canvas_y >= 0 && canvas_y < 8 ) 
         {
-            let index = canvas_x + canvas_y * 8 + this.currentChain * 64;
+            let index = canvas_x + canvas_y * 8 + this.currentLayer * 64;
             this.pads[index]?.KeyPress();
         }
     }
 
     KeyRelease(device: DeviceInfoCanvas, keyID: KeyID): void {
-        let chain = this.IndexOfKeyID(device.info.chain_key, keyID);
-        let [canvas_x, canvas_y] = keyID; //canvas_XY means the grid scope XY (Square), Raw XY will be the source XY (Including the chain keys)
+        let layer = this.IndexOfKeyID(device.info.layer_key, keyID);
+        let [canvas_x, canvas_y] = keyID; //canvas_XY means the grid scope XY (Square), Raw XY will be the source XY (Including the layer keys)
         if (canvas_x >= 0 && canvas_x < 8 && canvas_y >= 0 && canvas_y < 8 ) 
         {
-            let index = canvas_x + canvas_y * 8 + this.currentChain * 64;
+            let index = canvas_x + canvas_y * 8 + this.currentLayer * 64;
             this.pads[index]?.KeyRelease();
         }
     }
 
-    ChainChange(chain: number): void { 
-        if(chain < this.projectInfo["chain"])
+    LayerChange(layer: number): void { 
+        if(layer < this.projectInfo[layer])
         {
-            console.log(`Chain Change ${chain}`); 
-            this.currentChain = chain;
+            console.log(`Layer Change ${layer}`); 
+            this.currentLayer = layer;
         }
     }
 
@@ -162,8 +162,8 @@ class SuperPadLights implements ProjectRT {
         return this.projectInfo;
     }
 
-    GetChain(): number {
-        return this.currentChain;
+    GetLayer(): number {
+        return this.currentLayer;
     }
 
     //Helper

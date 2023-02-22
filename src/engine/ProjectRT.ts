@@ -7,7 +7,7 @@ export type { Canvas, DeviceInfoCanvas } from "./CanvasAPI"
 export interface ProjectInfo{
     name: string;
     author: string; //TODO we can have a number type for user ID
-    chain: number;
+    layer: number;
     devices: {[name:string]: [number, number]}; //name and size
 }
 
@@ -20,11 +20,14 @@ export interface ProjectRT {
     //Input
     KeyPress: (device: DeviceInfoCanvas, keyID:KeyID) => void;
     KeyRelease: (device: DeviceInfoCanvas, keyID:KeyID) => void;
-    ChainChange: (chain:number) => void;
+    LayerChange: (layer:number) => void;
+
+    // Getters
+    GetLayerCount: () => number;
 
     // Info
     readonly loaded: boolean;
-    readonly currentChain: number;
+    readonly currentLayer: number;
     readonly projectInfo: ProjectInfo;
 
     readonly fileFormat:string; //Format of file

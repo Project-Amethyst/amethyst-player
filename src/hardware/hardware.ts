@@ -330,7 +330,7 @@ export class GridController {
             dimension: this.activeConfig.dimension,
             grid_dimension: this.activeConfig.gridDimension,
             grid_offset: this.activeConfig.gridOffset,
-            chain_key: this.activeConfig.chainKey,
+            layer_key: this.activeConfig.layerKey,
         }
     }
 

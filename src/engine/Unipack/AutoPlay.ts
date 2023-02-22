@@ -24,7 +24,7 @@ class AutoPlay {
 
     thread_id = 0;
 
-    chain = 0;
+    layer = 0;
   
     constructor(text:string[], canvas:Canvas, project:UnipackRT) {
       this.autoplay = text;
@@ -84,7 +84,7 @@ class AutoPlay {
       // console.time("Autoplay")
       if (this.progress === 0) {
         // this.canvas.clear();
-        this.project.ChainChange(0);
+        this.project.LayerChange(0);
       }
       else
       {
@@ -102,8 +102,8 @@ class AutoPlay {
   
         // console.log(this.autoplay[this.progress])
 
-        if(this.project.currentChain != this.chain) {
-          this.project.ChainChange(this.chain);
+        if(this.project.currentLayer != this.layer) {
+          this.project.LayerChange(this.layer);
         }
   
         var command = this.getCommand(this.progress);
@@ -157,10 +157,10 @@ class AutoPlay {
           await this.wait(adjusted_ms);
           break;
         case 'c':
-        case 'chain':
-          var new_chain = parseInt(command[1]) - 1;
-          this.chain = new_chain;
-          this.project.ChainChange(new_chain);
+        case 'layer':
+          var new_layer = parseInt(command[1]) - 1;
+          this.layer = new_layer;
+          this.project.LayerChange(new_layer);
           if(this.canvas.options.showKeyPress)
           {
               const keyID:KeyID = ['c', parseInt(command[1]) - 1];
@@ -193,7 +193,7 @@ class AutoPlay {
       this.playing = false;
       this.status = "STOPPED"
       this.progress = 0;
-      this.project.ChainChange(0);
+      this.project.LayerChange(0);
       this.project.clearKeypressHistory();
       if(fullStop)
       {
@@ -206,14 +206,14 @@ class AutoPlay {
       }
     }
   
-    Next(justChain:boolean = false)
+    Next(justLayer:boolean = false)
     {
       while(true)
       {
         let command = this.getCommand(++this.progress);
         if(command.length == 0) continue;
         if(command[0] === "on" || command[0] === "touch") break;
-        if(!justChain)
+        if(!justLayer)
         {
           this.executeCommand(command);
         }
@@ -221,8 +221,8 @@ class AutoPlay {
         {
           if(command[0] === "chain") 
           { 
-            this.chain = parseInt(command[1]) - 1;
-            this.project.ChainChange(parseInt(command[1]) - 1);
+            this.layer = parseInt(command[1]) - 1;
+            this.project.LayerChange(parseInt(command[1]) - 1);
           }
         }
       }
@@ -272,18 +272,18 @@ class AutoPlay {
       this.Stop();
       console.log(`Seeking to ${target}`)
       // console.log(this.sections)
-      let targetChain = 0;
+      let targetLayer = 0;
       let progress = 0;
       for(let section of this.sections)
       {
         if(target <= section[1]) break;
-        targetChain = section[0];
+        targetLayer = section[0];
         progress = section[1];
       }
 
-      console.log(`Seeking from chain ${targetChain} at target ${progress}`)
-      this.project.ChainChange(targetChain);
-      this.chain = targetChain;
+      console.log(`Seeking from layer ${targetLayer} at target ${progress}`)
+      this.project.LayerChange(targetLayer);
+      this.layer = targetLayer;
       this.project.clearKeypressHistory();
 
       let command = this.getCommand(progress);

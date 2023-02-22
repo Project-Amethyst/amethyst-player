@@ -17,7 +17,7 @@
         dimension: [8, 8],
         grid_dimension: [8, 8],
         grid_offset: [0, 0],
-        chain_key: [[8, 0], [8, 1], [8, 2], [8, 3], [8, 4], [8, 5], [8, 6], [8, 7], 
+        layer_key: [[8, 0], [8, 1], [8, 2], [8, 3], [8, 4], [8, 5], [8, 6], [8, 7], 
                     [-1, 7], [-1, 6], [-1, 5], [-1, 4], [-1, 3], [-1, 2], [-1, 1], [-1, 0]]
     }
     /** Get the clip path for the middle pads. */
@@ -44,7 +44,7 @@
     function getKeypadIndex(keyID: KeyID): number {
         if(Array.isArray(keyID))
         {
-            if(keyID[0] === 'c') keyID = deviceInfo.chain_key[keyID[1]]
+            if(keyID[0] === 'c') keyID = deviceInfo.layer_key[keyID[1]]
             return keyID[1] * 10 + keyID[0];
         }
         else
@@ -56,7 +56,7 @@
 export function setColor(keyID: KeyID, color: Color) {
         if(Array.isArray(keyID))
         {
-            if(keyID[0] === 'c') keyID = deviceInfo.chain_key[keyID[1]];
+            if(keyID[0] === 'c') keyID = deviceInfo.layer_key[keyID[1]];
             keyID = [
                 keyID[0] + deviceInfo.grid_offset[0],
                 keyID[1] + deviceInfo.grid_offset[1]
