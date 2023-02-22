@@ -79,7 +79,7 @@
 
 
     let engine: ProjectRT;
-    let project_status: string = "not loaded";
+    let projectStatus: string = "not loaded";
 
     let virtualDevices: any[] = []; //Should be fine
     let virtualDevicesInfo: DeviceInfoCanvas[] = [];
@@ -223,7 +223,7 @@
             engine.LoadProjectFile(file).then(
                 (result) => {
                     console.log("Project Loaded");
-                    project_status = "loaded";
+                    projectStatus = "loaded";
                 },
                 (error) => {
                     toast.push(
@@ -238,10 +238,10 @@
                             duration: 5000
                         }
                     );
-                    project_status = "not loaded";
+                    projectStatus = "not loaded";
                 }
             );
-            project_status = "loading";
+            projectStatus = "loading";
         };
         input.click();
     };
@@ -420,7 +420,7 @@
                     on:demoplay={() => (popup["demoplay"] = true)}
                     on:loadProject={() => {loadProject();}}
                     bind:project={engine}
-                    bind:status={project_status}
+                    bind:status={projectStatus}
                     bind:show={showSidebar}
                     bind:mobile={mobileView}
             />
