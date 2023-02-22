@@ -1,0 +1,45 @@
+{
+    "short_name": "Amethyst Player",
+    "name": "Amethyst Player",
+    "start_url": "/",
+    "icons": [
+      {
+        "src": "pwa-logo-512.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      },
+      {
+        "src": "pwa-logo-256.png",
+        "type": "image/png",
+        "sizes": "256x256"
+      },
+      {
+        "src": "pwa-logo-192.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "maskable-logo-512.png",
+        "type": "image/png",
+        "sizes": "512x512", 
+        "purpose": "any maskable"
+      },
+      {
+        "src": "maskable-logo-384.png",
+        "type": "image/png",
+        "sizes": "256x256", 
+        "purpose": "any maskable"
+      },
+      {
+        "src": "maskable-logo-192.png",
+        "type": "image/png",
+        "sizes": "192x192", 
+        "purpose": "any maskable"
+      }
+    ],
+    "background_color": "#1d1d1d",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#141414",
+    "description": "Online Visual Performance Player with Midi Hardware support"
+}

@@ -11,3 +11,11 @@ button {
 * {
   box-sizing: border-box;
 }
+
+body::-webkit-scrollbar{
+  display: none;
+}
+
+html {
+  scrollbar-width: none;
+}
