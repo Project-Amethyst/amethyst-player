@@ -11,6 +11,7 @@ A web player for Amethyst that supports Launchpad/Matrix//Midi Figher 64
 | **Right** / **D**  | Demoplay move forward    |
 | **Up** / **W** / **E** | Next Layer               |
 | **Down** / **S** / **Q**| Previous Layer           |
+| **Any Number Key**          | Switch to Layer   |
 | **Enter** / **F** / **ESC** | Toggle Full Screen   |
 | **Z**          | Show Player Setting      |
 | **X**          | Show Device Setting      |
