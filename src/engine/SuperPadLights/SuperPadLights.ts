@@ -150,7 +150,7 @@ class SuperPadLights implements ProjectRT {
     }
 
     LayerChange(layer: number): void { 
-        if(layer < this.projectInfo[layer])
+        if(layer < this.projectInfo[layer] && layer >= 0)
         {
             console.log(`Layer Change ${layer}`); 
             this.currentLayer = layer;

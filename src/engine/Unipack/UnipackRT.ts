@@ -360,7 +360,7 @@ class UnipackRT implements ProjectRT {
     }
 
     LayerChange(layer: number): void { 
-        if(layer < this.unipackInfo["chain"])
+        if(layer < this.unipackInfo["chain"] && layer >= 0)
         {
             console.log(`Layer Change ${layer}`); 
             if (layer !== this.currentLayer) this.clearKeypressHistory();

@@ -211,6 +211,79 @@
         }
     };
 
+    const onKeyDown = (e: KeyboardEvent) => {
+        console.log(e)
+        var keyCode = e.keyCode;
+        if(keyCode > 47 && keyCode < 58) // 0-9
+        {
+            var layer = keyCode == 48 ? 9 : keyCode - 49;
+            engine?.LayerChange(layer);
+            return
+        }
+        
+        switch(keyCode) {
+            case 32: // Space
+            case 80: // P
+                engine?.demoplay?.status === "PLAYING" ? engine?.demoplay?.Pause() : engine?.demoplay?.Start();
+                break;
+            case 37: // Left - Previous Action
+            case 65: // A
+                engine?.demoplay?.Pause();
+                engine?.demoplay?.Previous();
+                break;
+            case 39: // Right - Next Action
+            case 68: // D
+                engine?.demoplay?.Pause();
+                engine?.demoplay?.Next();
+                break;
+            case 38: // Up - Layer Down
+            case 87: // W
+            case 69: // E
+                engine?.LayerChange(engine?.currentLayer + 1);
+                break;
+            case 40: // Down - Layer Up
+            case 83: // S
+            case 81: // Q
+                engine?.LayerChange(engine?.currentLayer - 1);
+                break;
+            case 70: // F - Full Screen
+            case 13: // Enter
+            case 27: // Esc
+                showSidebar = !showSidebar;
+                break;
+            case 82: // R - Reload
+                loadProject();
+                break;
+            case 90: // Z - Show Settings
+                if(popup["devices"] || popup["demoplay"]) 
+                {
+                    popup["devices"] = false;
+                    popup["demoplay"] = false;
+                }
+                popup["setting"] = !popup["setting"];
+                break;
+            case 88: // X - Show Devices
+                if(popup["setting"] || popup["demoplay"]) 
+                {
+                    popup["setting"] = false;
+                    popup["demoplay"] = false;
+                }
+                popup["devices"] = !popup["devices"];
+                break;
+            case 67: // C - Show Demo Play Settings
+                if(popup["setting"] || popup["devices"]) 
+                {
+                    popup["setting"] = false;
+                    popup["devices"] = false;
+                }
+                popup["demoplay"] = !popup["demoplay"];
+                break;
+            default:
+                break;
+        }
+
+	}
+
     midiDevices[0] = new GridController(0, deviceKeyPressed, deviceKeyReleased);
 
     const loadProject = () => {
@@ -913,3 +986,5 @@
         }
     }
 </style>
+
+<svelte:window on:keydown|preventDefault={onKeyDown} />
