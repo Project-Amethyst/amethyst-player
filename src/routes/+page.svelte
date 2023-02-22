@@ -213,6 +213,8 @@
 
     const onKeyDown = (e: KeyboardEvent) => {
         console.log(e)
+        if(e.repeat) return;
+        
         var keyCode = e.keyCode;
         if(keyCode > 47 && keyCode < 58) // 0-9
         {
