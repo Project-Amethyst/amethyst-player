@@ -1,8 +1,20 @@
 # Amethyst Player
 
-A web player for Amethyst that supports Launchpad/Matrix.
+A web player for Amethyst that supports Launchpad/Matrix//Midi Figher 64
 
-> Note that this is still in development.
+## Keybind
+| Key            | Function                 |
+|----------------|--------------------------|
+| **R**          | Load Project             |
+| **Space** / **P**  | Play & Pause Demoplay     |
+| **Left** / **A**   | Demoplay move backward   |
+| **Right** / **D**  | Demoplay move forward    |
+| **Up** / **W** / **E** | Next Layer               |
+| **Down** / **S** / **Q**| Previous Layer           |
+| **Enter** / **F** / **ESC** | Toggle Full Screen   |
+| **Z**          | Show Player Setting      |
+| **X**          | Show Device Setting      |
+| **C**          | Show Demoplay Setting    |
 
 ## Development
 
