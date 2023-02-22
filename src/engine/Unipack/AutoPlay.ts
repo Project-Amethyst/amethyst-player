@@ -157,7 +157,7 @@ class AutoPlay {
           await this.wait(adjusted_ms);
           break;
         case 'c':
-        case 'layer':
+        case 'chain':
           var new_layer = parseInt(command[1]) - 1;
           this.layer = new_layer;
           this.project.LayerChange(new_layer);

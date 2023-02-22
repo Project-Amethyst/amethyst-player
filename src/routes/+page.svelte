@@ -16,11 +16,11 @@
     import Popup from "../components/Popup.svelte";
     import Dropdown from "../components/Dropdown.svelte";
     import Sidebar from "../components/Sidebar.svelte";
-    import CircularLoader from "../components/CircularLoader.svelte";
     import Multibutton from "../components/Multibutton.svelte";
     import Switch from "../components/Switch.svelte";
     import MobileSidebarButton from "../components/MobileSidebarButton.svelte";
-    import MobileSidebar from "../components/MobileSidebar.svelte";
+    import LayerSelector from "../components/LayerSelector.svelte";
+
     import ResizeObserver from "svelte-resize-observer";
 
     import {SvelteToast, toast} from "@zerodevx/svelte-toast";
@@ -444,13 +444,14 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="amethyst-player-footer center-class">
-                    <span 
-                        title= {__BUILD_STRING__}
-                    >
+                <div class="amethyst-player-footer center-class" on:click={(e) => {e.stopPropagation()}}>
+                {#if projectStatus === "loaded"}
+                    <LayerSelector bind:project={engine}/>
+                {:else}
+                    <span title= {__BUILD_STRING__}>
                         {`Amethyst Player`}
                     </span>
+                {/if}
                 </div>
             </div>
         </div>

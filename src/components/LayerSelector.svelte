@@ -1,38 +1,44 @@
 <script lang="ts">
     import {ChevronLeft, ChevronRight} from "carbon-icons-svelte";
-    import { onMount } from "svelte";
+    import { onMount, onDestroy } from "svelte";
 
     export let project:ProjectRT;
-
-    let selectedLayer: number = 0;
-    let layerCount: number = 1;
     
+    let currentLayer: number = 0;
+    let layerCount: number = 0;
+
 
     function selectLayer(index: number) {
         project.LayerChange(index)
     }
 
     function selectOffsetLayer(offset: -1 | 1): void {
-        var newLayer = project.currentLayer;
+        var newLayer = currentLayer;
         if(offset == -1) {
             if (newLayer - 1 >= 0) {
                 newLayer -= 1
             }
         }
         else {
-            if (newLayer + 1 < project.getLayerCount()) {
+            if (newLayer + 1 < layerCount) {
                 newLayer += 1
             }
         }
 
-        project.selectLayer(newLayer)
+        project.LayerChange(newLayer)
     }
 
-    onMount(() => {
-        layerCount = project.projectInfo.layerCount;
-        setInterval(() => {
-            selectedLayer = project.currentLayer;
+    var refreshInterval = setInterval(() => {
+            currentLayer = project.currentLayer;
         }, 10)
+
+    onMount(() => {
+        layerCount = project.projectInfo.layer;
+        currentLayer = project.currentLayer;
+    })
+    
+    onDestroy(() => {
+        clearInterval(refreshInterval)
     })
 </script>
 
@@ -43,14 +49,14 @@
 
     <div class="layers-container">
         {#each Array(layerCount) as _, layer}
-            <div class="layer" on:click={() => selectedLayer === selectLayer(layer)} class:selected={selectedLayer === layer}>
+            <div class="layer" on:click={() => currentLayer === selectLayer(layer)} class:selected={currentLayer === layer}>
                     <span>{layer + 1}</span>
             </div>
         {/each}
     </div>
 
     <div class="layer-control" on:click={() => selectOffsetLayer(1)}>
-        <ChevronRight size={24}/>
+        <ChevronRight size={24} />
     </div>
 </div>
 
@@ -62,7 +68,7 @@
         justify-content: center;
         align-items: center;
         gap: 1em;
-        filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.25));
+        // filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.25));
 
         .layer-control {
             width: 36px;
@@ -74,13 +80,15 @@
             cursor: pointer;
             flex-shrink: 0;
 
-            border: 2px solid gray;
-
             transition: background-color 0.2s ease;
-            background-color: #eff0f3;
+            background-color: #242424;
+
+            color: #d5d5d5;
 
             &:hover {
-                background-color: lightgray;
+                background-color: rgb(10, 10, 10);
+
+                color: #c5c5c5;
             }
 
             &:active  {
@@ -102,9 +110,8 @@
             .layer {
                 width: 40px;
                 height: 40px;
-                border-radius: 6px;
 
-                background-color: #a6a6a6;
+                background-color: #242424;
                 cursor: pointer;
 
                 display: flex;
@@ -116,21 +123,25 @@
                 transition: background-color 0.2s ease, width 0.2s ease;
 
                 span {
-                    color: white;
+                    color: #B5B5B5;
                     font-family: Inter, sans-serif;
                     font-weight: 500;
                 }
 
                 &:hover {
-                    background-color: #969696;
+                    background-color: #141414;
                     width: 50px;
                 }
 
                 &.selected {
-                    background-color: #2c2c2c;
+                    background-color: #141414;
                     width: 80px;
-
-                }
+                    span {
+                        color: #c5c5c5;
+                        font-family: Inter, sans-serif;
+                        font-weight: 500;
+                    }
+                }   
             }
         }
     }
