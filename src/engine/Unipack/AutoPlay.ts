@@ -208,7 +208,7 @@ class AutoPlay {
   
     Next(justChain:boolean = false)
     {
-      while(true)
+      while(this.progress < this.total)
       {
         let command = this.getCommand(++this.progress);
         if(command.length == 0) continue;
@@ -338,7 +338,7 @@ class AutoPlay {
     getActionKeys(start:number = this.progress): KeyID[]
     {
       let actionKeys:KeyID[] = [];
-      while(true)
+      while(start < this.total)
       {
         let command = this.getCommand(start++);
         // console.log(`Action Key (Pre) - Command ${start} ${command[0]}`)
@@ -346,7 +346,7 @@ class AutoPlay {
         if(command[0] !== "delay" && command[0] !== "off") break;
       }
       start--;
-      while(true)
+      while(start < this.total)
       {
         let command = this.getCommand(start++);
         // console.log(`Action Key - Command ${start} ${command[0]}`)
